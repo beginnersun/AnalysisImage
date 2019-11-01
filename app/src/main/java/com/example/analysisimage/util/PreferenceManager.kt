@@ -34,6 +34,9 @@ class PreferenceManager constructor(var context: Context,var father:String):Fath
     fun set(){
         father = "!"
          a = "2222"
+
+        val data1 = Data1("123",12,2)
+        var (a,b,c) = data1
     }
 
     /**
@@ -108,3 +111,4 @@ class A :aa{
     override val pro: Int
         get() = 1
 }
+data class Data1(var name:String,var age:Int,var l:Int)

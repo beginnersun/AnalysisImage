@@ -11,21 +11,27 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Message
 import android.provider.MediaStore
+import android.support.annotation.LayoutRes
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
 import android.widget.TextView
 import com.example.analysisimage.Constants
 import com.example.analysisimage.R
+import com.example.analysisimage.base.BaseActivity
 import com.example.analysisimage.network.BaseRequestCallBack
 import com.example.analysisimage.network.OkHttpManager
 import com.example.analysisimage.util.FileUtil
-import kotlinx.android.synthetic.main.activity_plant.view.*
 import okhttp3.FormBody
 import java.util.concurrent.Executors
-import java.util.concurrent.ThreadPoolExecutor
+import kotlin.jvm.internal.Ref
 
-class PlantAnalysisActivity :AppCompatActivity() {
+class PlantAnalysisActivity :BaseActivity() {
+    override fun initData() {
+    }
+
+    override fun initView() {
+    }
 
     var tvSelectPhoto:TextView ? = null
     private val requestSelectImage = 1
@@ -104,7 +110,7 @@ class PlantAnalysisActivity :AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        singleThreadExecutor.shutdownNow();
+        singleThreadExecutor.shutdownNow()
     }
 
     val handler = object:Handler(){
@@ -118,5 +124,9 @@ class PlantAnalysisActivity :AppCompatActivity() {
                 else -> {}
             }
         }
+    }
+
+    override fun getLayoutId():Int {
+        return R.layout.activity_plant
     }
 }
