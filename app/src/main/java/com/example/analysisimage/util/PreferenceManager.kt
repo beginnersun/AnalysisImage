@@ -1,6 +1,8 @@
 package com.example.analysisimage.util
 
 import android.content.Context
+import com.example.analysisimage.network.OkHttpManager
+import kotlin.reflect.KProperty
 
 /**
  * 因为主构造方法不能有任何代码 所以如果要初始化某些内容
@@ -81,6 +83,7 @@ object PreferenceManagerUtil{
     public fun setToken(){
         SingletonDemo.get()
 
+        var bb:A.BBB = A().BBB("")
     }
 
     public fun getToken() = {}
@@ -110,5 +113,36 @@ interface aa{
 class A :aa{
     override val pro: Int
         get() = 1
+        var ccbb:String = "333"
+    inner class BBB(var name: String){
+        fun test(){
+            ccbb = "3"
+        }
+    }
+
 }
 data class Data1(var name:String,var age:Int,var l:Int)
+
+
+sealed class Expr
+data class Const(val number: Double) : Expr()
+data class Sum(val e1: Expr, val e2: Expr) : Expr()
+object NotANumber : Expr()
+open class BB :Expr(){
+}
+
+fun test(expr: Expr):Int =     when(expr){
+
+    is Const-> 2
+    else -> 3
+}
+
+fun getDelegate():Delegate{
+    return Delegate()
+}
+
+class Delegate {
+}
+class  Example{
+    val ok by lazy { getDelegate() }
+}

@@ -6,6 +6,28 @@
                                              android:layout_height="match_parent"
                                              tools:context=".MainActivity">
 
+    <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:scaleType="centerCrop"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginBottom="8dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintVertical_bias="0.375"/>
+
+    <TextureView
+            android:id="@+id/texture_view"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginBottom="8dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintVertical_bias="0.375"/>
 
     <TextView
             android:id="@+id/tv_select_image"
@@ -14,10 +36,31 @@
             android:text="选择图片"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
             android:padding="10dp"
             android:background="@color/colorPrimary"
-            android:textColor="#ffffff"/>
+            android:textColor="#ffffff"
+            app:layout_constraintTop_toBottomOf="@+id/imageView"
+            android:layout_marginTop="10dp"/>
+
+    <TextView
+            android:id="@+id/tv_analysis_result_name"
+            android:layout_width="220dp"
+            android:maxWidth="280dp"
+            android:layout_height="wrap_content"
+            android:text="名称:"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_select_image"
+            android:layout_marginTop="15dp"/>
+    <TextView
+            android:id="@+id/tv_analysis_result_description"
+            android:layout_width="220dp"
+            android:maxWidth="280dp"
+            android:layout_height="wrap_content"
+            android:text="描述:"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_analysis_result_name"
+            android:layout_marginTop="15dp"/>
 
 </android.support.constraint.ConstraintLayout>

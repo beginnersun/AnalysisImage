@@ -2,6 +2,7 @@ package com.example.analysisimage.util
 
 import android.content.Context
 import android.content.SharedPreferences
+import android.util.Log
 
 class SharedPreferenceUtil private constructor(){
     private var editor:SharedPreferences.Editor? = null;
@@ -33,7 +34,10 @@ class SharedPreferenceUtil private constructor(){
         editor?.apply()
     }
 
-    fun getToken() = { sharedPreference?.getString(ACCESS_TOKEN,"")}
+    fun getToken():String? {
+        Log.e("上传图片","获取token"+sharedPreference?.getString(ACCESS_TOKEN,""))
+        return sharedPreference?.getString(ACCESS_TOKEN,"")
+    }
 
     fun setExpirse(expirst_time:String){
         editor?.putString(TOKEN_EXPIRSE,expirst_time)

@@ -1,10 +1,13 @@
 package com.example.analysisimage
 
 import android.app.DownloadManager
+import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.TextView
+import com.example.analysisimage.activity.PlantAnalysisActivity
 import com.example.analysisimage.util.Father
 import com.example.analysisimage.util.PreferenceManager
 import com.example.analysisimage.util.PreferenceManagerUtil
@@ -22,36 +25,48 @@ class MainActivity : AppCompatActivity() {
     val client:OkHttpClient = OkHttpClient();
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        SharedPreferenceUtil.init(applicationContext)
         setContentView(R.layout.activity_main)
         /**
          * 声明一个匿名类  object:xxxxx{    override fun .....(){ 覆写的方法}    }
          */
-//        first.setOnClickListener(object :View.OnClickListener{
-//            override fun onClick(v: View?) {
-//
-//            }
-//        })
-        first.setOnClickListener {first.text = "222"}
-        var result = getImageRecogintionToken(apiKey,secretKey)
+        first.setOnClickListener{ view -> startActivity(Intent(this@MainActivity,PlantAnalysisActivity::class.java))}
+//        first.setOnClickListener {first.text = "222"}
+        Thread(){
+            kotlin.run {
+                var result = getImageRecogintionToken(apiKey,secretKey)
+                Log.e("TokenResult",result)
+                analysisToken(result)
+            }
+        }.start()
 
     }
 
     fun getImageRecogintionToken(apiKey:String ,secretKey:String):String{
         var url = "https://aip.baidubce.com/oauth/2.0/token?" + "grant_type=client_credentials"+
-                "&client_id=" + apiKey + "&client_secrey=" + secretKey
+                "&client_id=" + apiKey + "&client_secret=" + secretKey
         var result = ""
-        val request : Request = Request.Builder().url(url).get().build()
+        val request : Request = Request.Builder().url(url).build()
         val response: Response = client.newCall(request).execute()
-        result = response.body.toString()
-        return result;
+        if (response.isSuccessful) {
+            Log.d("kwwl", "response.code()==" + response.code)
+            Log.d("kwwl", "response.message()==" + response.message)
+            result = response.body!!.string()
+        }
+        else
+        {
+            Log.d("Fail","get请求失败")
+        }
+        return result
     }
 
     fun analysisToken(result:String):String{
-        val jsonObject:JSONObject = JSONObject(result);
-        var token = ""
-        var expires:Long;
+        val jsonObject = JSONObject(result)
+        var token:String
+        var expires:Long
         expires = jsonObject.optLong("expires_in")
         token = jsonObject.optString("access_token")
+        Log.e("上传图片",token)
         SharedPreferenceUtil.getInstance().setToken(token)
         return token;
     }
