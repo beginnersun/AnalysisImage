@@ -16,13 +16,14 @@ import android.media.ImageReader
 import android.net.Uri
 import android.os.*
 import android.provider.MediaStore
-import android.support.annotation.LayoutRes
-import android.support.annotation.MainThread
-import android.support.annotation.RequiresApi
-import android.support.annotation.WorkerThread
-import android.support.v4.app.ActivityCompat
-import android.support.v4.content.ContextCompat
-import android.support.v7.app.AppCompatActivity
+import android.provider.MediaStore.Images.ImageColumns.ORIENTATION
+import androidx.annotation.LayoutRes
+import androidx.annotation.MainThread
+import androidx.annotation.RequiresApi
+import androidx.annotation.WorkerThread
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
+import androidx.appcompat.app.AppCompatActivity
 import android.util.Base64
 import android.util.Log
 import android.util.Size
@@ -72,20 +73,30 @@ class PlantAnalysisActivity : AppCompatActivity() {
 
     private var frontCameraId: String = ""
     private var backCameraId: String = ""
-    private var backCameraCharacteristics: CameraCharacteristics? = null
+    private var cameraId: String = ""
+    private var cameraCharacteristics: CameraCharacteristics? = null
     private var previewSurface: Surface? = null
     private lateinit var mCameraManager: CameraManager
     private var cameraDevice: CameraDevice? = null
     private var imageReader: ImageReader? = null
     private var mCameraSession: CameraCaptureSession? = null
-    private var mCameraSensorOrientation = 0        //摄像头方向
 
-    private var count = 58;
+    private var count = 58
+    private val cameraHandler:Handler
+    private val handlerThread:HandlerThread
+    private var useFront = true
 
+    init {
+        handlerThread = HandlerThread("CameraThread")
+        handlerThread.start()
+        cameraHandler = Handler(handlerThread.looper)
+        handlerThread.quitSafely()
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_plant)
+
 
         tv_select_image.setOnClickListener { selectImage() }
         tv_crop_image.setOnClickListener { captureImage() }
@@ -142,13 +153,15 @@ class PlantAnalysisActivity : AppCompatActivity() {
                 }
             }
         }
-        backCameraCharacteristics = mCameraManager.getCameraCharacteristics(frontCameraId)
-        mCameraSensorOrientation =
-            backCameraCharacteristics?.get(CameraCharacteristics.SENSOR_ORIENTATION)!!  //获取摄像头方向  用于自动对焦
-        val exchange = exchangeWidthAndHeight(windowManager.defaultDisplay.rotation, mCameraSensorOrientation)
+        if(useFront){
+            cameraId = frontCameraId
+        }else{
+            cameraId = backCameraId
+        }
+        cameraCharacteristics = mCameraManager.getCameraCharacteristics(cameraId)
 
         val previewSize =
-            getOptimalSize(texture_view.width,texture_view.height, backCameraCharacteristics)  //获取最合适的预览大小
+            getOptimalSize(texture_view.width,texture_view.height, cameraCharacteristics)  //获取最合适的预览大小
         //设置预览界面的大小      surfaceTexture 就是TextureView的getSurfaceTexture方法返回了mSurface
         if (previewSize!=null) {
             texture_view.surfaceTexture.setDefaultBufferSize(
@@ -156,132 +169,118 @@ class PlantAnalysisActivity : AppCompatActivity() {
                 previewSize.height
             )
         }
-
-        if (exchange){
-            imageReader = ImageReader.newInstance(texture_view.height, texture_view.width, ImageFormat.YUV_420_888, 5)
-        }else {
-            imageReader = ImageReader.newInstance(texture_view.width, texture_view.height, ImageFormat.YUV_420_888, 5)
-        }
+        imageReader = ImageReader.newInstance(texture_view.width, texture_view.height, ImageFormat.JPEG, 3)
         imageReader?.setOnImageAvailableListener(OnMyImageAvailableListener(), handler)
 
-        //调整方向
-//        val orientation = resources.configuration.orientation
-//        if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
-//            texture_view
-//        }
         openCamera()
     }
 
     private fun captureImage() {
         val requestBuilder = cameraDevice?.createCaptureRequest(CameraDevice.TEMPLATE_STILL_CAPTURE)
         requestBuilder?.addTarget(imageReader?.surface)  //再加上ImageReader的surface 用来拍摄照片（或者获取单帧图片）
-        requestBuilder?.set(CaptureRequest.CONTROL_AF_MODE, CaptureRequest.CONTROL_AF_MODE_CONTINUOUS_PICTURE) //自动对焦
-//        mCameraSensorOrientation = getDisplayRotation(backCameraCharacteristics!!)
-        Log.e("屏幕方向","角度为${mCameraSensorOrientation}")
-        requestBuilder?.set(CaptureRequest.JPEG_ORIENTATION, mCameraSensorOrientation)
+//        requestBuilder?.set(CaptureRequest.CONTROL_AF_MODE, CaptureRequest.CONTROL_AF_MODE_CONTINUOUS_PICTURE) //自动对焦
+        requestBuilder?.set(CaptureRequest.CONTROL_AF_TRIGGER, CameraMetadata.CONTROL_AF_TRIGGER_START) //锁定焦点
+        requestBuilder?.set(CaptureRequest.JPEG_ORIENTATION,getJpegOrientation(cameraCharacteristics!!,windowManager.defaultDisplay.rotation))
         requestBuilder?.set(CaptureRequest.JPEG_QUALITY,100)
         mCameraSession?.capture(requestBuilder?.build(), null, handler)
     }
 
-//    @WorkerThread
-//    @RequiresApi(21)
-//    private fun getLocation(): Location? {
-//        val locationManager = getSystemService(LocationManager::class.java)
-//        if (locationManager != null && ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-//            return locationManager.getLastKnownLocation(LocationManager.PASSIVE_PROVIDER)
-//        }
-//        return null
-//    }
-
     private var degrees = 0
-    /**
-     * 获取当前摄像头角度
-     */
-    private fun getDisplayRotation(cameraCharacteristics: CameraCharacteristics): Int {
-        val rotation = windowManager.defaultDisplay.rotation
-        degrees = when (rotation) {
-            Surface.ROTATION_0 -> 0
-            Surface.ROTATION_90 -> 90
-            Surface.ROTATION_180 -> 180
-            Surface.ROTATION_270 -> 270
-            else -> 0
+
+    private fun getJpegOrientation(cameraCharacteristics: CameraCharacteristics, deviceOrientation: Int): Int {
+        var myDeviceOrientation = deviceOrientation
+        if (myDeviceOrientation == android.view.OrientationEventListener.ORIENTATION_UNKNOWN) {
+            return 0
+        }
+        val sensorOrientation = cameraCharacteristics.get(CameraCharacteristics.SENSOR_ORIENTATION)!!
+
+        // Round device orientation to a multiple of 90
+        myDeviceOrientation = (myDeviceOrientation + 45) / 90 * 90
+
+        // Reverse device orientation for front-facing cameras
+        val facingFront = cameraCharacteristics.get(CameraCharacteristics.LENS_FACING) == CameraCharacteristics.LENS_FACING_FRONT
+        if (facingFront) {
+            myDeviceOrientation = -myDeviceOrientation
         }
 
-        Log.e("屏幕方向","屏幕角度为${degrees}")
-        val sensorOrientation = cameraCharacteristics[CameraCharacteristics.SENSOR_ORIENTATION]!!
-        return if (cameraCharacteristics[CameraCharacteristics.LENS_FACING] == CameraCharacteristics.LENS_FACING_FRONT) {
-            (360 - (sensorOrientation + degrees) % 360) % 360
-        } else {
-            (sensorOrientation - degrees + 360) % 360
-        }
-    }
-    private fun exchangeWidthAndHeight(displayRotation: Int, sensorOrientation: Int): Boolean {
-        var exchange = false
-        when (displayRotation) {
-            Surface.ROTATION_0, Surface.ROTATION_180 ->
-                if (sensorOrientation == 90 || sensorOrientation == 270) {
-                    exchange = true
-                }
-            Surface.ROTATION_90, Surface.ROTATION_270 ->
-                if (sensorOrientation == 0 || sensorOrientation == 180) {
-                    exchange = true
-                }
-            else -> Log.e("屏幕方向","Display rotation is invalid: $displayRotation")
-        }
-
-        Log.e("屏幕方向","屏幕方向  $displayRotation")
-        degrees = sensorOrientation
-        Log.e("屏幕方向","相机方向  $sensorOrientation")
-        return exchange
-    }
-
-    fun mirror(rawBitmap: Bitmap): Bitmap {
-        var matrix = Matrix()
-        if (degrees == 270) {
-            Log.e("屏幕方向","asdfasdf镜像")
-            matrix.postScale(-1f,1f)
-            matrix.setRotate(-90f)
-        }else{
-            matrix.setRotate(90f)
-        }
-        return Bitmap.createBitmap(rawBitmap, 0, 0, rawBitmap.width, rawBitmap.height, matrix, true)
+        // Calculate desired JPEG orientation relative to camera orientation to make
+        // the image upright relative to the device orientation
+        return (sensorOrientation + myDeviceOrientation + 360) % 360
     }
 
     @RequiresApi(21)
     private inner class OnMyImageAvailableListener : ImageReader.OnImageAvailableListener {
         override fun onImageAvailable(reader: ImageReader?) { //捕获到单帧图片
-            val image = reader?.acquireLatestImage()
+            val image = reader?.acquireNextImage()
+            val buffer = image!!.planes[0].buffer
+            val data = ByteArray(buffer.remaining())
+            buffer.get(data)
+            val rawBitmap = BitmapFactory.decodeByteArray(data, 0, data.size)
+            val newBitmap = BitmapUtil.convertBitmap(rawBitmap)
+            pre_imageView.setImageBitmap(newBitmap)
+            image?.close()
+//
+//            Image mImage = reader.acquireNextImage();
+//            ByteBuffer buffer = mImage.getPlanes()[0].getBuffer();
+//            byte[] data = new byte[buffer.remaining()];
+//            buffer.get(data);
+//            String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+//            Camera2Util.createSavePath(Camera2Config.PATH_SAVE_PIC);//判断有没有这个文件夹，没有的话需要创建
+//            picSavePath = Camera2Config.PATH_SAVE_PIC + "IMG_" + timeStamp + ".jpg";
+//            FileOutputStream fos = null;
+//            try {
+//                fos = new FileOutputStream(picSavePath);
+//                fos.write(data, 0, data.length);
+//
+//                Message msg = new Message();
+//                msg.what = CAPTURE_OK;
+//                msg.obj = picSavePath;
+//                mCameraHandler.sendMessage(msg);
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            } finally {
+//                if (fos != null) {
+//                    try {
+//                        fos.close();
+//                    } catch (IOException e) {
+//                        e.printStackTrace();
+//                    }
+//                }
+//            }
+//            mImage.close()
 
-            if (null!=image){
-                val plane_y = image!!.planes[0]
-                val plane_u = image!!.planes[1]
-                val plane_b = image!!.planes[2]
-            }
-
-
-            val width = image?.width
-            val height = image?.height
-            val byteArray = getDataFromImage(image, 1) //从Image中读取图片数据（注意此时数据是YUV格式的）
-            var rawBitmap = getBitmapImageFromYUV(
-                I420Tonv21(byteArray, width!!, height!!),
-                width!!,
-                height!!
-            ) //I420 转为21（也就是YUV转为jpg） 然后再转为bitmap
-            rawBitmap = mirror(rawBitmap)
-            val out_Image = BitmapUtil.CompressBitmap(rawBitmap)//进行质量压缩  减小位深 但是不影响图片质量 适用于二进制数据传递
-            var imageBase64Code = String(Base64.encode(out_Image, Base64.DEFAULT)) //编码为Base64
-            val file = File(Environment.getExternalStorageDirectory().absolutePath + "/$count.txt")
-            if (!file.exists()) {
-                file.createNewFile()
-            }
+//            val image = reader?.acquireLatestImage()
+//
+//            if (null!=image){
+//                val plane_y = image!!.planes[0]
+//                val plane_u = image!!.planes[1]
+//                val plane_b = image!!.planes[2]
+//            }
+//
+//
+//            val width = image?.width
+//            val height = image?.height
+//            val byteArray = getDataFromImage(image, 1) //从Image中读取图片数据（注意此时数据是YUV格式的）
+//            var rawBitmap = getBitmapImageFromYUV(
+//                I420Tonv21(byteArray, width!!, height!!),
+//                width!!,
+//                height!!
+//            ) //I420 转为21（也就是YUV转为jpg） 然后再转为bitmap
+//            rawBitmap = mirror(rawBitmap)
+//            val out_Image = BitmapUtil.CompressBitmap(rawBitmap)//进行质量压缩  减小位深 但是不影响图片质量 适用于二进制数据传递
+//            var imageBase64Code = String(Base64.encode(out_Image, Base64.DEFAULT)) //编码为Base64
+//            val file = File(Environment.getExternalStorageDirectory().absolutePath + "/$count.txt")
+//            if (!file.exists()) {
+//                file.createNewFile()
+//            }
 //            val out = FileOutputStream(file)
-            imageBase64Code = imageBase64Code.replace("\n", "").replace("\r", "").replace("\r\n", "")  //移除内容中的换行
+//            imageBase64Code = imageBase64Code.replace("\n", "").replace("\r", "").replace("\r\n", "")  //移除内容中的换行
 //            out.write(imageBase64Code.toByteArray())
 //            out.close()
-            Toast.makeText(this@PlantAnalysisActivity,"图片保存成功 地址为$count.txt",Toast.LENGTH_LONG).show()
-            count = count + 5;
-            pre_imageView.setImageBitmap(rawBitmap)
-            image?.close()
+//            Toast.makeText(this@PlantAnalysisActivity,"图片保存成功 地址为$count.txt",Toast.LENGTH_LONG).show()
+//            count = count + 5;
+//            pre_imageView.setImageBitmap(rawBitmap)
+//            image?.close()
         }
     }
 
@@ -330,21 +329,10 @@ class PlantAnalysisActivity : AppCompatActivity() {
                 }
 
                 override fun onConfigureFailed(session: CameraCaptureSession) {
-
                 }
-
             },
             handler
         )
-    }
-
-    override fun onResume() {
-        super.onResume()
-    }
-
-    override fun onPause() {
-        super.onPause()
-//        mCameraSession?.stopRepeating()
     }
 
     /**
@@ -485,6 +473,8 @@ class PlantAnalysisActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
+        releaseCamera()
+        releaseTask()
         singleThreadExecutor.shutdownNow()
     }
 
@@ -547,8 +537,28 @@ class PlantAnalysisActivity : AppCompatActivity() {
         }
         return me_size
     }
-//
-//    override fun getLayoutId():Int {
-//        return R.layout.activity_plant
-//    }
+
+    fun releaseCamera() {
+        mCameraSession?.close()
+        mCameraSession = null
+
+        cameraDevice?.close()
+        cameraDevice = null
+
+        imageReader?.close()
+        imageReader = null
+
+    }
+
+    fun releaseTask(){
+        cameraHandler?.removeCallbacksAndMessages(null)
+        handlerThread.quitSafely()
+    }
+
+    fun exchangeCamera(){
+        releaseCamera()
+        useFront = !useFront
+        initCamera()
+    }
+
 }

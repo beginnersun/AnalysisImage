@@ -1,7 +1,7 @@
 package com.example.analysisimage.util
 
 import android.hardware.camera2.CameraCharacteristics
-import android.support.annotation.RequiresApi
+import androidx.annotation.RequiresApi
 
 /**
  * 筛选 相机硬件支持的情况

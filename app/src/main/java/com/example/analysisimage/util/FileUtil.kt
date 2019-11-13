@@ -1,6 +1,7 @@
 package com.example.analysisimage.util
 
 import android.os.Build
+import android.os.Environment
 import android.text.TextUtils
 import android.util.Base64
 import java.io.*
@@ -33,6 +34,14 @@ class FileUtil {
 //                result = Base64.encodeToString(byteArray,Base64.DEFAULT)
             }
             return result
+        }
+
+        fun createCameraFile(path:String):File{
+            val file = File(Environment.getExternalStorageDirectory().absolutePath + File.separator + path)
+            if (!file.exists()){
+                file.createNewFile()
+            }
+            return file
         }
 
     }

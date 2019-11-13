@@ -1,9 +1,9 @@
 package com.example.analysisimage.base
 
 import android.os.Bundle
-import android.support.annotation.IntDef
-import android.support.annotation.LayoutRes
-import android.support.v7.app.AppCompatActivity
+import androidx.annotation.IntDef
+import androidx.annotation.LayoutRes
+import androidx.appcompat.app.AppCompatActivity
 import android.util.Log
 import com.example.analysisimage.R
 import kotlin.jvm.internal.Ref

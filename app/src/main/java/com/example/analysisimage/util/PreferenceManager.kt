@@ -20,25 +20,29 @@ import kotlin.reflect.KProperty
  * 如果基类没有构造方法那么
  * 什么都不需要操作只需要在类名后面加:+基类名字
  */
-class PreferenceManager constructor(var context: Context,var father:String):Father(father){  //主构造函数
+class PreferenceManager constructor(var context: Context, var father: String) : Father(father) {  //主构造函数
 
-    var a1 :String =""
+    var a1: String = ""
+
     /**
      * 次构造函数
      */
-    constructor(context: Context,father: String,parent:String):this(context,father){   //如果类有一个主构造函数，每个次构造函数需要委托给主构造函数
+    constructor(context: Context, father: String, parent: String) : this(
+        context,
+        father
+    ) {   //如果类有一个主构造函数，每个次构造函数需要委托给主构造函数
         a1 = "2"
 
     }
 
-    var GET:String = ""
+    var GET: String = ""
 
-    fun set(){
+    fun set() {
         father = "!"
-         a = "2222"
+        a = "2222"
 
-        val data1 = Data1("123",12,2)
-        var (a,b,c) = data1
+        val data1 = Data1("123", 12, 2)
+        var (a, b, c) = data1
     }
 
     /**
@@ -63,31 +67,32 @@ class PreferenceManager constructor(var context: Context,var father:String):Fath
 /**
  *
  */
-data class Data  (val name:String,val age:Int){
+data class Data(val name: String, val age: Int) {
 
 }
 
 /**
  * 作为基类 必须有open修饰   open代表允许一个类  子类化（也就是被继承） 或者方法可被覆盖
  */
-open class Father(var name:String){
-    open var a:String = ""
-    val a22:String?= null
-    open fun sun(){
+open class Father(var name: String) {
+    open var a: String = ""
+    val a22: String? = null
+    open fun sun() {
         a = "ss"
         name = "fda"
     }
 }
 
-object PreferenceManagerUtil{
-    public fun setToken(){
+object PreferenceManagerUtil {
+    public fun setToken() {
         SingletonDemo.get()
 
-        var bb:A.BBB = A().BBB("")
+        var bb: A.BBB = A().BBB("")
     }
 
     public fun getToken() = {}
 }
+
 class SingletonDemo private constructor() {
     companion object {
         private var instance: SingletonDemo? = null
@@ -97,52 +102,91 @@ class SingletonDemo private constructor() {
                 }
                 return field
             }
+
         @Synchronized
-        fun get(): SingletonDemo{
+        fun get(): SingletonDemo {
             return instance!!
         }
     }
 
 }
-interface aa{
 
-    val pro:Int
+interface aa {
+
+    val pro: Int
 
 }
 
-class A :aa{
+class A : aa {
     override val pro: Int
         get() = 1
-        var ccbb:String = "333"
-    inner class BBB(var name: String){
-        fun test(){
+    var ccbb: String = "333"
+
+    inner class BBB(var name: String) {
+        fun test() {
             ccbb = "3"
         }
     }
 
 }
-data class Data1(var name:String,var age:Int,var l:Int)
+
+data class Data1(var name: String, var age: Int, var l: Int)
 
 
 sealed class Expr
 data class Const(val number: Double) : Expr()
 data class Sum(val e1: Expr, val e2: Expr) : Expr()
 object NotANumber : Expr()
-open class BB :Expr(){
+open class BB : Expr() {
 }
 
-fun test(expr: Expr):Int =     when(expr){
+fun test(expr: Expr): Int = when (expr) {
 
-    is Const-> 2
+    is Const -> 2
     else -> 3
 }
 
-fun getDelegate():Delegate{
+fun getDelegate(): Delegate {
     return Delegate()
 }
 
 class Delegate {
+    operator fun getValue(example: Example, property: KProperty<*>): Any {
+        return Delegate()
+    }
 }
-class  Example{
-    val ok by lazy { getDelegate() }
+
+class Example {
+    val ok by getDelegate()
 }
+
+class C {
+    // 私有函数，所以其返回类型是匿名对象类型
+    private fun foo() = object {
+        val x: String = "x"
+    }
+
+    // 公有函数，所以其返回类型是 Any
+    fun publicFoo() = object {
+        val x: String = "x"
+    }
+
+    fun bar() {
+        val x1 = foo().x        // 没问题
+//        val x2 = publicFoo().x  // 错误：未能解析的引用“x”
+    }
+}
+
+fun foo(cc: Int = 0, bb: Int) {
+
+}
+
+fun foo(vararg strings:String){
+    var length = strings[0]
+
+}
+fun Test(){
+    foo(bb = 1)  //bb = 1  命名参数法
+    foo("1","2","3")   //foo(*arrayof("1","2","3"))传入可变数量的参数    foo("1","2","3")也可以直接放入值
+}
+
