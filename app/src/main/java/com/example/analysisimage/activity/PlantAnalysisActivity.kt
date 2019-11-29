@@ -118,6 +118,7 @@ class PlantAnalysisActivity : AppCompatActivity() {
         }
 
         override fun onSurfaceTextureDestroyed(surface: SurfaceTexture?): Boolean {
+            releaseCamera()
             return false
         }
 

@@ -8,6 +8,7 @@ import android.util.Log
 import android.view.View
 import android.widget.TextView
 import com.example.analysisimage.activity.PlantAnalysisActivity
+import com.example.analysisimage.activity.camerax.PlantAnalysisActivityCameraX
 import com.example.analysisimage.util.Father
 import com.example.analysisimage.util.PreferenceManager
 import com.example.analysisimage.util.PreferenceManagerUtil
@@ -30,7 +31,7 @@ class MainActivity : AppCompatActivity() {
         /**
          * 声明一个匿名类  object:xxxxx{    override fun .....(){ 覆写的方法}    }
          */
-        first.setOnClickListener{ view -> startActivity(Intent(this@MainActivity,PlantAnalysisActivity::class.java))}
+        first.setOnClickListener{ view -> startActivity(Intent(this@MainActivity,PlantAnalysisActivityCameraX::class.java))}
 //        first.setOnClickListener {first.text = "222"}
         Thread(){
             kotlin.run {

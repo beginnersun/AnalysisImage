@@ -1,6 +1,13 @@
 package com.example.analysisimage
 
+import android.os.Environment
+import java.io.File
+
 class Constants {
+
+    object APPString{
+        val APP_DIRECTORY_ABSOLUTEPATH:String = Environment.getExternalStorageDirectory().absolutePath + File.separator
+    }
 
     companion object URL{
         const val ANALYSIS_IMAGE_FOR_PLANT = "https://aip.baidubce.com/rest/2.0/image-classify/v1/plant"

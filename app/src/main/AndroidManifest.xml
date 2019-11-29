@@ -29,6 +29,8 @@
         <activity android:name=".activity.PlantAnalysisActivity">
 
         </activity>
+
+        <activity android:name=".activity.camerax.PlantAnalysisActivityCameraX"/>
     </application>
 
 </manifest>

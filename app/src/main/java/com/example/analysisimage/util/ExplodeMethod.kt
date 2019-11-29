@@ -12,21 +12,23 @@ import androidx.annotation.RequiresApi
  * LEVEL_EXTERNAL （外接摄像头 与LIMITED蕾西）
  */
 @RequiresApi(21)
-fun CameraCharacteristics.isHardwareLevelSupported(requiredLevel: Int): Boolean{
+fun CameraCharacteristics.isHardwareLevelSupported(requiredLevel: Int): Boolean {
     val sortedLevels = intArrayOf(
         CameraCharacteristics.INFO_SUPPORTED_HARDWARE_LEVEL_LEGACY,
         CameraCharacteristics.INFO_SUPPORTED_HARDWARE_LEVEL_LIMITED,
         CameraCharacteristics.INFO_SUPPORTED_HARDWARE_LEVEL_FULL,
-        CameraCharacteristics.INFO_SUPPORTED_HARDWARE_LEVEL_3)
+        CameraCharacteristics.INFO_SUPPORTED_HARDWARE_LEVEL_3
+    )
 
     //在扩展函数中 this代表在点左侧传递的 接收者 参数。(就是调用这个方法的对象  eg: cameraMe.isHardwareLevelSupported   this就代表cameraMe
     val deviceLevel = this[CameraCharacteristics.INFO_SUPPORTED_HARDWARE_LEVEL]
-    for (sortedLevel in sortedLevels){
-        if (requiredLevel == sortedLevel){
+    for (sortedLevel in sortedLevels) {
+        if (requiredLevel == sortedLevel) {
             return true
-        }else if (deviceLevel == sortedLevel){
+        } else if (deviceLevel == sortedLevel) {
             return false
         }
     }
     return false
 }
+

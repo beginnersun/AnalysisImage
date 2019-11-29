@@ -189,4 +189,70 @@ fun Test(){
     foo(bb = 1)  //bb = 1  命名参数法
     foo("1","2","3")   //foo(*arrayof("1","2","3"))传入可变数量的参数    foo("1","2","3")也可以直接放入值
 }
+//
+val items = listOf(1, 2, 3, 4, 5)
+val ccs = listOf("1","2","3")
+
+fun <T, R> Collection<T>.fold(
+    initial: R,
+    combine: (acc: R, nextElement: T) -> R
+): R {
+    var accumulator: R = initial
+    for (element: T in this) {
+        accumulator = combine(accumulator, element)
+    }
+    return accumulator
+}
+
+val product = items.fold(1, Int::times)  //使用Int 的扩展函数
+
+val max: (a: Int, b: Int) -> Int =     // 函数类型为 (Int,Int) -> Int    意思就是类型为传入两个Int返回一个Int  =号后面是函数的实例化
+    fun(c, d): Int {
+        return c
+    }
+//    {
+//        a,b -> a
+//    }
+val cc:(Int,Int) -> Int = fun(a,b):Int{   //当然函数类型也可以不写参数名 只写类型
+    return a
+}
+
+val acv = items.fold(2, cc)   //也可以传递一个匿名函数 fun(x:Int,y:Int) = x + y
+
+
+
+class IntTransformer: (Int) -> Int {     //使用函数类型 作为借口 然后实现方法  比如 继承(Int) -> Int 这个函数类型 然后实现
+                                         // (Int) -> Int这个方法 必须覆写invoke这个函数（因为(Int)->Int 要在invoke中执行
+    override operator fun invoke(x: Int): Int = TODO()
+
+    val cadd:(Int,Int) -> Int = { i,j -> i+1}
+}
+val a = { i: Int -> i + 1 } // 推断出的类型是 (Int) -> Int
+
+val intPlus: Int.(Int) -> Int = Int::plus   //接收者类型函数   调用不变 intPlus(2.3) 结果是5   plus 在Int中是将传入的值叠加到当前对象
+                                            // 意为将传入的value参数增加到当前对象上  Int.(Int) -> Int intPlus具有接收者类型所以讲(Int)里面的Int作为第一个参数传递
+
+                                            //就好比一个扩展函数 2.plus(3)
+// 简写的都是只适用于lambda 表达式
+val produce = items.fold(1){acc , e -> acc * e}   //如果函数的最后一个参数是函数的话 可以把函数表达式卸载括号外面
+fun test(){
+    run { println("") }   //如果函数的参数就是一个表达式那么可以省略括号直接把表达式写在花括号里面
+}
+
+val abcdef:(Int) -> Int = {  //如果函数参数只有一个那么可以用it来代替唯一一个参数     并且可已不用写return 直接把最后一个表达式当做值返回
+    it -> it+1
+}
+
+val strings = arrayOf("1","2","3","4")
+fun testFun(){
+    strings.filter { it.length>5 }.sortedBy { it.length }.map { it.toUpperCase() }  //以上方法的测试
+}
+
+
+class ABC(val p: Int)
+fun teprintln(){
+    println(ABC::p)
+    println(strings[0])
+}
+val stringPlus: (String, String) -> String = String::plus
 

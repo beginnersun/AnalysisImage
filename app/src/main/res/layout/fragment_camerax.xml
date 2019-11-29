@@ -4,17 +4,10 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent">
 
-
     <TextureView android:layout_width="match_parent" android:layout_height="match_parent"
     android:id="@+id/texture_view"/>
 
-    <Button
-            android:id="@+id/capture"
-            android:layout_width="wrap_content" android:layout_height="wrap_content"
+    <Button android:layout_width="match_parent" android:layout_height="wrap_content"
     android:text="拍照"/>
-
-
-    <!--<FrameLayout android:layout_width="match_parent" android:layout_height="match_parent"-->
-    <!--android:id="@+id/frameLayout"></FrameLayout>-->
 
 </RelativeLayout>
