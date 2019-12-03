@@ -131,6 +131,26 @@ class A : aa {
 }
 
 data class Data1(var name: String, var age: Int, var l: Int)
+/**
+ * 幕后属性
+ */
+class Person2(name:String) {
+    private var backingName:String = name   //外面直接访问不到  通过name来访问  backingName就是幕后属性
+    var name
+        get() = backingName
+        set(value) {
+            if(value.length > 5 || value.length < 2){
+                println("你设置的人名不符合要求")
+            }else{
+                backingName = value  //对幕后字段赋值  backingName为自定义的幕后字段  也就成为了幕后属性
+            }
+        }
+    var number:String = ""
+    get() = "$"
+    set(value){
+        field = "${value}fd"   //field 为幕后字段
+    }
+}
 
 
 sealed class Expr
@@ -177,22 +197,12 @@ class C {
     }
 }
 
-fun foo(cc: Int = 0, bb: Int) {
-
-}
-
-fun foo(vararg strings:String){
-    var length = strings[0]
-
-}
-fun Test(){
-    foo(bb = 1)  //bb = 1  命名参数法
-    foo("1","2","3")   //foo(*arrayof("1","2","3"))传入可变数量的参数    foo("1","2","3")也可以直接放入值
-}
 //
 val items = listOf(1, 2, 3, 4, 5)
 val ccs = listOf("1","2","3")
-
+/**
+ * 高阶函数   高阶函数的参数的每一个函数都是对象 外加一个闭包   这些函数体内的变量等等访问与内存的分配都会引入运行时开销
+ */
 fun <T, R> Collection<T>.fold(
     initial: R,
     combine: (acc: R, nextElement: T) -> R
@@ -231,10 +241,17 @@ val a = { i: Int -> i + 1 } // 推断出的类型是 (Int) -> Int
 
 val intPlus: Int.(Int) -> Int = Int::plus   //接收者类型函数   调用不变 intPlus(2.3) 结果是5   plus 在Int中是将传入的值叠加到当前对象
                                             // 意为将传入的value参数增加到当前对象上  Int.(Int) -> Int intPlus具有接收者类型所以讲(Int)里面的Int作为第一个参数传递
-
                                             //就好比一个扩展函数 2.plus(3)
+val repeatFun: String.(Int) -> String = { times -> this.repeat(times) }
+//times 指的是Int这个参数
+//repeatFun("#",2)     "sdf".repeatFun(2)  两种调用方式
+// 还可以根据repeatFun.invoke(string,int)调用
+
+
+
 // 简写的都是只适用于lambda 表达式
 val produce = items.fold(1){acc , e -> acc * e}   //如果函数的最后一个参数是函数的话 可以把函数表达式卸载括号外面
+//val produce = items.fold(1){_ , e ->   e}   //如果函数的最后一个参数是函数的话 可以把函数表达式卸载括号外面  下划线代表未使用的参数
 fun test(){
     run { println("") }   //如果函数的参数就是一个表达式那么可以省略括号直接把表达式写在花括号里面
 }
@@ -246,6 +263,9 @@ val abcdef:(Int) -> Int = {  //如果函数参数只有一个那么可以用it�
 val strings = arrayOf("1","2","3","4")
 fun testFun(){
     strings.filter { it.length>5 }.sortedBy { it.length }.map { it.toUpperCase() }  //以上方法的测试
+    repeatFun("#",2)
+    repeatFun.invoke("#",2)
+    "sdf".repeatFun(2)
 }
 
 
@@ -255,4 +275,143 @@ fun teprintln(){
     println(strings[0])
 }
 val stringPlus: (String, String) -> String = String::plus
+
+
+fun testVararg(vararg strings:String){
+
+}
+fun testReformat(string:String,ac1:Boolean = true,ac2:Boolean = false){
+
+}
+fun testReformat1(string:String,ac1:Boolean = true,ac2:Boolean = false,string2:String){
+
+}
+fun foo(cc: Int = 0, bb: Int) {
+}
+
+fun foo(vararg strings:String){
+    var length = strings[0]
+}
+fun Test(){
+    foo(bb = 1)  //bb = 1  命名参数法
+    foo("1","2","3")   //foo(*arrayof("1","2","3"))传入可变数量的参数    foo("1","2","3")也可以直接放入值
+}
+fun testTestMethod(){
+    testVararg(strings = * arrayOf("1","2"))
+    testVararg("1","2")
+    testReformat("")
+    testReformat("1",ac1 = false,ac2=  false)
+    testReformat("1",ac2=  false)
+    testReformat1("1",ac2 = false,string2 = "")
+    testReformat1("1",ac2 = false,ac1= false,string2 = "")
+//    testReformat1("1",ac2 = false,ac1= false,"")  这种情况不允许  所以 在有默认值的情况下 最好把带默认值的放到最后
+
+}
+class TestCCC{
+    infix fun testZhongzhui(str:String){  //infix 必须是成员函数或者扩展函数
+
+    }
+}
+
+
+
+/**
+ * 内联函数  降低程序运行时间   (小知识  在kotlin中函数就是对象)
+ *     原因：编译器将使用函数的定义体来替代函数调用语句，这种替代行为发生在编译阶段而非程序运行阶段
+ *     人话翻译：因为在调用函数时会有寻找函数的时间消耗，创建相关对象的空间消耗 所以为了减少这些消耗这个过程被优化为将调用的函数
+ *     体直接放到调用的位置减少消耗。  eg:
+ *     fun test(){
+ *         执行语句2
+ *     }
+ *         执行语句1
+ *         test()
+ *         执行语句3
+ *     如果test为inline函数就会变为
+ *         执行语句1
+ *         执行语句2
+ *         执行语句3
+ *     PS 1、这些变化是在编译器发生的
+ *        2、如果该内联函数有函数参数 那么该函数参数也是内联函数（如果想禁用可以用 noinline 标记代表非内联函数 因为）
+ */
+
+//return 在内联函数中的区别
+fun returnTest(strings:Array<String>){
+    go (strings[0]) {
+        if (it.length>2) it.length else return@go 2
+    }
+    printTest (strings[0]){if (it.length > 6) println("长字符串") else return }
+}
+inline fun printTest(string:String,f:(String)->Unit){  //内联函数   参数传入lambda表达式 此lambda表达式可以 直接使用return
+    f(string)
+}
+//inline fun printTest(string:String,noinline f:(String)->Unit){  //内联函数   如果加了noinline的话也不可以直接return 了 但是如果仅仅是为了禁止局部返回的话可以使用crossinline标志
+//    f(string)
+//}
+
+fun go(string:String,f:(String) -> Int){   //非内联函数  参数lambda表达式不可直接使用内联函数
+    println(f(string))
+}
+
+// 将内联函数用在属性的set与get方法上
+class InLineClass{
+    var name:String = ""
+        set(value) { field = "${value}" }   //field 为幕后字段
+        get() = String()
+
+    inline var number:String
+        get() = String()
+        set(value){
+            this.name = value+""
+        }
+//    inline var number:String = ""
+//    set(value) {
+//        "{$value}的长度为{${value.length}}"
+//    }
+}
+
+class Address(province:String,city:String){
+    var province = province
+    var city = city
+}
+class Person3 {
+    var address:String? = null
+
+    val personProvince:Address
+        inline get() = Address("河南","")
+
+    var personCity:Address
+        get() = Address("","郑州")
+        inline set(value) {
+            this.address = value.city
+        }
+
+    //inline 修饰属性本身，表明读取和设置属性都会内联化
+    inline var fullAddress:Address
+        get() = Address("广东","广州")
+        set(value) {
+//            this.address = value.city+value.province
+        }
+
+}
+/**
+ * 集合
+ */
+interface Bean{
+
+}
+class BeanA:Bean{
+
+}
+class BeanB:Bean{
+
+}
+var beansList = listOf<Bean>()
+var AList = ArrayList<BeanA>(3)
+val sourceList = mutableListOf(1, 2, 3)
+fun testList(){
+    AList.add(BeanA())
+    sourceList.add(1)
+}
+
+
 
