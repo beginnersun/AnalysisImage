@@ -26,13 +26,7 @@ class FileUtil {
                 }
                 val bye = bos.toByteArray()
                 result = String(Base64.encode(bye,Base64.DEFAULT))
-//                val
-//                val input = FileInputStream(src)
-//                var byteArray = ByteArray(input.available())
-//                input.read(byteArray)
-////                result = String(byteArray)
-//                byteArray = String(byteArray).replaceFirst("data:image/jpeg;base64,","").toByteArray()
-//                result = Base64.encodeToString(byteArray,Base64.DEFAULT)
+
             }
             return result
         }

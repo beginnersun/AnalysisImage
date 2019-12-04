@@ -406,10 +406,11 @@ class BeanB:Bean{
 
 }
 var beansList = listOf<Bean>()
-var AList = ArrayList<BeanA>(3)
+var AList = ArrayList<Bean>(3)
 val sourceList = mutableListOf(1, 2, 3)
 fun testList(){
     AList.add(BeanA())
+    AList.add(BeanB())
     sourceList.add(1)
 }
 

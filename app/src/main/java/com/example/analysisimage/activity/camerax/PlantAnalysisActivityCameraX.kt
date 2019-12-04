@@ -2,13 +2,11 @@ package com.example.analysisimage.activity.camerax
 
 import android.Manifest
 import android.content.pm.PackageManager
+import android.graphics.ImageFormat
 import android.graphics.SurfaceTexture
 import android.opengl.GLSurfaceView
 import android.os.*
-import android.util.DisplayMetrics
-import android.util.Log
-import android.util.Rational
-import android.util.Size
+import android.util.*
 import android.view.TextureView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -18,11 +16,20 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LifecycleRegistry
+import com.example.analysisimage.Constants
 import com.example.analysisimage.R
+import com.example.analysisimage.bean.PlantBean
+import com.example.analysisimage.network.BaseRequestCallBack
+import com.example.analysisimage.network.OkHttpManager
 import com.example.analysisimage.util.FileUtil
+import com.example.analysisimage.util.SharedPreferenceUtil
 import com.example.analysisimage.util.TextureMeteringPointFactory
 import kotlinx.android.synthetic.main.activity_camerax.*
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.activity_plant.*
+import okhttp3.FormBody
+import okhttp3.internal.format
+import org.json.JSONArray
 import java.io.File
 //, LifecycleOwner
 class PlantAnalysisActivityCameraX : AppCompatActivity() {
@@ -59,13 +66,6 @@ class PlantAnalysisActivityCameraX : AppCompatActivity() {
             ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.CAMERA,Manifest.permission.WRITE_EXTERNAL_STORAGE), 1)
         }
 
-
-
-
-//        textureView.surfaceTexture.setOnFrameAvailableListener { surfaceTexture ->
-//
-//        }
-
         textureView.setOnTouchListener { v, event ->
 
             val meteringPoint = TextureMeteringPointFactory().createPoint(event.getX(), event.getY())
@@ -101,14 +101,12 @@ class PlantAnalysisActivityCameraX : AppCompatActivity() {
             .setTargetRotation(textureView.display.rotation)
             .setImageReaderMode(ImageAnalysis.ImageReaderMode.ACQUIRE_LATEST_IMAGE)
             .setCallbackHandler(Handler(handlerThread.looper))
+
             .build()
 
         preview = Preview(previewConfig)
         imageCapture = ImageCapture(imageCaptureConfig)
         analysis = ImageAnalysis(imageAnalysisConfig)
-
-
-
 
         preview?.setOnPreviewOutputUpdateListener {
             textureView.surfaceTexture = it.surfaceTexture
@@ -135,6 +133,7 @@ class PlantAnalysisActivityCameraX : AppCompatActivity() {
                 }
             })
         }
+        val a = "string"
         analysis?.setAnalyzer { image, rotationDegrees ->
 
             val rect = image.cropRect
@@ -142,20 +141,18 @@ class PlantAnalysisActivityCameraX : AppCompatActivity() {
             val width = image.width
             val height = image.height
             val planes = image.planes
-            Log.e("Analysis图片", 1.toString())
-
+            val buffer = image.planes[0].buffer
+            val data = ByteArray(buffer.remaining())
+            buffer.get(data)
+            if (format == ImageFormat.YUV_444_888 || format == ImageFormat.YUV_420_888 || format == ImageFormat.YUV_422_888){
+                Log.e("图片格式","YUV")
+            } else{
+                Log.e("图片格式","NV $format")
+            }
+            val result = String(Base64.encode(data, Base64.DEFAULT))
+            updateImage(result)
         }
         CameraX.bindToLifecycle(this, preview, imageCapture, analysis)
-        Environment.getExternalStorageDirectory()
-//        Environment.getExternalStoragePublicDirectory(int type)  根据传入参数获取对应的SD中对应的目录
-        getExternalFilesDir(null)   //获取应用目录 （卸载后会随之删除）
-//        context.externalCacheDir()  获取 应用  缓存路径
-
-        openFileInput("").bufferedReader().useLines { lines ->
-            lines.fold("") { some, text ->
-                "$some\n$text"
-            }
-        }
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
@@ -169,11 +166,9 @@ class PlantAnalysisActivityCameraX : AppCompatActivity() {
     fun takePreView() {
         textureView.surfaceTextureListener = object:TextureView.SurfaceTextureListener{
             override fun onSurfaceTextureSizeChanged(surface: SurfaceTexture?, width: Int, height: Int) {
-
             }
 
             override fun onSurfaceTextureUpdated(surface: SurfaceTexture?) {
-
             }
 
             override fun onSurfaceTextureDestroyed(surface: SurfaceTexture?): Boolean {
@@ -187,8 +182,45 @@ class PlantAnalysisActivityCameraX : AppCompatActivity() {
     }
 
 
-//    override fun getLifecycle(): Lifecycle {
-//        return lifecycleRegistry
-//    }
+    private fun updateImage(imageCode:String) {
+        analysis?.removeAnalyzer() //图片开始上传就取消
+        val builder = FormBody.Builder()
+        builder.add("image", imageCode)
+        OkHttpManager.instance.syncPlantAnalysisPost(
+            Constants.ANALYSIS_IMAGE_FOR_PLANT + "?access_token=" + SharedPreferenceUtil.getInstance().getToken(),
+            builder.build(),
+            object : BaseRequestCallBack() {
+                override fun onFailed(result: String) {
+                    Log.e("上传图片失败", result)
+                }
 
+                override fun onSucceed(result: String) {
+                    Log.e("上传图片有回调", result)
+                    val plantBean = dealAnalysisResult(result)
+                    tv_analysis_result_name.text = "名称:" + plantBean?.name
+                    tv_analysis_result_description.text = "描述:" + plantBean?.description
+                }
+
+                override fun onNetworkFaild() {
+                    Log.e("上传图片", "网络问题")
+                }
+            })
+    }
+
+    fun dealAnalysisResult(result: String): PlantBean? {
+        val array = JSONArray(result)
+        var plantBean = PlantBean("", "", "", "")
+        for (index in 0..array.length()) {
+            val json = array.optJSONObject(index)
+            plantBean.name = json.optString("name")
+            if (null != json.optJSONObject("baike_info")) {
+                val baike = json.optJSONObject("baike_info")
+                plantBean.image = baike.optString("image_url")
+                plantBean.description = baike.optString("description")
+                plantBean.baike = baike.optString("baike_url")
+                return plantBean
+            }
+        }
+        return plantBean
+    }
 }
