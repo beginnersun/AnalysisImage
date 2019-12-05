@@ -40,7 +40,6 @@ class MainActivity : AppCompatActivity() {
                 analysisToken(result)
             }
         }.start()
-
     }
 
     fun getImageRecogintionToken(apiKey:String ,secretKey:String):String{

@@ -4,8 +4,8 @@ import android.Manifest
 import android.content.pm.PackageManager
 import android.graphics.ImageFormat
 import android.graphics.SurfaceTexture
-import android.opengl.GLSurfaceView
 import android.os.*
+import android.text.TextUtils
 import android.util.*
 import android.view.TextureView
 import android.widget.Toast
@@ -13,36 +13,32 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.camera.core.*
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.LifecycleRegistry
 import com.example.analysisimage.Constants
 import com.example.analysisimage.R
 import com.example.analysisimage.bean.PlantBean
 import com.example.analysisimage.network.BaseRequestCallBack
 import com.example.analysisimage.network.OkHttpManager
 import com.example.analysisimage.util.FileUtil
+import com.example.analysisimage.util.ImageUtil
 import com.example.analysisimage.util.SharedPreferenceUtil
 import com.example.analysisimage.util.TextureMeteringPointFactory
 import kotlinx.android.synthetic.main.activity_camerax.*
-import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.activity_plant.*
 import okhttp3.FormBody
-import okhttp3.internal.format
 import org.json.JSONArray
+import org.json.JSONObject
 import java.io.File
-//, LifecycleOwner
 class PlantAnalysisActivityCameraX : AppCompatActivity() {
 
     private lateinit var textureView: TextureView
     private var preview: Preview? = null
     private var imageCapture: ImageCapture? = null
     private var analysis: ImageAnalysis? = null
-    private val framgent = CameraXFragment()
 //    private var lifecycleRegistry: LifecycleRegistry = LifecycleRegistry(this)
     private var camerarFacing: CameraX.LensFacing? = null
 
-    private var glsurafce: GLSurfaceView? = null
+    private val UPDATE_IMAGE_TO_ANALYSISI = 1
+    private var start_analysis = false
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -133,24 +129,41 @@ class PlantAnalysisActivityCameraX : AppCompatActivity() {
                 }
             })
         }
-        val a = "string"
         analysis?.setAnalyzer { image, rotationDegrees ->
 
+            image.image
             val rect = image.cropRect
             val format = image.format
             val width = image.width
             val height = image.height
             val planes = image.planes
             val buffer = image.planes[0].buffer
-            val data = ByteArray(buffer.remaining())
-            buffer.get(data)
-            if (format == ImageFormat.YUV_444_888 || format == ImageFormat.YUV_420_888 || format == ImageFormat.YUV_422_888){
-                Log.e("图片格式","YUV")
-            } else{
-                Log.e("图片格式","NV $format")
+            if(!start_analysis) {
+                start_analysis = true
+//                val data = ByteArray(buffer.remaining())
+//                buffer.get(data)
+                if (format == ImageFormat.YUV_444_888 || format == ImageFormat.YUV_420_888 || format == ImageFormat.YUV_422_888) {
+                    Log.e("图片格式", "YUV $format")
+                    Log.e("图片像素","width = $width  height = $height")
+                    Log.e("图片Plane0之pixelStride","pixelStride = ${image.planes[0].pixelStride}")
+                    Log.e("图片Plane0之rowStride","rowStride = ${image.planes[0].rowStride}")
+                    Log.e("图片Plane0", "buffersize = ${image.planes[0].buffer.remaining()}")
+                    Log.e("图片Plane1之pixelStride","pixelStride = ${image.planes[1].pixelStride}")
+                    Log.e("图片Plane1之rowStride","rowStride = ${image.planes[1].rowStride}")
+                    Log.e("图片Plane1", "buffersize = ${image.planes[1].buffer.remaining()}")
+                    Log.e("图片Plane2之pixelStride","pixelStride = ${image.planes[2].pixelStride}")
+                    Log.e("图片Plane2之rowStride","rowStride = ${image.planes[2].rowStride}")
+                    Log.e("图片Plane2", "buffersize = ${image.planes[2].buffer.remaining()}")
+                    ImageUtil.getJpegImageForYUVData(Constants.APPString.APP_DIRECTORY_ABSOLUTEPATH + "xxxyyy.jpeg",image?.image!!)
+                } else {
+                    Log.e("图片格式", "NV $format")
+                }
+//                val result = String(Base64.encode(data, Base64.DEFAULT))
+//                val message = Message()
+//                message.what = UPDATE_IMAGE_TO_ANALYSISI
+//                message.obj = result
+//                handler.sendMessage(message)
             }
-            val result = String(Base64.encode(data, Base64.DEFAULT))
-            updateImage(result)
         }
         CameraX.bindToLifecycle(this, preview, imageCapture, analysis)
     }
@@ -183,7 +196,6 @@ class PlantAnalysisActivityCameraX : AppCompatActivity() {
 
 
     private fun updateImage(imageCode:String) {
-        analysis?.removeAnalyzer() //图片开始上传就取消
         val builder = FormBody.Builder()
         builder.add("image", imageCode)
         OkHttpManager.instance.syncPlantAnalysisPost(
@@ -196,9 +208,15 @@ class PlantAnalysisActivityCameraX : AppCompatActivity() {
 
                 override fun onSucceed(result: String) {
                     Log.e("上传图片有回调", result)
-                    val plantBean = dealAnalysisResult(result)
-                    tv_analysis_result_name.text = "名称:" + plantBean?.name
-                    tv_analysis_result_description.text = "描述:" + plantBean?.description
+                    val jsonObject = JSONObject(result)
+                    if(!TextUtils.isEmpty(jsonObject.optString("error_mssg"))) {
+                        analysis?.removeAnalyzer()
+                        val plantBean = dealAnalysisResult(result)
+//                        tv_analysis_result.text = "名称:" + plantBean?.name + "\n" +"描述:" + plantBean?.description
+                        tv_analysis_result.text = "名称: ${plantBean?.name} \n 描述: ${plantBean?.description}"
+                    }else{
+                        start_analysis = false
+                    }
                 }
 
                 override fun onNetworkFaild() {
@@ -222,5 +240,14 @@ class PlantAnalysisActivityCameraX : AppCompatActivity() {
             }
         }
         return plantBean
+    }
+
+    val handler = object: Handler(){
+        override fun handleMessage(msg: Message?) {
+            super.handleMessage(msg)
+            when(msg?.what){
+                UPDATE_IMAGE_TO_ANALYSISI -> updateImage(msg?.obj as String)
+            }
+        }
     }
 }
