@@ -1,23 +1,80 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent">
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
 
-    <TextureView android:layout_width="match_parent" android:layout_height="match_parent"
-    android:id="@+id/texture_view"/>
+    <TextureView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/texture_view"/>
 
-    <Button
-            android:id="@+id/capture"
-            android:layout_width="wrap_content" android:layout_height="wrap_content"
-    android:text="拍照"/>
+    <View android:layout_width="370dp"
+          android:layout_height="417dp"
+          android:background="@drawable/bg_camera_press"
+    />
 
-    <TextView
-            android:id="@+id/tv_analysis_result"
+    <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="200dp"
-    android:layout_alignParentBottom="true"/>
+            android:orientation="horizontal"
+            android:layout_alignParentBottom="true"
+            android:padding="20dp">
+
+        <TextView
+                android:id="@+id/tv_analysis_result"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent"
+                android:textSize="15sp"
+                android:text="描述内容"
+                android:lineSpacingExtra="2dp"
+                android:textColor="#ffffff"
+                android:scrollbars="none"/>
+
+        <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:paddingRight="5dp">
+
+
+            <TextView
+                    android:id="@+id/capture"
+                    android:layout_width="86dp"
+                    android:layout_height="32dp"
+                    android:text="拍照"
+                    android:textColor="#ffffff"
+                    android:background="@drawable/bg_camera_btn"
+                    android:gravity="center"
+            android:clickable="true"/>
+
+            <TextView
+                    android:id="@+id/tv_analysis"
+                    android:layout_width="86dp"
+                    android:layout_height="32dp"
+                    android:layout_marginTop="10dp"
+                    android:text="继续识别"
+                    android:textColor="#ffffff"
+                    android:background="@drawable/bg_camera_btn"
+                    android:gravity="center"
+            android:clickable="true"/>
+
+            <TextView
+                    android:id="@+id/tv_save_message"
+                    android:layout_width="86dp"
+                    android:layout_height="32dp"
+                    android:layout_marginTop="10dp"
+                    android:text="保存信息"
+                    android:textColor="#ffffff"
+                    android:background="@drawable/bg_camera_btn"
+                    android:clickable="true"
+                    android:gravity="center"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
 
 
     <!--<FrameLayout android:layout_width="match_parent" android:layout_height="match_parent"-->

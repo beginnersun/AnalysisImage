@@ -10,9 +10,11 @@ class Constants {
     }
 
     companion object URL{
-        const val ANALYSIS_IMAGE_FOR_PLANT = "https://aip.baidubce.com/rest/2.0/image-classify/v1/plant"
-        const val ANALYSIS_IMAGE_FOR_CURRENCY = "https://aip.baidubce.com/rest/2.0/image-classify/v1/currency"  //货币识别
-        const val ANALYSIS_IMAGE_FOR_ANIMAL = "https://aip.baidubce.com/rest/2.0/image-classify/v1/animal"  //动物识别
+        private const val Root = "https://aip.baidubce.com/rest/2.0/"
+        const val ANALYSIS_IMAGE_FOR_PLANT = "${Root}image-classify/v1/plant"
+        const val ANALYSIS_IMAGE_DETECT = "${Root}image-classify/v1/object_detect"
+        const val ANALYSIS_IMAGE_FOR_CURRENCY = "${Root}image-classify/v1/currency"  //货币识别
+        const val ANALYSIS_IMAGE_FOR_ANIMAL = "${Root}image-classify/v1/animal"  //动物识别
     }
 
 }

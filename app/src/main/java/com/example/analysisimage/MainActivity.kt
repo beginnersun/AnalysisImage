@@ -68,6 +68,6 @@ class MainActivity : AppCompatActivity() {
         token = jsonObject.optString("access_token")
         Log.e("上传图片",token)
         SharedPreferenceUtil.getInstance().setToken(token)
-        return token;
+        return token
     }
 }

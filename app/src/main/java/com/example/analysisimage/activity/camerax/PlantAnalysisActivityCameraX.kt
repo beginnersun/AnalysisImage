@@ -191,7 +191,7 @@ class PlantAnalysisActivityCameraX : AppCompatActivity() {
 
             override fun onSurfaceTextureUpdated(surface: SurfaceTexture?) {
                 val canvas = textureView.lockCanvas()
-                
+
                 textureView.unlockCanvasAndPost(canvas)
             }
 
