@@ -6,6 +6,7 @@ import android.graphics.ImageFormat
 import android.graphics.SurfaceTexture
 import android.os.*
 import android.text.TextUtils
+import android.text.method.ScrollingMovementMethod
 import android.util.*
 import android.view.TextureView
 import android.widget.Toast
@@ -33,11 +34,12 @@ class PlantAnalysisActivityCameraX : AppCompatActivity() {
     private var preview: Preview? = null
     private var imageCapture: ImageCapture? = null
     private var analysis: ImageAnalysis? = null
-//    private var lifecycleRegistry: LifecycleRegistry = LifecycleRegistry(this)
     private var camerarFacing: CameraX.LensFacing? = null
 
     private val UPDATE_IMAGE_TO_ANALYSISI = 1
+    private val RESTART_ANALYSIS_IMAGE = 2
     private var start_analysis = false
+    private var count = 0
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -46,6 +48,7 @@ class PlantAnalysisActivityCameraX : AppCompatActivity() {
         textureView = findViewById(R.id.texture_view)
 
         camerarFacing = CameraX.LensFacing.BACK
+        tv_analysis_result.movementMethod = ScrollingMovementMethod.getInstance()
 
         if (this.let {
                 ContextCompat.checkSelfPermission(
@@ -62,12 +65,16 @@ class PlantAnalysisActivityCameraX : AppCompatActivity() {
             ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.CAMERA,Manifest.permission.WRITE_EXTERNAL_STORAGE), 1)
         }
 
-        textureView.setOnTouchListener { v, event ->
-
+        textureView.setOnTouchListener { v, event ->   //点击 聚焦
             val meteringPoint = TextureMeteringPointFactory().createPoint(event.getX(), event.getY())
             val action = FocusMeteringAction.Builder.from(meteringPoint).addPoint(meteringPoint).build()
             CameraX.getCameraControl(camerarFacing).startFocusAndMetering(action)
             return@setOnTouchListener false    //单纯写个false 也行
+        }
+
+        tv_analysis.setOnClickListener {
+            start_analysis = false  //重新开启图像分析
+            CameraX.bindToLifecycle(this,analysis)
         }
 
     }
@@ -107,7 +114,9 @@ class PlantAnalysisActivityCameraX : AppCompatActivity() {
         preview?.setOnPreviewOutputUpdateListener {
             textureView.surfaceTexture = it.surfaceTexture
 //            textureView.surfaceTexture.setOnFrameAvailableListener { surfaceTexture: SurfaceTexture? ->
+//
 //            }
+
         }
 
         capture.setOnClickListener {
@@ -138,31 +147,30 @@ class PlantAnalysisActivityCameraX : AppCompatActivity() {
             val height = image.height
             val planes = image.planes
             val buffer = image.planes[0].buffer
+            var result = ""
             if(!start_analysis) {
                 start_analysis = true
-//                val data = ByteArray(buffer.remaining())
-//                buffer.get(data)
                 if (format == ImageFormat.YUV_444_888 || format == ImageFormat.YUV_420_888 || format == ImageFormat.YUV_422_888) {
-                    Log.e("图片格式", "YUV $format")
-                    Log.e("图片像素","width = $width  height = $height")
-                    Log.e("图片Plane0之pixelStride","pixelStride = ${image.planes[0].pixelStride}")
-                    Log.e("图片Plane0之rowStride","rowStride = ${image.planes[0].rowStride}")
-                    Log.e("图片Plane0", "buffersize = ${image.planes[0].buffer.remaining()}")
-                    Log.e("图片Plane1之pixelStride","pixelStride = ${image.planes[1].pixelStride}")
-                    Log.e("图片Plane1之rowStride","rowStride = ${image.planes[1].rowStride}")
-                    Log.e("图片Plane1", "buffersize = ${image.planes[1].buffer.remaining()}")
-                    Log.e("图片Plane2之pixelStride","pixelStride = ${image.planes[2].pixelStride}")
-                    Log.e("图片Plane2之rowStride","rowStride = ${image.planes[2].rowStride}")
-                    Log.e("图片Plane2", "buffersize = ${image.planes[2].buffer.remaining()}")
-                    ImageUtil.getJpegImageForYUVData(Constants.APPString.APP_DIRECTORY_ABSOLUTEPATH + "xxxyyy.jpeg",image?.image!!)
+//                    Log.e("图片格式", "YUV $format")
+//                    Log.e("图片像素","width = $width  height = $height")
+//                    Log.e("图片Plane0之pixelStride","pixelStride = ${image.planes[0].pixelStride}")
+//                    Log.e("图片Plane0之rowStride","rowStride = ${image.planes[0].rowStride}")
+//                    Log.e("图片Plane0", "buffersize = ${image.planes[0].buffer.remaining()}")
+//                    Log.e("图片Plane1之pixelStride","pixelStride = ${image.planes[1].pixelStride}")
+//                    Log.e("图片Plane1之rowStride","rowStride = ${image.planes[1].rowStride}")
+//                    Log.e("图片Plane1", "buffersize = ${image.planes[1].buffer.remaining()}")
+//                    Log.e("图片Plane2之pixelStride","pixelStride = ${image.planes[2].pixelStride}")
+//                    Log.e("图片Plane2之rowStride","rowStride = ${image.planes[2].rowStride}")
+//                    Log.e("图片Plane2", "buffersize = ${image.planes[2].buffer.remaining()}")
+                    val byteArray = ImageUtil.getJpegImageForYUVData(Constants.APPString.APP_DIRECTORY_ABSOLUTEPATH + "xxxyyy${count}.jpeg",image?.image!!)
+                    result = String(Base64.encode(byteArray, Base64.DEFAULT))
                 } else {
                     Log.e("图片格式", "NV $format")
                 }
-//                val result = String(Base64.encode(data, Base64.DEFAULT))
-//                val message = Message()
-//                message.what = UPDATE_IMAGE_TO_ANALYSISI
-//                message.obj = result
-//                handler.sendMessage(message)
+                val message = Message()
+                message.what = UPDATE_IMAGE_TO_ANALYSISI
+                message.obj = result
+                handler.sendMessage(message)
             }
         }
         CameraX.bindToLifecycle(this, preview, imageCapture, analysis)
@@ -182,6 +190,9 @@ class PlantAnalysisActivityCameraX : AppCompatActivity() {
             }
 
             override fun onSurfaceTextureUpdated(surface: SurfaceTexture?) {
+                val canvas = textureView.lockCanvas()
+                
+                textureView.unlockCanvasAndPost(canvas)
             }
 
             override fun onSurfaceTextureDestroyed(surface: SurfaceTexture?): Boolean {
@@ -195,7 +206,7 @@ class PlantAnalysisActivityCameraX : AppCompatActivity() {
     }
 
 
-    private fun updateImage(imageCode:String) {
+    private fun analysisImage(imageCode:String) {
         val builder = FormBody.Builder()
         builder.add("image", imageCode)
         OkHttpManager.instance.syncPlantAnalysisPost(
@@ -203,17 +214,22 @@ class PlantAnalysisActivityCameraX : AppCompatActivity() {
             builder.build(),
             object : BaseRequestCallBack() {
                 override fun onFailed(result: String) {
+                    start_analysis = false
                     Log.e("上传图片失败", result)
                 }
 
                 override fun onSucceed(result: String) {
                     Log.e("上传图片有回调", result)
                     val jsonObject = JSONObject(result)
-                    if(!TextUtils.isEmpty(jsonObject.optString("error_mssg"))) {
+                    if(jsonObject.optJSONArray("result")!=null) {
                         analysis?.removeAnalyzer()
-                        val plantBean = dealAnalysisResult(result)
-//                        tv_analysis_result.text = "名称:" + plantBean?.name + "\n" +"描述:" + plantBean?.description
-                        tv_analysis_result.text = "名称: ${plantBean?.name} \n 描述: ${plantBean?.description}"
+                        val plantList = dealAnalysisResult(jsonObject.optString("result")!!)
+                        tv_analysis_result.text = "" //清空内容
+                        for (plantBean in plantList!!.iterator()) {
+                            tv_analysis_result.append("名称: ${plantBean?.    name} \n描述: ${plantBean?.description} \n\n")
+                        }
+                        start_analysis = true
+                        CameraX.unbind(analysis) // 解除识别（分析）
                     }else{
                         start_analysis = false
                     }
@@ -225,28 +241,64 @@ class PlantAnalysisActivityCameraX : AppCompatActivity() {
             })
     }
 
-    fun dealAnalysisResult(result: String): PlantBean? {
+    fun findDetectForImage(imageCode:String,isPerson:Boolean){
+        val builder = FormBody.Builder()
+        builder.add("image",imageCode)
+        builder.add("with_face",(if (!isPerson) 0 else { 1 }) as String)
+        OkHttpManager.instance.syncPlantAnalysisPost(Constants.ANALYSIS_IMAGE_DETECT,builder.build(),object :BaseRequestCallBack(){
+            override fun onSucceed(result: String) {
+                Log.e("上传图片回调",result)
+                val jsonObject = JSONObject(result)
+                val result = jsonObject.optJSONObject("result")
+                if (result != null){
+                    val width = result.optInt("width")
+                    val height = result.optInt("height")
+                    val left = result.optInt("left")
+                    val top = result.optInt("top")
+
+                }else{
+
+                }
+            }
+
+            override fun onNetworkFaild() {
+                Log.e("上传图片", "网络问题")
+            }
+
+            override fun onFailed(result: String) {
+                Log.e("上传图片失败", result)
+            }
+
+        })
+    }
+
+    fun dealAnalysisResult(result: String): List<PlantBean>? {
         val array = JSONArray(result)
-        var plantBean = PlantBean("", "", "", "")
-        for (index in 0..array.length()) {
+        val plantList = ArrayList<PlantBean>()
+        for (index in 0 until array.length()) {
             val json = array.optJSONObject(index)
+            val plantBean = PlantBean("", "", "", "")
             plantBean.name = json.optString("name")
             if (null != json.optJSONObject("baike_info")) {
                 val baike = json.optJSONObject("baike_info")
                 plantBean.image = baike.optString("image_url")
                 plantBean.description = baike.optString("description")
                 plantBean.baike = baike.optString("baike_url")
-                return plantBean
             }
+            plantList.add(plantBean)
         }
-        return plantBean
+        return plantList
     }
 
     val handler = object: Handler(){
         override fun handleMessage(msg: Message?) {
             super.handleMessage(msg)
             when(msg?.what){
-                UPDATE_IMAGE_TO_ANALYSISI -> updateImage(msg?.obj as String)
+                UPDATE_IMAGE_TO_ANALYSISI -> analysisImage(msg?.obj as String)
+                RESTART_ANALYSIS_IMAGE -> {
+                    start_analysis = false
+                    sendEmptyMessageDelayed(RESTART_ANALYSIS_IMAGE,1000)
+                }
             }
         }
     }
