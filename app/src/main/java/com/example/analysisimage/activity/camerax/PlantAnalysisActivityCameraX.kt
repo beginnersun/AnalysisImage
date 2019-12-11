@@ -23,6 +23,7 @@ import com.example.analysisimage.util.FileUtil
 import com.example.analysisimage.util.ImageUtil
 import com.example.analysisimage.util.SharedPreferenceUtil
 import com.example.analysisimage.util.TextureMeteringPointFactory
+import com.example.analysisimage.widget.LoadingView
 import kotlinx.android.synthetic.main.activity_camerax.*
 import okhttp3.FormBody
 import org.json.JSONArray
@@ -40,6 +41,8 @@ class PlantAnalysisActivityCameraX : AppCompatActivity() {
     private val RESTART_ANALYSIS_IMAGE = 2
     private var start_analysis = false
     private var count = 0
+
+    private var mPd = LoadingView(this)
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -89,7 +92,6 @@ class PlantAnalysisActivityCameraX : AppCompatActivity() {
             .setLensFacing(camerarFacing!!)
             .setTargetAspectRatio(screenAspectRatio)
             .setTargetResolution(screenSize).build()
-
 
         val imageCaptureConfig = ImageCaptureConfig.Builder()
             .setCaptureMode(ImageCapture.CaptureMode.MAX_QUALITY)
@@ -141,27 +143,11 @@ class PlantAnalysisActivityCameraX : AppCompatActivity() {
         analysis?.setAnalyzer { image, rotationDegrees ->
 
             image.image
-            val rect = image.cropRect
             val format = image.format
-            val width = image.width
-            val height = image.height
-            val planes = image.planes
-            val buffer = image.planes[0].buffer
             var result = ""
             if(!start_analysis) {
                 start_analysis = true
                 if (format == ImageFormat.YUV_444_888 || format == ImageFormat.YUV_420_888 || format == ImageFormat.YUV_422_888) {
-//                    Log.e("图片格式", "YUV $format")
-//                    Log.e("图片像素","width = $width  height = $height")
-//                    Log.e("图片Plane0之pixelStride","pixelStride = ${image.planes[0].pixelStride}")
-//                    Log.e("图片Plane0之rowStride","rowStride = ${image.planes[0].rowStride}")
-//                    Log.e("图片Plane0", "buffersize = ${image.planes[0].buffer.remaining()}")
-//                    Log.e("图片Plane1之pixelStride","pixelStride = ${image.planes[1].pixelStride}")
-//                    Log.e("图片Plane1之rowStride","rowStride = ${image.planes[1].rowStride}")
-//                    Log.e("图片Plane1", "buffersize = ${image.planes[1].buffer.remaining()}")
-//                    Log.e("图片Plane2之pixelStride","pixelStride = ${image.planes[2].pixelStride}")
-//                    Log.e("图片Plane2之rowStride","rowStride = ${image.planes[2].rowStride}")
-//                    Log.e("图片Plane2", "buffersize = ${image.planes[2].buffer.remaining()}")
                     val byteArray = ImageUtil.getJpegImageForYUVData(Constants.APPString.APP_DIRECTORY_ABSOLUTEPATH + "xxxyyy${count}.jpeg",image?.image!!)
                     result = String(Base64.encode(byteArray, Base64.DEFAULT))
                 } else {
@@ -190,9 +176,9 @@ class PlantAnalysisActivityCameraX : AppCompatActivity() {
             }
 
             override fun onSurfaceTextureUpdated(surface: SurfaceTexture?) {
-                val canvas = textureView.lockCanvas()
+//                val canvas = textureView.lockCanvas()
 
-                textureView.unlockCanvasAndPost(canvas)
+//                textureView.unlockCanvasAndPost(canvas)
             }
 
             override fun onSurfaceTextureDestroyed(surface: SurfaceTexture?): Boolean {
@@ -209,16 +195,19 @@ class PlantAnalysisActivityCameraX : AppCompatActivity() {
     private fun analysisImage(imageCode:String) {
         val builder = FormBody.Builder()
         builder.add("image", imageCode)
+        mPd.show()
         OkHttpManager.instance.syncPlantAnalysisPost(
             Constants.ANALYSIS_IMAGE_FOR_PLANT + "?access_token=" + SharedPreferenceUtil.getInstance().getToken(),
             builder.build(),
             object : BaseRequestCallBack() {
                 override fun onFailed(result: String) {
+                    mPd.cancel()
                     start_analysis = false
                     Log.e("上传图片失败", result)
                 }
 
                 override fun onSucceed(result: String) {
+                    mPd.cancel()
                     Log.e("上传图片有回调", result)
                     val jsonObject = JSONObject(result)
                     if(jsonObject.optJSONArray("result")!=null) {
@@ -236,6 +225,7 @@ class PlantAnalysisActivityCameraX : AppCompatActivity() {
                 }
 
                 override fun onNetworkFaild() {
+                    mPd.cancel()
                     Log.e("上传图片", "网络问题")
                 }
             })
@@ -245,8 +235,10 @@ class PlantAnalysisActivityCameraX : AppCompatActivity() {
         val builder = FormBody.Builder()
         builder.add("image",imageCode)
         builder.add("with_face",(if (!isPerson) 0 else { 1 }) as String)
+        mPd.show()
         OkHttpManager.instance.syncPlantAnalysisPost(Constants.ANALYSIS_IMAGE_DETECT,builder.build(),object :BaseRequestCallBack(){
             override fun onSucceed(result: String) {
+                mPd.cancel()
                 Log.e("上传图片回调",result)
                 val jsonObject = JSONObject(result)
                 val result = jsonObject.optJSONObject("result")
@@ -255,17 +247,18 @@ class PlantAnalysisActivityCameraX : AppCompatActivity() {
                     val height = result.optInt("height")
                     val left = result.optInt("left")
                     val top = result.optInt("top")
-
                 }else{
 
                 }
             }
 
             override fun onNetworkFaild() {
+                mPd.cancel()
                 Log.e("上传图片", "网络问题")
             }
 
             override fun onFailed(result: String) {
+                mPd.cancel()
                 Log.e("上传图片失败", result)
             }
 
@@ -301,5 +294,12 @@ class PlantAnalysisActivityCameraX : AppCompatActivity() {
                 }
             }
         }
+    }
+
+    /**
+     * 防止浪费资源   识别功能由用户手动点击开始
+     */
+    fun startAnalysis(){
+
     }
 }

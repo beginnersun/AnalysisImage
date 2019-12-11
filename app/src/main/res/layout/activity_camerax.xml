@@ -10,10 +10,10 @@
             android:layout_height="match_parent"
             android:id="@+id/texture_view"/>
 
-    <View android:layout_width="370dp"
-          android:layout_height="417dp"
-          android:background="@drawable/bg_camera_press"
-    />
+    <!--<View android:layout_width="370dp"-->
+          <!--android:layout_height="417dp"-->
+          <!--android:background="@drawable/bg_camera_press"-->
+    <!--/>-->
 
     <LinearLayout
             android:layout_width="match_parent"
@@ -55,7 +55,7 @@
                     android:layout_width="86dp"
                     android:layout_height="32dp"
                     android:layout_marginTop="10dp"
-                    android:text="继续识别"
+                    android:text="开始识别"
                     android:textColor="#ffffff"
                     android:background="@drawable/bg_camera_btn"
                     android:gravity="center"

@@ -27,3 +27,14 @@ fun testListCollection(){
     val numbers = listOf("one", "two", "three", "four")
     numbers.associateWith { it.length>3 }
 }
+
+/**
+ * 与 Java 不同，Kotlin 中的数组是不型变的。这意味着 Kotlin 不允许我们把一个 Array<String> 赋值给一个 Array<Any>
+ *
+ * 但是对于 Java 方法，这是允许的（通过 Array<(out) String>! 这种形式的平台类型
+ */
+var StringArray = arrayOf<String>()
+var AnyArray = arrayOf<Any>()
+fun testArray(){
+//    AnyArray = StringArray   这种操作是不被允许的 在Kotlin中 Array是不可型变的    一个Array<Father>  一个Array<Son> son是不能直接赋值给Father的
+}

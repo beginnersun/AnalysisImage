@@ -2,6 +2,7 @@ package com.example.analysisimage.util
 
 import android.content.Context
 import com.example.analysisimage.network.OkHttpManager
+import kotlin.properties.Delegates
 import kotlin.reflect.KProperty
 
 /**
@@ -339,7 +340,7 @@ fun returnTest(strings:Array<String>){
     go (strings[0]) {
         if (it.length>2) it.length else return@go 2
     }
-    printTest (strings[0]){if (it.length > 6) println("长字符串") else return }
+    printTest (strings[0]){if (it.length > 6) println("长字符串") else return }   //此时return 可以不加标签
 }
 inline fun printTest(string:String,f:(String)->Unit){  //内联函数   参数传入lambda表达式 此lambda表达式可以 直接使用return
     f(string)
@@ -347,6 +348,9 @@ inline fun printTest(string:String,f:(String)->Unit){  //内联函数   参数�
 //inline fun printTest(string:String,noinline f:(String)->Unit){  //内联函数   如果加了noinline的话也不可以直接return 了 但是如果仅仅是为了禁止局部返回的话可以使用crossinline标志
 //    f(string)
 //}
+inline fun asss(f:(String)->String):String{
+    return f("")
+}
 
 fun go(string:String,f:(String) -> Int){   //非内联函数  参数lambda表达式不可直接使用内联函数
     println(f(string))
@@ -393,6 +397,74 @@ class Person3 {
         }
 
 }
+/**
+ * 委托
+ *   1、类委托
+ *   2、委托属性
+ */
+/**
+ * 1、类委托   （相当于Java中的代理）
+ */
+interface Base {
+    fun printMessage()
+    fun printMessageLine()
+}
+
+class BaseImpl(val x: Int) : Base {
+    override fun printMessage() { print(x) }
+    override fun printMessageLine() { println(x) }
+}
+
+class Derived(b: Base) : Base by b {
+    override fun printMessage() { print("abc") }
+}
+
+fun entrust() {
+    val b = BaseImpl(10)
+    Derived(b).printMessage()
+    Derived(b).printMessageLine()
+}
+/**
+ * 2、委托属性
+ *    格式val/var <属性名>: <类型> by <表达式>
+ *    1、lazy
+ *    2、observable
+ *    3、map
+ *
+ * ps：by背后隐藏的内容     by 后面的表达式所返回的值需要实现getValue与setValue（val不需要）函数
+ *                            println(TestTrust().a)使用该委托属性时会调用getValue方法
+ *                            println(TestTrust().a = ...)设置值时会调用setValue方法(此时行不通因为我们例子中a为val)
+ *     调用函数时返回的值即函数返回的类型 如lazy 函数返回Lazy<T>类型  然后当调用a时就会去执行Lazy的getValue方法
+ *  2.1局部委托属性（1.1之后支持）
+ */
+class TestTrust(val map:Map<String,Any?>){
+    val a by lazy(){ //默认传入的参数为SYNCHRONIZED
+        print("默认只调用一次")
+        "5"       //最后一行 为返回值
+    }
+
+    //可观察属性 传入的函数在赋值后执行
+    val b by Delegates.observable("没有值那就先给个初始值"){
+        property, oldValue, newValue ->
+        println("the property is ${property.name}  old = $oldValue   ->     new = $newValue")
+    }
+    // 可修改  传入的函数用来判断是否修改值
+    val b_1:String by Delegates.vetoable("继续给个初始值"){
+        property, oldValue, newValue ->
+        newValue.length > 5
+    }
+
+    val name:String by map
+    val age:Int by map
+}
+
+fun testTrustMethod(){  //测试委托之映射
+    val test = TestTrust(mapOf("name" to "salier","age" to 25))
+    println("${test.name} is ${test.age}'s old!")
+}
+
+
+
 /**
  * 集合
  */

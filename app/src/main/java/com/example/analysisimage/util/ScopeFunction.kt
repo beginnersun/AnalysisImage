@@ -1,6 +1,7 @@
 package com.example.analysisimage.util
 
 import android.app.Person
+import android.util.Log
 import com.example.analysisimage.bean.PersonBean
 
 
@@ -71,3 +72,74 @@ fun testTakeFunction(){
         println("welcom to $it 's home")
     }
 }
+
+
+
+
+//interface Base {
+//    fun print()
+//}
+
+// 实现此接口的被委托的类
+//class BaseImpl(val x: String) : Base {
+//    override fun print() {
+//        Log.d("haha", x)
+//    }
+//}
+// 通过关键字 by 建立委托类      修改前
+//class Derived(b: Base) : Base by b {
+//
+//    fun doMyOwnPrint() {
+//        Log.d("hehe","33")
+//        print()
+//    }
+//}
+
+// 通过关键字 by 建立委托类      修改后
+//class Derived(var b: Base) : Base by b {
+//
+//    override fun print() {
+//        Log.d("hehe","33")
+//        b.print()
+//    }
+//}
+
+fun testmain() {
+//    val b = BaseImpl("10")
+//    Derived(b).doMyOwnPrint()  改前
+//    Derived(b).print()   改后
+    // 输出 hehe33
+    // 输出 haha10
+}
+
+
+
+
+//
+//import kotlin.reflect.KProperty
+//// 定义包含属性委托的类
+//class Example {
+//    var p: String by Delegate()
+//}
+//
+//// 委托的类
+//class Delegate {
+//    operator fun getValue(thisRef: Any?, property: KProperty<*>): String {
+//        println("调用getValue")
+//        if(property.equals("Runoob")){
+//            return "改变成功"
+//        }
+//        return "$thisRef, 这里委托了 ${property.name} 属性"
+//    }
+//
+//    operator fun setValue(thisRef: Any?, property: KProperty<*>, value: String) {
+//        println("$thisRef 的 ${property.name} 属性赋值为 $value")
+//    }
+//}
+//fun main(args: Array<String>) {
+//    val e = Example()
+//    println(e.p)     // 访问该属性，调用 getValue() 函数
+//
+//    e.p = "Runoob"   // 调用 setValue() 函数
+//    println(e.p)
+//}

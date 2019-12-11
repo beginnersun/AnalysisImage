@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rotate
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:interpolator="@android:anim/accelerate_decelerate_interpolator"
+        android:fromDegrees="0"
+        android:toDegrees="360"
+        android:pivotX="50%"
+        android:pivotY="50%">
+    <shape
+            android:shape="ring"
+            android:thicknessRatio="30"
+            android:useLevel="false">
+        <!--useLevel = false 渐变才有效果-->
+
+        <gradient
+                android:centerColor="#33aaff"
+                android:endColor="#33aaff"
+                android:startColor="#ffffff"
+                android:centerY="0.3"
+                android:type="sweep"
+        />
+
+    </shape>
+</rotate>
