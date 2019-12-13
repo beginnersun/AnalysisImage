@@ -1,16 +1,7 @@
-package com.example.analysisimage.util
+package com.example.base_module.util
 
-import android.content.Context
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import android.graphics.Canvas
 import android.graphics.Matrix
-import android.renderscript.ScriptIntrinsicYuvToRGB
-import android.text.AndroidCharacter.mirror
-import id.zelory.compressor.Compressor
-import okio.Okio
-import java.io.ByteArrayOutputStream
-import kotlin.concurrent.thread
 
 object BitmapUtil {
 

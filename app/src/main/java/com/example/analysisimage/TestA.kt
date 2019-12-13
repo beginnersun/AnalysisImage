@@ -1,10 +1,12 @@
 package com.example.analysisimage
 
+import android.app.Fragment
 import android.graphics.Bitmap
 
 class TestA {
 
     fun rawByteArray2RGBABitmap2(data: ByteArray, width: Int, height: Int): Bitmap {
+
         val frameSize = width * height
         val rgba = IntArray(frameSize)
         for (i in 0 until height)

@@ -1,4 +1,4 @@
-package com.example.analysisimage.util;
+package com.example.base_module.util;
 
 /**
  * Base64 工具类

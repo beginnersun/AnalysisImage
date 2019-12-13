@@ -1,23 +1,11 @@
 package com.example.analysisimage
 
-import android.app.DownloadManager
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import android.view.View
-import android.widget.TextView
-import com.example.analysisimage.activity.PlantAnalysisActivity
 import com.example.analysisimage.activity.camerax.PlantAnalysisActivityCameraX
-import com.example.analysisimage.util.Father
-import com.example.analysisimage.util.PreferenceManager
-import com.example.analysisimage.util.PreferenceManagerUtil
-import com.example.analysisimage.util.SharedPreferenceUtil
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.Response

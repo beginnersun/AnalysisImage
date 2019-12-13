@@ -1,6 +1,5 @@
-package com.example.analysisimage.util
+package com.example.base_module.util
 
-import android.os.Build
 import android.os.Environment
 import android.text.TextUtils
 import android.util.Base64

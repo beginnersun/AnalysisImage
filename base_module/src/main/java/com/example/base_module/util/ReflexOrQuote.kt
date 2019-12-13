@@ -1,6 +1,5 @@
-package com.example.analysisimage.util
+package com.example.base_module.util
 
-import android.app.Person
 import com.example.analysisimage.bean.PersonBean
 import com.example.analysisimage.bean.PlantBean
 

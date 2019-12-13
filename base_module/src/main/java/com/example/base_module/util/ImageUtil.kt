@@ -1,4 +1,4 @@
-package com.example.analysisimage.util
+package com.example.base_module.util
 
 import android.graphics.ImageFormat
 import android.graphics.YuvImage

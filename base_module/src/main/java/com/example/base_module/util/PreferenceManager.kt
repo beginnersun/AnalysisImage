@@ -1,4 +1,4 @@
-package com.example.analysisimage.util
+package com.example.base_module.util
 
 import android.content.Context
 import com.example.analysisimage.network.OkHttpManager

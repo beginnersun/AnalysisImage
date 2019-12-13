@@ -5,7 +5,6 @@ import android.content.pm.PackageManager
 import android.graphics.ImageFormat
 import android.graphics.SurfaceTexture
 import android.os.*
-import android.text.TextUtils
 import android.text.method.ScrollingMovementMethod
 import android.util.*
 import android.view.TextureView
@@ -19,11 +18,11 @@ import com.example.analysisimage.R
 import com.example.analysisimage.bean.PlantBean
 import com.example.analysisimage.network.BaseRequestCallBack
 import com.example.analysisimage.network.OkHttpManager
-import com.example.analysisimage.util.FileUtil
-import com.example.analysisimage.util.ImageUtil
-import com.example.analysisimage.util.SharedPreferenceUtil
-import com.example.analysisimage.util.TextureMeteringPointFactory
 import com.example.analysisimage.widget.LoadingView
+import com.example.base_module.util.FileUtil
+import com.example.base_module.util.SharedPreferenceUtil
+import com.example.analysisimage.util.TextureMeteringPointFactory
+import com.example.base_module.util.ImageUtil
 import kotlinx.android.synthetic.main.activity_camerax.*
 import okhttp3.FormBody
 import org.json.JSONArray
@@ -69,7 +68,8 @@ class PlantAnalysisActivityCameraX : AppCompatActivity() {
         }
 
         textureView.setOnTouchListener { v, event ->   //点击 聚焦
-            val meteringPoint = TextureMeteringPointFactory().createPoint(event.getX(), event.getY())
+            val meteringPoint = TextureMeteringPointFactory()
+                .createPoint(event.getX(), event.getY())
             val action = FocusMeteringAction.Builder.from(meteringPoint).addPoint(meteringPoint).build()
             CameraX.getCameraControl(camerarFacing).startFocusAndMetering(action)
             return@setOnTouchListener false    //单纯写个false 也行
