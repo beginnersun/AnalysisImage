@@ -1,6 +1,6 @@
 package com.example.base_module.util
 
-import com.example.analysisimage.bean.PersonBean
+import com.example.base_module.bean.PersonBean
 
 
 /**
