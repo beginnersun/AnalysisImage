@@ -1,7 +1,6 @@
 package com.example.base_module.util
 
 import android.content.Context
-import com.example.analysisimage.network.OkHttpManager
 import kotlin.properties.Delegates
 import kotlin.reflect.KProperty
 
@@ -243,7 +242,12 @@ val a = { i: Int -> i + 1 } // 推断出的类型是 (Int) -> Int
 val intPlus: Int.(Int) -> Int = Int::plus   //接收者类型函数   调用不变 intPlus(2.3) 结果是5   plus 在Int中是将传入的值叠加到当前对象
                                             // 意为将传入的value参数增加到当前对象上  Int.(Int) -> Int intPlus具有接收者类型所以讲(Int)里面的Int作为第一个参数传递
                                             //就好比一个扩展函数 2.plus(3)
-val repeatFun: String.(Int) -> String = { times -> this.repeat(times) }
+var repeatFun: String.(Int) -> String = { times -> this.repeat(times) }
+val ccFun :(String,Int) -> String = {cc,time -> cc.repeat(time) }   //相同
+
+fun testEquals(){
+    repeatFun = ccFun
+}
 //times 指的是Int这个参数
 //repeatFun("#",2)     "sdf".repeatFun(2)  两种调用方式
 // 还可以根据repeatFun.invoke(string,int)调用

@@ -7,11 +7,13 @@ import androidx.lifecycle.ViewModelProviders
 import com.example.kotlinmvvm.R
 import com.example.kotlinmvvm.databinding.ActivityMainBinding
 import com.example.kotlinmvvm.vm.MainViewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MainActivity :AppCompatActivity() {
 
     private var binding:ActivityMainBinding? = null
 
+    val myviewModel:MainViewModel by viewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

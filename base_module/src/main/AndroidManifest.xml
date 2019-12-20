@@ -1,2 +1,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="com.example.base_module"/>
+          package="com.example.base_module">
+
+    <application
+            android:name=".BaseApplication">
+
+
+    </application>
+
+
+</manifest>

@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import com.example.analysisimage.activity.camerax.PlantAnalysisActivityCameraX
+import com.example.base_module.util.SharedPreferenceUtil
 import kotlinx.android.synthetic.main.activity_main.*
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -23,6 +24,7 @@ class MainActivity : AppCompatActivity() {
         /**
          * 声明一个匿名类  object:xxxxx{    override fun .....(){ 覆写的方法}    }
          */
+
         first.setOnClickListener { view ->
             startActivity(
                 Intent(

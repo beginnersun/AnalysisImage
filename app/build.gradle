@@ -49,10 +49,6 @@ dependencies {
     // 添加 CameraX Camera2 API 互操作支持
     implementation "androidx.camera:camera-camera2:${camerax_version}"
 
-//    if(isNeedBaseModule.toBoolean()){
-        implementation project(':base_module')
-//    }
-//    if(isNeddMVVMModule.toBoolean()){
-        implementation project(':kotlinmvvm')
-//    }
+    implementation project(':base_module')
+    implementation project(':kotlinmvvm')
 }
