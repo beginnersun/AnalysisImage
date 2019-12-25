@@ -62,4 +62,10 @@ dependencies {
     api 'com.squareup.retrofit2:converter-gson:2.3.0'
     api 'com.squareup.retrofit2:adapter-rxjava2:2.3.0'
     api 'com.google.code.gson:gson:2.8.0'
+
+    implementation "androidx.viewpager2:viewpager2:1.0.0-beta04"
+
+    api ('com.jcodecraeer:xrecyclerview:1.6.0'){
+        exclude group:'com.android.support'
+    }
 }

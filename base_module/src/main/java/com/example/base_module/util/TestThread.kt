@@ -1,7 +1,6 @@
 package com.example.base_module.util
 
-import com.example.analysisimage.bean.PersonBean
-import com.example.analysisimage.bean.PlantBean
+import com.example.base_module.bean.PersonBean
 import kotlinx.coroutines.*
 import kotlin.system.measureTimeMillis
 

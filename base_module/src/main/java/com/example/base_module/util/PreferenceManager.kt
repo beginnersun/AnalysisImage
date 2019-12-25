@@ -20,7 +20,7 @@ import kotlin.reflect.KProperty
  * 如果基类没有构造方法那么
  * 什么都不需要操作只需要在类名后面加:+基类名字
  */
-class PreferenceManager constructor(var context: Context, var father: String) : Father(father) {  //主构造函数
+class PreferenceManager private constructor(var context: Context, var father: String) : Father(father) {  //主构造函数
 
     var a1: String = ""
 

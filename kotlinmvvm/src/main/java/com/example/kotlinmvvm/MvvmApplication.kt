@@ -15,21 +15,14 @@ class MvvmApplication: BaseApplication() {
     val cc: (KoinApplication) -> Unit = { it ->
         it.androidLogger()
         it.androidContext(this@MvvmApplication)
-        it.modules(listOf())
+        it.modules(listOf(remoteModule, mainViewModel))
     }
 
     val koin:KoinApplication.() -> Unit = {
-        this.androidContext(this@MvvmApplication)
-        this.logger(AndroidLogger())
+        androidContext(this@MvvmApplication)
+        logger(AndroidLogger())
         androidFileProperties("koin.properties")
-        modules(
-            module {
-                factory {
-                    MainViewModel()
-                }
-            }
-        )
-
+        modules(listOf(remoteModule, mainViewModel))
     }
 
     override fun onCreate() {

@@ -1,15 +1,22 @@
 package com.example.kotlinmvvm.view
 
+import android.content.Intent
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProviders
+import com.alibaba.android.arouter.facade.annotation.Route
 import com.example.kotlinmvvm.R
+import com.example.kotlinmvvm.base.BaseActivity
+import com.example.kotlinmvvm.base.BaseViewModel
 import com.example.kotlinmvvm.databinding.ActivityMainBinding
+import com.example.kotlinmvvm.view.news.NewsActivity
 import com.example.kotlinmvvm.vm.MainViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class MainActivity :AppCompatActivity() {
+@Route(path = "/mvvm/main")
+class MainActivity :BaseActivity() {
+
+
 
     private var binding:ActivityMainBinding? = null
 
@@ -24,6 +31,13 @@ class MainActivity :AppCompatActivity() {
         binding?.tvContent!!.text = "测试DataBinding"
         binding?.viewModel = viewModel
 
+        binding?.tvContent!!.setOnClickListener {
+            startActivity(Intent(this@MainActivity, NewsActivity::class.java))
+        }
+
     }
+
+    override fun setViewModel(): BaseViewModel = myviewModel
+
 
 }

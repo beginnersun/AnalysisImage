@@ -13,8 +13,15 @@ import io.reactivex.ObservableSource
 import io.reactivex.annotations.NonNull
 import io.reactivex.functions.Function
 import java.util.concurrent.Callable
+import javax.xml.datatype.DatatypeConstants.SECONDS
+import android.icu.lang.UCharacter.GraphemeClusterBreak.T
+import com.example.kotlinmvvm.base.BaseViewModel
+import io.reactivex.functions.BiFunction
+import io.reactivex.functions.Consumer
+import java.util.concurrent.TimeUnit
 
-class MainViewModel(val userRepositroy:UserRepository) : ViewModel() {
+
+class MainViewModel(val userRepositroy: UserRepository) : BaseViewModel() {
 
     private val userLiveData by lazy {
         MutableLiveData<UserBean>().also {
@@ -22,48 +29,23 @@ class MainViewModel(val userRepositroy:UserRepository) : ViewModel() {
         }
     }
 
-    private fun loadUser(){
-        userLiveData.value = UserBean("name","password","phoneNumber","headImage")
+
+
+    private fun loadUser() {
+        userLiveData.value = UserBean("name", "password", "phoneNumber", "headImage")
     }
 
     @SuppressLint("CheckResult")
-    public fun login(username:String, password:String){
-        var observable =  Observable.create(ObservableOnSubscribe<UserBean>(){
-            it.onNext(UserBean("1","","",""))
-            it.onNext(UserBean("22","","",""))
-            it.onNext(UserBean("333","","",""))
-        })
-        var observable1 = Observable.just(UserBean("","","",""))
-        Observable.defer{
-            Observable.just(1)
+    public fun login(username: String, password: String) {
+        userRepositroy.login(username, password).doOnSubscribe {
+            listener?.startLoad()
         }
-        
-        Observable.defer(object:Callable<Observable<out Any>>{
-            override fun call(): Observable<out Any> {
-                return Observable.just(1)
+            .doOnSuccess {
+                userLiveData.value = it
             }
-        })
-
-        observable.map {
-            t -> t.headImage.length
-        }
-        observable.map(object:Function<UserBean,String>{
-            override fun apply(t: UserBean): String {
-                return t.headImage
-            }
-        })
-//        observable.buffer()
-
-        observable.flatMap {
-            val list = mutableListOf<String>()
-            for (i in 0..9){
-                list.add("${it.name}$i")
-            }
-            return@flatMap Observable.just(list)
-        }
-
-
-//        userRepositroy.login(username,password)
+            .doOnError {
+                listener?.error(it.message.toString())
+            }  //doOnError发送错误事件时调用
     }
 
 }
