@@ -13,23 +13,39 @@ abstract class BaseActivity:AppCompatActivity() {
         baseViewModel = setViewModel()
         baseViewModel?.listener = object:VmStateListener{
             override fun error(message: String) {
-
+                onError(message)
             }
 
             override fun startLoad() {
-
+                onStartLoad()
             }
 
             override fun endLoad() {
-
+                onEndLoad()
             }
 
             override fun onSuccess() {
-
+                onLoadSucess()
             }
 
         }
     }
 
     abstract fun setViewModel():BaseViewModel
+
+    protected fun onError(message:String){
+
+    }
+
+    protected fun onStartLoad(){
+
+    }
+
+    protected fun onEndLoad(){
+
+    }
+
+    protected fun onLoadSucess(){
+
+    }
 }

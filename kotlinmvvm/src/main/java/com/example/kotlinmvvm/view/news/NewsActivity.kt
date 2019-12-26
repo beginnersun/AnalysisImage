@@ -46,6 +46,10 @@ class NewsActivity : BaseActivity(),XRecyclerView.LoadingListener{
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_news)
 
+        binding?.viewPager!!.apply {
+            adapter = FragmentManagerdapter(fragmentList,new_tab.keys.toList(),supportFragmentManager)
+        }
+
         binding?.tablayout!!.run {
             for (item in new_tab){
                 addTab(newTab().setText(item.key).setTag(item.value))
@@ -54,9 +58,6 @@ class NewsActivity : BaseActivity(),XRecyclerView.LoadingListener{
             setupWithViewPager(binding?.viewPager)
         }
 
-        binding?.viewPager!!.apply {
-            adapter = FragmentManagerdapter(fragmentList,supportFragmentManager)
-        }
 
 //        binding?.recyclerNews!!.apply {
 //            layoutManager = LinearLayoutManager(this@NewsActivity)
@@ -72,5 +73,6 @@ class NewsActivity : BaseActivity(),XRecyclerView.LoadingListener{
     }
 
     override fun setViewModel(): BaseViewModel = viewModel
+
 
 }
