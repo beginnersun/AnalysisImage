@@ -19,7 +19,7 @@ class NewsViewModel(val newsRepository: NewsRepository):BaseViewModel() {
         if (newsDatas.keys.contains(type))
             return newsDatas[type]!!
         else {
-            newsDatas[type] = MutableLiveData()
+            newsDatas[type] = MutableLiveData<List<NewsBean>>()
             return newsDatas[type]!!
         }
     }
@@ -28,7 +28,7 @@ class NewsViewModel(val newsRepository: NewsRepository):BaseViewModel() {
         newsRepository.getNewsList(type,start,step).doOnSuccess{
             var jsonObject:JSONObject = it as JSONObject
             var jsonArray = jsonObject.optJSONArray(type)
-            newsDatas[type]!!.value = jsonArray as List<NewsBean>
+//            newsDatas[type]!!.value = jsonArray as List<NewsBean>
             listener?.onSuccess()
         }.doOnError {
             listener?.error(it.message.toString())

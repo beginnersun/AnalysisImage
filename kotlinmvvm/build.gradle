@@ -4,6 +4,10 @@ if(!isNeddMVVMModule.toBoolean()){
     apply plugin: 'com.android.library'
 }
 
+apply plugin: 'kotlin-android'
+
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
 android {
     compileSdkVersion 29
     buildToolsVersion "29.0.2"

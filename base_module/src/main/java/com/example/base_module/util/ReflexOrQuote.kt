@@ -1,7 +1,7 @@
 package com.example.base_module.util
 
-import com.example.analysisimage.bean.PersonBean
-import com.example.analysisimage.bean.PlantBean
+import com.example.base_module.bean.PersonBean
+
 
 /**
  * 反射与类引用
@@ -14,8 +14,8 @@ import com.example.analysisimage.bean.PlantBean
  * ::class     如果该类是java那么还需要加上.java
  */
 val b = ""
-fun testReflex(name:String){
-    println("${PlantBean::class.qualifiedName}")
+fun testReflex(){
+//    println("${PlantBean::class.qualifiedName}")
     val person = PersonBean("ni",22)
     println("${person::class.qualifiedName}")
     println(::b.name)

@@ -9,17 +9,47 @@ import com.example.kotlinmvvm.R
 import com.example.kotlinmvvm.bean.NewsBean
 import com.example.kotlinmvvm.databinding.ItemNewsBinding
 
-class NewsAdapter(val context: Context, val datas: List<out Any>) : RecyclerView.Adapter<NewsAdapter.ViewHolder>() {
+class NewsAdapter(private val context: Context) : RecyclerView.Adapter<NewsAdapter.ViewHolder>() {
+
+    private val datas = mutableListOf<NewsBean>()
+
+    constructor(context: Context,datas: List<NewsBean>):this(context){
+        this.datas.clear()
+        this.datas.addAll(datas)
+        notifyDataSetChanged()
+    }
+
+    fun removeAndAddList(news:List<NewsBean>){
+        this.datas.clear()
+        addAllList(news)
+    }
+
+    fun addAllList(news:List<NewsBean>){
+        this.datas.addAll(news)
+        notifyDataSetChanged()
+    }
+
+    fun removeAndAdd(vararg newsBean:NewsBean){
+        this.datas.clear()
+        this.datas.addAll(newsBean)
+        notifyDataSetChanged()
+    }
+
+    fun addAll(vararg newsBean:NewsBean){
+        this.datas.addAll(newsBean)
+        notifyDataSetChanged()
+    }
+
+    private var onItemCLickListener:OnItemClickListener? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder =
         ViewHolder.create(parent, LayoutInflater.from(context))
 
     override fun getItemCount(): Int =
-        datas?.size
-
+        datas.size
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bindData(datas[position] as NewsBean)
+        holder.bindData(datas[position])
     }
 
     class ViewHolder(val binding: ItemNewsBinding) : RecyclerView.ViewHolder(binding.root) {
@@ -33,6 +63,12 @@ class NewsAdapter(val context: Context, val datas: List<out Any>) : RecyclerView
             binding.item = bean
             binding.executePendingBindings()
         }
+    }
+
+    interface OnItemClickListener{
+        fun onNoInterestClick(id:Int)
+
+        fun onShieldClick(id:Int)
     }
 
 }

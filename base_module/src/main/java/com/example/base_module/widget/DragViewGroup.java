@@ -1,4 +1,4 @@
-package com.example.base_module.util;
+package com.example.base_module.widget;
 
 import android.content.Context;
 import android.graphics.Rect;
@@ -12,11 +12,8 @@ import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.Scroller;
 
-import androidx.core.view.ViewCompat;
 
 public class DragViewGroup extends LinearLayout {
-    private static final String TAG = "TestViewGroup";
-
     private boolean openDrag = true;
 
     // 记录手指上次触摸的坐标
@@ -68,8 +65,8 @@ public class DragViewGroup extends LinearLayout {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        int action = event.getAction();
         if (openDrag) {
+            int action = event.getAction();
             switch (action) {
                 case MotionEvent.ACTION_DOWN:
                     if (isPointOnViews(event)) {
@@ -84,7 +81,7 @@ public class DragViewGroup extends LinearLayout {
                 case MotionEvent.ACTION_MOVE:
                     int deltaX = (int) -(event.getX() - mLastPointX);
                     touchWidth += deltaX;
-                    Log.e("Move状态", getScrollX() + "   " + sumDragWidth + "    " + deltaX + "    " + Math.abs(sumDragWidth - deltaX));
+//                    Log.e("Move状态", getScrollX() + "   " + sumDragWidth + "    " + deltaX + "    " + Math.abs(sumDragWidth - deltaX));
                     if (mCurrentState == State.DRAGGING && mDragView != null && Math.abs(deltaX) > mSlop && Math.abs(sumDragWidth) <= menuWidth && !mScroller.computeScrollOffset()) {//总滑动长度小于菜单内容宽度时
                         // 如果符合条件则对被拖拽的 child 进行位置移动
                         if (getScrollX() <= 0 && deltaX < 0) {   //deltax<0 代表要向右滑动  getScrollX<=0 代表此时内容View已经是初始化或者向右滑动状态（此时禁止滑动）
@@ -104,19 +101,19 @@ public class DragViewGroup extends LinearLayout {
                     if (mCurrentState == State.DRAGGING) {
                         int scrollX = getScrollX();
                         int scrollY = getScrollY();
-                        Log.e("Up状态", Math.abs(sumDragWidth) + "   " + scrollX + "   " + menuWidth);
+//                        Log.e("Up状态", Math.abs(sumDragWidth) + "   " + scrollX + "   " + menuWidth);
                         if (scrollX >0){  //scrollX 大于0   结果为向左滑动的scrollX距离 然后根据滑动距离计算是否展示
                             if (scrollX>= menuWidth || scrollX >= childViewWidth/2 ){
-                            Log.e("Up状态", "显示菜单" + "      " +  (int) (Math.abs(scrollX)-menuWidth));
+//                            Log.e("Up状态", "显示菜单" + "      " +  (int) (Math.abs(scrollX)-menuWidth));
                                 mScroller.startScroll(scrollX,scrollY, (int) (menuWidth-Math.abs(scrollX)),0,500);
                                 sumDragWidth = -menuWidth;
                             }else {
-                                Log.e("Up状态", "移除菜单1" + "      " + scrollX);
+//                                Log.e("Up状态", "移除菜单1" + "      " + scrollX);
                                 mScroller.startScroll(scrollX,scrollY, -scrollX,0,500);
                                 sumDragWidth = 0;
                             }
                         }else{   //scrollY 小于0  代表向右滑动了scrollX 要隐藏
-                            Log.e("Up状态", "移除菜单2" + "      " +  scrollX);
+//                            Log.e("Up状态", "移除菜单2" + "      " +  scrollX);
                             mScroller.startScroll(scrollX,scrollY, -scrollX,0,500);
                             sumDragWidth = 0;
                         }

@@ -19,7 +19,6 @@ data class NewsBean(
     val title: String,
     val url: String
 )
-
 data class Imgextra(
     val imgsrc: String
 )

@@ -1,16 +1,124 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
+<layout
+        xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto">
     <data>
         <variable name="item" type="com.example.kotlinmvvm.bean.NewsBean"/>
     </data>
 
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                  android:orientation="vertical"
-                  android:layout_width="match_parent"
-                  android:layout_height="wrap_content">
+    <com.example.base_module.widget.DragViewGroup
+            android:id="@+id/rootView"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="94dp">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="94dp"
+                android:padding="10dp"
+                android:visibility="visible">
+
+            <TextView
+                    android:id="@+id/tv_news_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/iv_news_image"
+                    app:layout_constraintHorizontal_bias="0"
+                    app:layout_constraintHorizontal_chainStyle="spread_inside"
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:text="@{item.title}"
+                    android:layout_marginRight="6dp"
+                    android:maxLines="2"
+                    android:ellipsize="end"
+                    android:textColor="@color/title_black"
+                    app:layout_constrainedWidth="true"
+                    android:textSize="15sp"/>
+
+            <TextView
+                    android:id="@+id/tv_news_source"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/tv_news_time"
+                    app:layout_constraintHorizontal_chainStyle="spread_inside"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    android:text="@{item.source}"
+                    app:layout_constrainedWidth="true"
+                    android:maxLines="1"
+                    android:textSize="13sp"
+            />
+
+            <TextView
+                    android:id="@+id/tv_news_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    app:layout_constraintStart_toEndOf="@id/tv_news_source"
+                    app:layout_constraintEnd_toStartOf="@+id/tv_news_reward"
+                    app:layout_constraintHorizontal_chainStyle="spread_inside"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constrainedWidth="true"
+                    app:differenceTime="@{item.ptime}"
+                    android:maxLines="1"
+                    android:textSize="13sp"
+            />
+
+            <TextView
+                    android:id="@+id/tv_news_reward"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    app:layout_constraintStart_toEndOf="@id/tv_news_time"
+                    app:layout_constraintEnd_toStartOf="@+id/iv_news_image"
+                    app:layout_constraintHorizontal_chainStyle="spread_inside"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    android:text="@{item.commentCount}"
+                    app:layout_constrainedWidth="true"
+                    android:maxLines="1"
+                    android:textSize="13sp"
+            />
+
+            <ImageView
+                    android:id="@+id/iv_news_image"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/tv_news_title"
+                    app:layout_constraintHorizontal_bias="1"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:src="@drawable/ic_launcher_background"
+                    android:visibility="visible"
+                    app:loadPic="@{item.imgsrc}"
+            />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <LinearLayout
+                android:layout_width="148dp"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+            <TextView
+                    android:id="@+id/tv_shield_source"
+                    android:layout_width="74dp"
+                    android:layout_height="match_parent"
+                    android:text="屏蔽来源"
+                    android:background="#ff0000"
+                    android:textColor="@color/white"
+                    android:gravity="center"/>
+
+            <TextView
+                    android:id="@+id/tv_no_interest"
+                    android:layout_width="74dp"
+                    android:layout_height="match_parent"
+                    android:text="不感兴趣"
+                    android:background="@color/button_gray"
+                    android:textColor="@color/white"
+                    android:gravity="center"/>
+
+        </LinearLayout>
 
 
-
-    </LinearLayout>
+    </com.example.base_module.widget.DragViewGroup>
 </layout>

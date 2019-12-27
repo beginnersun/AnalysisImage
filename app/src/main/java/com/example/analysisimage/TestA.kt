@@ -1,6 +1,5 @@
 package com.example.analysisimage
 
-import android.app.Fragment
 import android.graphics.Bitmap
 
 class TestA {

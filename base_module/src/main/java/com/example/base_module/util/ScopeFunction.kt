@@ -41,13 +41,13 @@ fun testScope(){
         println("$this fda")
     }
 
-    var personHaveJack = PersonBean("Tom",23).apply {
-        age = 2
-    }.apply {
-        name = "TomeOrJack"
-    }.let {
-        "Jack" in it.name
-    }
+//    var personHaveJack = PersonBean("Tom",23).apply {
+//        age = 2
+//    }.apply {
+//        name = "TomeOrJack"
+//    }.let {
+//        "Jack" in it.name
+//    }
     with(PersonBean("Tina",20)){
         age = 5
     }

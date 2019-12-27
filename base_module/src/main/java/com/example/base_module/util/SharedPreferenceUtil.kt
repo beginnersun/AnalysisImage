@@ -5,7 +5,7 @@ import android.content.SharedPreferences
 import android.util.Log
 
 class SharedPreferenceUtil private constructor(){
-    private var editor:SharedPreferences.Editor? = null;
+    private var editor:SharedPreferences.Editor? = null
     init {
         editor = sharedPreference?.edit()
     }

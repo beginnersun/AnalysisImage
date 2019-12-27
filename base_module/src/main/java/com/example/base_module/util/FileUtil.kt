@@ -3,7 +3,6 @@ package com.example.base_module.util
 import android.os.Environment
 import android.text.TextUtils
 import android.util.Base64
-import com.example.analysisimage.Constants
 import java.io.*
 
 class FileUtil {
@@ -39,7 +38,7 @@ class FileUtil {
         }
 
         fun createTempFile(name:String,formate:String):File{
-            val file = File(Constants.APPString.APP_DIRECTORY_ABSOLUTEPATH + name + formate)
+            val file = File(Environment.getExternalStorageDirectory().absolutePath + File.separator + name + formate)
             if(!file.exists()){
                 file.createNewFile()
             }

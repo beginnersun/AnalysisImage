@@ -4,7 +4,6 @@ import android.graphics.ImageFormat
 import android.graphics.YuvImage
 import android.media.Image
 import android.util.Log
-import com.example.analysisimage.activity.BitmapUtil
 import java.io.ByteArrayOutputStream
 import java.io.FileOutputStream
 
@@ -24,7 +23,7 @@ object ImageUtil{
      *
      */
     fun getDateFromImage(image: Image):ByteArray{
-        if(!isSupportImage(image)) throw IllegalArgumentException("can't support convert Image by format = ${image.format}") as Throwable
+        if(!isSupportImage(image)) throw IllegalArgumentException("can't support convert Image by format = ${image.format}")
         val crop = image.cropRect
         val format = image.format
         val width = image.width //分辨率

@@ -385,7 +385,7 @@ class PlantAnalysisActivity : AppCompatActivity() {
                 }
             }
         } else if (requestCode == requestPhoto) {
-            if (permissions != null && permissions.size > 1 && permissions[0] == Manifest.permission.READ_EXTERNAL_STORAGE
+            if (permissions.size > 1 && permissions[0] == Manifest.permission.READ_EXTERNAL_STORAGE
                 && permissions[1] == Manifest.permission.WRITE_EXTERNAL_STORAGE
             ) {
                 if (grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED) {

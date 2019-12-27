@@ -1,6 +1,7 @@
 package com.example.kotlinmvvm.base
 
 import android.os.Bundle
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.kotlinmvvm.vminterface.VmStateListener
 
@@ -34,7 +35,7 @@ abstract class BaseActivity:AppCompatActivity() {
     abstract fun setViewModel():BaseViewModel
 
     protected fun onError(message:String){
-
+        Toast.makeText(this,message,Toast.LENGTH_LONG).show()
     }
 
     protected fun onStartLoad(){
