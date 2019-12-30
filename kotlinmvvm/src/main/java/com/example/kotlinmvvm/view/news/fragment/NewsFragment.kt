@@ -1,25 +1,29 @@
 package com.example.kotlinmvvm.view.news.fragment
 
-
-import android.app.Activity
+import android.app.ActionBar
 import android.content.Context
+import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
 import androidx.databinding.DataBindingUtil
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.kotlinmvvm.R
-import com.example.kotlinmvvm.bean.NewsBean
+import com.example.kotlinmvvm.base.BaseFragment
 import com.example.kotlinmvvm.databinding.FragmentListBinding
+import com.example.kotlinmvvm.model.NewsService
 import com.example.kotlinmvvm.view.news.adapter.NewsAdapter
 import com.example.kotlinmvvm.vm.NewsViewModel
 import com.jcodecraeer.xrecyclerview.XRecyclerView
+import org.koin.androidx.viewmodel.ext.android.getViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.core.qualifier.named
 
-class NewsFragment: Fragment(),XRecyclerView.LoadingListener {
+class NewsFragment: BaseFragment(),XRecyclerView.LoadingListener {
 
     override fun onLoadMore() {
         viewModel.getNewsList(type,px,pz)
@@ -31,7 +35,7 @@ class NewsFragment: Fragment(),XRecyclerView.LoadingListener {
     }
 
     private var type:String = ""
-    private val viewModel:NewsViewModel by viewModel()
+    private val viewModel:NewsViewModel by viewModel(named("news"))
     private var binding:FragmentListBinding? =null
 
     private var px = 0
@@ -54,9 +58,9 @@ class NewsFragment: Fragment(),XRecyclerView.LoadingListener {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_list,container,false)
+
         binding = DataBindingUtil.bind(view)
         newsAdapter = NewsAdapter(activity!!)
-        viewModel.getNewsList(type,px,pz)
 
         binding?.recyclerNews!!.apply {
             layoutManager = LinearLayoutManager(activity)
@@ -64,18 +68,28 @@ class NewsFragment: Fragment(),XRecyclerView.LoadingListener {
             setLoadingMoreEnabled(true)
             setPullRefreshEnabled(true)
             adapter = newsAdapter
+//            addHeaderView(View(context).apply {
+//                layoutParams.width = LinearLayout.LayoutParams.MATCH_PARENT
+//                layoutParams.height = 1
+//                setBackgroundColor(Color.GRAY)
+//            })
         }
-
-        viewModel.getDatas(type).observe(this, Observer {
-            if (px == 0){
-                newsAdapter?.removeAndAddList(it)
-            }else{
-                newsAdapter?.addAllList(it)
-            }
-            px += it.size
-        })
-
         return view
+    }
+
+    override fun onFirstVisible() {
+        viewModel.apply {
+            getNewsList(type,px,pz) //请求数据 增加监听
+            getDatas(type).observe(this@NewsFragment, Observer {
+                binding?.recyclerNews!!.reset()
+                if (px == 0){
+                    newsAdapter?.removeAndAddList(it)
+                }else{
+                    newsAdapter?.addAllList(it)
+                }
+                px += it.size
+            })
+        }
     }
 
 }

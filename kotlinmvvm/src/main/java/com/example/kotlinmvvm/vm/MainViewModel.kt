@@ -29,8 +29,6 @@ class MainViewModel(val userRepositroy: UserRepository) : BaseViewModel() {
         }
     }
 
-
-
     private fun loadUser() {
         userLiveData.value = UserBean("name", "password", "phoneNumber", "headImage")
     }

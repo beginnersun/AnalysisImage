@@ -14,6 +14,7 @@ class UserRepository(val userService: UserService) {
     fun login(name: String, password: String): Single<UserBean> = userService.login(name, password).map {
         it.headImage = "www.baidu.com${it.headImage}"
         it
-    }.asyncTask()
+    }
+//        .asyncTask()
 
 }

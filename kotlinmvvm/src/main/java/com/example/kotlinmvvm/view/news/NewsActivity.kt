@@ -21,6 +21,7 @@ import com.example.kotlinmvvm.view.news.adapter.FragmentManagerdapter
 import com.example.kotlinmvvm.view.news.fragment.NewsFragment
 import com.jcodecraeer.xrecyclerview.XRecyclerView
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.core.qualifier.named
 
 @Route(path = "/kotlinmvvm/news")
 class NewsActivity : BaseActivity(),XRecyclerView.LoadingListener{
@@ -41,11 +42,11 @@ class NewsActivity : BaseActivity(),XRecyclerView.LoadingListener{
     }
 
     private var binding: ActivityNewsBinding? = null
-    val viewModel: NewsViewModel by viewModel()
+    val viewModel: NewsViewModel by viewModel(named("news"))
     private val new_tab = mapOf(
         "电视" to "BA10TA81wangning", "电影" to "BD2A9LEIwangning", "明星" to "BD2AB5L9wangning",
         "音乐" to "BD2AC4LMwangning", "体育" to "BA8E6OEOwangning", "财经" to "BA8EE5GMwangning",
-        "军事" to "BAI67OGGwangning"
+        "军事" to "BAI67OGGwangning", "健康" to "BDC4QSV3wangning"
     )
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -53,10 +54,6 @@ class NewsActivity : BaseActivity(),XRecyclerView.LoadingListener{
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_news)
         ARouter.getInstance().inject(this)
-
-        binding?.viewPager!!.apply {
-            adapter = FragmentManagerdapter(fragmentList,new_tab.keys.toList(),supportFragmentManager)
-        }
 
         binding?.tablayout!!.run {
             for (item in new_tab){
@@ -66,6 +63,9 @@ class NewsActivity : BaseActivity(),XRecyclerView.LoadingListener{
             setupWithViewPager(binding?.viewPager)
         }
 
+        binding?.viewPager!!.apply {
+            adapter = FragmentManagerdapter(fragmentList,new_tab.keys.toList(),supportFragmentManager)
+        }
 
 //        binding?.recyclerNews!!.apply {
 //            layoutManager = LinearLayoutManager(this@NewsActivity)
@@ -81,9 +81,8 @@ class NewsActivity : BaseActivity(),XRecyclerView.LoadingListener{
     }
 
     override fun setViewModel(): BaseViewModel {
-        Log.e("测试",(viewModel == null).toString())
+        Log.e("测试1",(viewModel).toString())
         return viewModel
     }
-
 
 }
