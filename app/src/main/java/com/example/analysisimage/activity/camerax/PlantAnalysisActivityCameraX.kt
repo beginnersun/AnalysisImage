@@ -18,11 +18,11 @@ import com.example.analysisimage.R
 import com.example.analysisimage.bean.PlantBean
 import com.example.analysisimage.network.BaseRequestCallBack
 import com.example.analysisimage.network.OkHttpManager
-import com.example.analysisimage.widget.LoadingView
 import com.example.base_module.util.FileUtil
 import com.example.base_module.util.SharedPreferenceUtil
 import com.example.analysisimage.util.TextureMeteringPointFactory
 import com.example.base_module.util.ImageUtil
+import com.example.base_module.widget.LoadingView
 import kotlinx.android.synthetic.main.activity_camerax.*
 import okhttp3.FormBody
 import org.json.JSONArray

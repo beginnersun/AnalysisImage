@@ -7,14 +7,16 @@
     <TextView android:layout_width="61.25dp"
               android:layout_height="wrap_content"
               android:id="@+id/loading_text"
-              android:text="正在加载，请稍等  "
+              android:text="正在加载，请稍等"
               android:layout_centerInParent="true"
               android:singleLine="true"
               android:ellipsize="marquee"
               android:textSize="13sp"
               android:marqueeRepeatLimit="marquee_forever"/>
 
-    <ProgressBar android:layout_width="100dp"
+    <ProgressBar
+            android:id="@+id/progress_bar"
+            android:layout_width="100dp"
                  android:layout_height="100dp"
                  android:indeterminateDuration="650"
                  android:indeterminateDrawable="@drawable/loadingbar"

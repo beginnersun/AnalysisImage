@@ -7,8 +7,15 @@ open class BaseApplication : Application() {
 
     private val isDebug = true
 
+    companion object{
+        private var instance:BaseApplication? = null
+
+        fun getInstance():BaseApplication = instance!!
+    }
+
     override fun onCreate() {
         super.onCreate()
+        instance = this
         if (isDebug){
             ARouter.openLog()
             ARouter.openDebug()

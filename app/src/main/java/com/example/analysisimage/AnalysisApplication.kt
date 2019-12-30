@@ -2,6 +2,7 @@ package com.example.analysisimage
 
 import android.util.Log
 import com.example.base_module.BaseApplication
+import com.example.kotlinmvvm.localModule
 import com.example.kotlinmvvm.mainViewModel
 import com.example.kotlinmvvm.newsViewModel
 import com.example.kotlinmvvm.remoteModule
@@ -17,7 +18,7 @@ class AnalysisApplication : BaseApplication() {
         Log.e("测试1","初始化Module")
         it.androidLogger()
         it.androidContext(this@AnalysisApplication)
-        it.modules(listOf(remoteModule, mainViewModel,newsViewModel))
+        it.modules(listOf(remoteModule, mainViewModel,newsViewModel, localModule))
     }
 
     override fun onCreate() {

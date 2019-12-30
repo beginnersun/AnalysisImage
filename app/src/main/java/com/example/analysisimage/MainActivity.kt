@@ -29,13 +29,13 @@ class MainActivity : AppCompatActivity() {
          */
 
         first.setOnClickListener { view ->
-//            ARouter.getInstance().build("/kotlinmvvm/news").navigation()
-            startActivity(
-                Intent(
-                    this@MainActivity,
-                    NewsActivity::class.java
-                )
-            )
+            ARouter.getInstance().build("/kotlinmvvm/news").navigation()
+//            startActivity(
+//                Intent(
+//                    this@MainActivity,
+//                    NewsActivity::class.java
+//                )
+//            )
         }
 //        first.setOnClickListener {first.text = "222"}
         Thread() {
