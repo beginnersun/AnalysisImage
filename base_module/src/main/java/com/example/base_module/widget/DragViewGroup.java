@@ -5,6 +5,7 @@ import android.graphics.Rect;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
+import android.view.VelocityTracker;
 import android.view.View;
 import android.view.ViewConfiguration;
 import android.widget.FrameLayout;
@@ -33,10 +34,13 @@ public class DragViewGroup extends LinearLayout {
 
     State mCurrentState;
 
+    private VelocityTracker velocityTracker;
+
     private float childViewWidth;
     private float menuWidth;
     private float sumDragWidth = 0;
     private float touchWidth = 0;
+    private float maxTouchWidth = 0;
     private Scroller mScroller;
 
     public DragViewGroup(Context context) {
@@ -81,6 +85,9 @@ public class DragViewGroup extends LinearLayout {
                 case MotionEvent.ACTION_MOVE:
                     int deltaX = (int) -(event.getX() - mLastPointX);
                     touchWidth += deltaX;
+                    if (touchWidth > maxTouchWidth){
+                        maxTouchWidth = touchWidth;
+                    }
 //                    Log.e("Move状态", getScrollX() + "   " + sumDragWidth + "    " + deltaX + "    " + Math.abs(sumDragWidth - deltaX));
                     if (mCurrentState == State.DRAGGING && mDragView != null && Math.abs(deltaX) > mSlop && Math.abs(sumDragWidth) <= menuWidth && !mScroller.computeScrollOffset()) {//总滑动长度小于菜单内容宽度时
                         // 如果符合条件则对被拖拽的 child 进行位置移动
@@ -107,12 +114,12 @@ public class DragViewGroup extends LinearLayout {
 //                            Log.e("Up状态", "显示菜单" + "      " +  (int) (Math.abs(scrollX)-menuWidth));
                                 mScroller.startScroll(scrollX,scrollY, (int) (menuWidth-Math.abs(scrollX)),0,500);
                                 sumDragWidth = -menuWidth;
-                            }else {
+                            } else {
 //                                Log.e("Up状态", "移除菜单1" + "      " + scrollX);
                                 mScroller.startScroll(scrollX,scrollY, -scrollX,0,500);
                                 sumDragWidth = 0;
                             }
-                        }else{   //scrollY 小于0  代表向右滑动了scrollX 要隐藏
+                        } else{   //scrollY 小于0  代表向右滑动了scrollX 要隐藏
 //                            Log.e("Up状态", "移除菜单2" + "      " +  scrollX);
                             mScroller.startScroll(scrollX,scrollY, -scrollX,0,500);
                             sumDragWidth = 0;
@@ -121,7 +128,7 @@ public class DragViewGroup extends LinearLayout {
                         // 标记状态为空闲，并将 mDragView 变量置为 null
                         mCurrentState = State.IDLE;
                         mDragView = null;
-                        if (Math.abs(touchWidth) >= mSlop*5){  //在点击允许触碰距离外  消耗touch事件
+                        if (Math.abs(maxTouchWidth) >= mSlop*5) {  //在点击允许触碰距离外  消耗touch事件
                             touchWidth = 0;
                             return true;
                         }
@@ -130,7 +137,7 @@ public class DragViewGroup extends LinearLayout {
                     }
             }
             return super.onTouchEvent(event);
-        }else {
+        } else {
             return false;
         }
     }

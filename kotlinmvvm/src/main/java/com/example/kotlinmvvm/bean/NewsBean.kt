@@ -1,35 +1,33 @@
 package com.example.kotlinmvvm.bean
 
-import androidx.room.ColumnInfo
-import androidx.room.Entity
-import androidx.room.PrimaryKey
-import androidx.room.TypeConverters
+import androidx.room.*
 import com.example.kotlinmvvm.util.AnyConverters
 
-
+@Fts4
 @Entity(tableName = "news")
 @TypeConverters(AnyConverters::class)
 data class NewsBean(
-    @PrimaryKey val docid: String,
+    @PrimaryKey @ColumnInfo(name = "rowid") val id: Int,  //为了支持全文搜索 必须有rowid且是Int类型 作为主键
+    @ColumnInfo(name = "docid") val docid: String,
     @ColumnInfo(name = "commentCount") val commentCount: Int,
     @ColumnInfo(name = "digest") val digest: String,
     @ColumnInfo(name = "imgextra") val imgextra: List<Imgextra>,
     @ColumnInfo(name = "imgsrc") val imgsrc: String,
     @ColumnInfo(name = "imgsrc3gtype") val imgsrc3gtype: String,
-    @ColumnInfo(name = "") val liveInfo: Any,
-    val modelmode: String,
-    val photosetID: String,
-    val priority: Int,
-    val ptime: String,
-    val skipType: String,
-    val skipURL: String,
-    val source: String,
-    val stitle: String,
-    val title: String,
-    val url: String,
-    val statusCode: Int,
-    val message: String,
-    var type:String
+    @Ignore val liveInfo: String,
+    @ColumnInfo(name = "modelmode") val modelmode: String,
+    @ColumnInfo(name = "photosetID") val photosetID: String,
+    @ColumnInfo(name = "priority") val priority: Int,
+    @ColumnInfo(name = "ptime") val ptime: String,
+    @ColumnInfo(name = "skipType") val skipType: String,
+    @ColumnInfo(name = "skipURL") val skipURL: String,
+    @ColumnInfo(name = "source") val source: String,
+    @ColumnInfo(name = "stitle") val stitle: String,
+    @ColumnInfo(name = "title") val title: String,
+    @ColumnInfo(name = "url") val url: String,
+    @Ignore val statusCode: Int,
+    @Ignore val message: String,
+    @ColumnInfo(name = "type") var type:String
 )
 
 data class Imgextra(
