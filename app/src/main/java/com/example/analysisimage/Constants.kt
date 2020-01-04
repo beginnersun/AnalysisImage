@@ -15,6 +15,9 @@ class Constants {
         const val ANALYSIS_IMAGE_DETECT = "${Root}image-classify/v1/object_detect"
         const val ANALYSIS_IMAGE_FOR_CURRENCY = "${Root}image-classify/v1/currency"  //货币识别
         const val ANALYSIS_IMAGE_FOR_ANIMAL = "${Root}image-classify/v1/animal"  //动物识别
+
+
+        const val GET_KUAISHOU_VIDEO = "https://live.kuaishou.com/rest/wd/live/liveStream/myfollow" //快手关注的视频信息
     }
 
 }

@@ -32,7 +32,7 @@ val mainViewModel = module {
 }
 val newsViewModel = module {
     single(named("news")) {
-        NewsViewModel(NewsRepository(get()),get())
+        NewsViewModel(NewsRepository(get(),get()),get())
     }
 }
 /**
