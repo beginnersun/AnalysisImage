@@ -15,6 +15,9 @@ import android.os.Handler
 import android.os.Message
 import android.text.Spanned
 import android.util.Log
+import io.reactivex.Observable
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 import java.net.URL
 
 
@@ -40,11 +43,16 @@ class NewsDetailsActivity : AppCompatActivity() {
                     " left;\"><font face=\"微软雅黑\" size=\"3\">　　以下是本次合服的方案：</font></p><p style=\"text-align: left;\"><font face=\"微软雅黑\" size=\"3\">　　1329区,13" +
                     "31区,1332区,1335区,1336区,1337区将进行合并，合并后服务器代号为S3221</font></p><p style=\"text-align: left;\"><font face=\"微软雅黑\" size=\"3\"><br></font></p><" +
                     "/td>        </tr>      </tbody>    </table>  </div></div>\\n\\n\\n"
+//        Thread{
+//            message = Html.fromHtml(htmlInfo, imgGetter, null)
+//            handler.sendEmptyMessage(1)
+//        }.start()
+        Observable.create<Spanned> {
+            it.onNext(Html.fromHtml(htmlInfo,imgGetter,null))
+        }.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe {
+            tv_images.text = it
+        }
 
-        Thread{
-            message = Html.fromHtml(htmlInfo, imgGetter, null)
-            handler.sendEmptyMessage(1)
-        }.start()
     }
 
     private val handler:Handler = object :Handler(){
