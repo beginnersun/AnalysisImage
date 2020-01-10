@@ -26,6 +26,15 @@ android {
             }
         }
     }
+//
+//    kapt {
+//        arguments {
+//            arg("moduleName", project.getName())
+//            includeCompileClasspath = true
+//        }
+//        generateStubs = true
+//    }
+
     buildTypes {
         release {
             minifyEnabled false

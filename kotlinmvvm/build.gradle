@@ -31,6 +31,14 @@ android {
             }
         }
     }
+//
+//    kapt {
+//        arguments {
+//            arg("moduleName", project.getName())
+//            includeCompileClasspath = true
+//        }
+//        generateStubs = true
+//    }
 
     buildTypes {
         release {
@@ -61,6 +69,9 @@ dependencies {
     implementation ('com.trello.rxlifecycle2:rxlifecycle-components:2.2.1'){
         exclude group:'com.android.support'
     }
+    /**
+     * RxBinding
+     */
 //
 //    implementation"org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 //    implementation 'androidx.appcompat:appcompat:1.0.0-beta01'

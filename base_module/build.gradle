@@ -24,6 +24,14 @@ android {
         }
 
     }
+//
+//    kapt {
+//        arguments {
+//            arg("moduleName", project.getName())
+//            includeCompileClasspath = true
+//        }
+//        generateStubs = true
+//    }
 
     buildTypes {
         release {
@@ -69,6 +77,10 @@ dependencies {
     api 'com.google.code.gson:gson:2.8.6'
 
     api ('com.jcodecraeer:xrecyclerview:1.6.0'){
+        exclude group:'com.android.support'
+    }
+
+    api ('com.jakewharton.rxbinding2:rxbinding:2.2.0'){
         exclude group:'com.android.support'
     }
 

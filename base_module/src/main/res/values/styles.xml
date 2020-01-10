@@ -24,4 +24,21 @@
         <item name="android:windowFrame">@null</item>
     </style>
 
+
+    <style name="news_title">
+        <item name="android:textColor">@color/title_black</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:lineSpacingExtra">1dp</item>
+    </style>
+
+    <style name="tv_tag">
+        <item name="android:textSize">12sp</item>
+        <item name="android:letterSpacing">0.1</item>
+        <item name="android:color">#BBB4B4</item>
+    </style>
+
+    <style name="tag_atlas" parent="tv_tag">
+        <item name="android:textColor">#ee1a1a</item>
+    </style>
+
 </resources>

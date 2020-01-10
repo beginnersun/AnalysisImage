@@ -1,4 +1,4 @@
-package com.example.kotlinmvvm.vminterface
+package com.example.kotlinmvvm.vm.vminterface
 
 interface VmStateListener {
 

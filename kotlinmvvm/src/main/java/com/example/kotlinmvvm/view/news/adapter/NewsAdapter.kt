@@ -1,17 +1,21 @@
 package com.example.kotlinmvvm.view.news.adapter
 
 import android.content.Context
+import android.text.TextUtils
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.kotlinmvvm.R
+import com.example.kotlinmvvm.bean.Imgextra
 import com.example.kotlinmvvm.bean.NewsBean
 import com.example.kotlinmvvm.databinding.ItemNewsBinding
 
 class NewsAdapter(private val context: Context) : RecyclerView.Adapter<NewsAdapter.ViewHolder>() {
 
     private val datas = mutableListOf<NewsBean>()
+    private var count = 0;
 
     constructor(context: Context,datas: List<NewsBean>):this(context){
         this.datas.clear()
@@ -43,7 +47,9 @@ class NewsAdapter(private val context: Context) : RecyclerView.Adapter<NewsAdapt
     private var onItemCLickListener:OnItemClickListener? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder =
-        ViewHolder.create(parent, LayoutInflater.from(context))
+        ViewHolder.create(parent, LayoutInflater.from(context)).apply {
+            Log.e("创建${count++}次",this.toString())
+        }
 
     override fun getItemCount(): Int =
         datas.size
@@ -61,6 +67,11 @@ class NewsAdapter(private val context: Context) : RecyclerView.Adapter<NewsAdapt
 
         fun bindData(bean:NewsBean){
             binding.item = bean
+            View.VISIBLE
+            if (bean.imgextra!= null && TextUtils.equals(bean.imgsrc3gtype,"2")) {
+                binding.images = bean.imgextra
+                Log.e("图集",bean.imgextra.toString())
+            }
             binding.executePendingBindings()
         }
     }

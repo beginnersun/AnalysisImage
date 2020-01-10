@@ -1,13 +1,11 @@
 package com.example.analysisimage
 
-import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.alibaba.android.arouter.launcher.ARouter
 import com.example.base_module.util.SharedPreferenceUtil
-import com.example.kotlinmvvm.view.news.NewsActivity
 import kotlinx.android.synthetic.main.activity_main.*
 import okhttp3.OkHttpClient
 import okhttp3.Request

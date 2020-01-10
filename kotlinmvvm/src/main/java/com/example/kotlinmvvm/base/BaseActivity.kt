@@ -1,11 +1,10 @@
 package com.example.kotlinmvvm.base
 
 import android.os.Bundle
-import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.base_module.widget.LoadingView
-import com.example.kotlinmvvm.vminterface.VmStateListener
+import com.example.kotlinmvvm.vm.vminterface.VmStateListener
 
 abstract class BaseActivity:AppCompatActivity() {
 
@@ -37,6 +36,25 @@ abstract class BaseActivity:AppCompatActivity() {
             }
 
         }
+    }
+
+    class OnVmStateListener:VmStateListener{
+        override fun error(message: String) {
+
+        }
+
+        override fun startLoad() {
+
+        }
+
+        override fun endLoad() {
+
+        }
+
+        override fun onSuccess() {
+
+        }
+
     }
 
     abstract fun setViewModel():BaseViewModel

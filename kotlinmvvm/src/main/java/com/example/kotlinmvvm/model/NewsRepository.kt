@@ -10,10 +10,9 @@ import com.google.gson.reflect.TypeToken
 import io.reactivex.*
 import org.json.JSONObject
 
-class NewsRepository(private val newsService: NewsService,private val newsDao:NewsDao) {
+class NewsRepository(private val newsService: NewsService) {
 
     fun getNewsList(type: String, start: Int, step: Int = 10): Single<List<NewsBean>> {
-        if (NetWorkState.isConnected()) {
             return newsService.getNewsList(
                 type, start, if (step > 20) 20 else {
                     step
@@ -35,8 +34,6 @@ class NewsRepository(private val newsService: NewsService,private val newsDao:Ne
                 }
                 Single.just(list)
             }.asyncTask()
-        }else{
-            return Single.just(newsDao.getNewsList(type,start,step))
-        }
+
     }
 }

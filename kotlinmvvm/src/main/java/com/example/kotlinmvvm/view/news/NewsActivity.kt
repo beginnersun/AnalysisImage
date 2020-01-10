@@ -1,6 +1,7 @@
 package com.example.kotlinmvvm.view.news
 
 import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
@@ -17,6 +18,7 @@ import com.example.kotlinmvvm.bean.NewsBean
 import com.example.kotlinmvvm.vm.NewsViewModel
 //import org.koin.androidx.viewmodel.ext.android.viewModel
 import com.example.kotlinmvvm.databinding.ActivityNewsBinding
+import com.example.kotlinmvvm.view.MainActivity
 import com.example.kotlinmvvm.view.news.adapter.FragmentManagerdapter
 import com.example.kotlinmvvm.view.news.fragment.NewsFragment
 import com.jcodecraeer.xrecyclerview.XRecyclerView
@@ -51,7 +53,7 @@ class NewsActivity : BaseActivity(),XRecyclerView.LoadingListener{
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        Log.e("thisActivity",this.toString())
         binding = DataBindingUtil.setContentView(this, R.layout.activity_news)
         ARouter.getInstance().inject(this)
 
@@ -66,6 +68,8 @@ class NewsActivity : BaseActivity(),XRecyclerView.LoadingListener{
         binding?.viewPager!!.apply {
             adapter = FragmentManagerdapter(fragmentList,new_tab.keys.toList(),supportFragmentManager)
         }
+//
+        startActivity(Intent(this,NewsDetailsActivity::class.java))
 
 //        binding?.recyclerNews!!.apply {
 //            layoutManager = LinearLayoutManager(this@NewsActivity)

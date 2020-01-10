@@ -26,13 +26,13 @@ import retrofit2.converter.gson.GsonConverterFactory
  * 初始化需要的ViewModel
  */
 val mainViewModel = module {
-    viewModel {
+    single(named("main")) {
         MainViewModel(UserRepository(get()))
     }
 }
 val newsViewModel = module {
     single(named("news")) {
-        NewsViewModel(NewsRepository(get(),get()),get())
+        NewsViewModel(NewsRepository(get()))
     }
 }
 /**
@@ -53,5 +53,5 @@ val remoteModule = module {
 }
 
 val localModule = module{
-    single { Room.databaseBuilder(androidApplication().applicationContext,NewsDatabase::class.java,"news.db").build().newsDao()}
+//    single { Room.databaseBuilder(androidApplication().applicationContext,NewsDatabase::class.java,"news.db").build().newsDao()}
 }

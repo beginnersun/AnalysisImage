@@ -5,36 +5,41 @@ import android.os.Bundle
 import androidx.databinding.DataBindingUtil
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.alibaba.android.arouter.launcher.ARouter
+import com.example.base_module.rxbinding.RxView
 import com.example.kotlinmvvm.R
 import com.example.kotlinmvvm.base.BaseActivity
 import com.example.kotlinmvvm.base.BaseViewModel
-import com.example.kotlinmvvm.databinding.ActivityMainBinding
+import com.example.kotlinmvvm.databinding.ActivityMainKotlinBinding
 import com.example.kotlinmvvm.view.news.NewsActivity
 import com.example.kotlinmvvm.vm.MainViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.core.qualifier.named
 
 @Route(path = "/kotlinmvvm/main")
 class MainActivity :BaseActivity() {
 
+    private var binding:ActivityMainKotlinBinding? = null
 
-
-    private var binding:ActivityMainBinding? = null
-
-    val myviewModel:MainViewModel by viewModel()
+    val myviewModel:MainViewModel by viewModel((named("main")))
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        ARouter.getInstance().inject(this)
 
-        binding = DataBindingUtil.setContentView(this,R.layout.activity_main)
+        binding = DataBindingUtil.setContentView(this,R.layout.activity_main_kotlin)
+
+        ARouter.getInstance().inject(this)
 
         binding?.tvContent!!.text = "测试DataBinding"
         binding?.viewModel = myviewModel
 
-        binding?.tvContent!!.setOnClickListener {
-            startActivity(Intent(this@MainActivity, NewsActivity::class.java))
+        RxView.bindClick(binding!!.tvInfo).subscribe{
+            myviewModel.test()
         }
+
+//        binding?.tvContent!!.setOnClickListener {
+//                startActivity(Intent(this@MainActivity, NewsActivity::class.java))
+//        }
 
     }
 
