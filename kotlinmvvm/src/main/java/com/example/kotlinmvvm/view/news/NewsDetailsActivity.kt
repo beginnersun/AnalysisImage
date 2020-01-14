@@ -1,23 +1,22 @@
 package com.example.kotlinmvvm.view.news
 
 import android.graphics.drawable.Drawable
+import android.os.Build
 import android.os.Bundle
 import android.text.Html
 import androidx.appcompat.app.AppCompatActivity
 import com.example.kotlinmvvm.R
-import com.example.kotlinmvvm.base.BaseActivity
-import com.example.kotlinmvvm.base.BaseViewModel
 import kotlinx.android.synthetic.main.activity_news_detail.*
-import androidx.core.app.ComponentActivity.ExtraData
-import androidx.core.content.ContextCompat.getSystemService
-import android.icu.lang.UCharacter.GraphemeClusterBreak.T
 import android.os.Handler
 import android.os.Message
+import android.text.Html.FROM_HTML_MODE_LEGACY
 import android.text.Spanned
 import android.util.Log
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import java.net.URL
 
 
@@ -43,49 +42,42 @@ class NewsDetailsActivity : AppCompatActivity() {
                     " left;\"><font face=\"微软雅黑\" size=\"3\">　　以下是本次合服的方案：</font></p><p style=\"text-align: left;\"><font face=\"微软雅黑\" size=\"3\">　　1329区,13" +
                     "31区,1332区,1335区,1336区,1337区将进行合并，合并后服务器代号为S3221</font></p><p style=\"text-align: left;\"><font face=\"微软雅黑\" size=\"3\"><br></font></p><" +
                     "/td>        </tr>      </tbody>    </table>  </div></div>\\n\\n\\n"
-//        Thread{
-//            message = Html.fromHtml(htmlInfo, imgGetter, null)
-//            handler.sendEmptyMessage(1)
-//        }.start()
-        Observable.create<Spanned> {
-            it.onNext(Html.fromHtml(htmlInfo,imgGetter,null))
-        }.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe {
-            tv_images.text = it
-        }
 
+        if (Build.VERSION.SDK_INT >= 24) {
+            Observable.create<Spanned> {
+                emitter ->
+                emitter.onNext(Html.fromHtml(htmlInfo, FROM_HTML_MODE_LEGACY, imgGetter, null))
+            }.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe {
+                spanned ->
+                tv_images.text = spanned
+            }
+        }else{
+            Observable.create<Spanned> {
+                    emitter ->
+                emitter.onNext(Html.fromHtml(htmlInfo,imgGetter, null))
+            }.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe {
+                    spanned ->
+                tv_images.text = spanned
+            }
+        }
     }
 
-    private val handler:Handler = object :Handler(){
-        override fun handleMessage(msg: Message) {
-            super.handleMessage(msg)
-            tv_images.text = message
-        }
-    }
 
     //这里面的resource就是fromhtml函数的第一个参数里面的含有的url
-    var imgGetter: Html.ImageGetter = Html.ImageGetter { source ->
-        Log.e("RG", "source---?>>>$source")
-        var drawable: Drawable? = null
+    private val imgGetter: Html.ImageGetter = Html.ImageGetter { source ->
+        var drawable: Drawable?
         val url: URL
         try {
             url = URL(source)
-            Log.e("RG", "url---?>>>$url")
             drawable = Drawable.createFromStream(url.openStream(), "") // 获取网路图片
         } catch (e: Exception) {
-            Log.e("RG", "url---?>>>出错")
             e.printStackTrace()
             return@ImageGetter null
         }
-        if (drawable == null){
-            Log.e("RG", "url---?>>>出错是空")
-        }else{
-            Log.e("RG", "url---?>>>出错成功")
-        }
         drawable!!.setBounds(
-            0, 0, drawable!!.getIntrinsicWidth(),
-            drawable!!.getIntrinsicHeight()
+            0, 0, drawable!!.intrinsicWidth,
+            drawable!!.intrinsicHeight
         )
-        Log.e("RG", "url---?>>>$url")
         drawable
     }
 

@@ -1,5 +1,6 @@
 package com.example.kotlinmvvm.view.news.adapter
 
+import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentStatePagerAdapter
@@ -22,5 +23,9 @@ class FragmentManagerdapter(
 
     override fun getPageTitle(position: Int): CharSequence? {
         return titleList[position]
+    }
+
+    override fun destroyItem(container: ViewGroup, position: Int, `object`: Any) {
+//        super.destroyItem(container, position, `object`)
     }
 }

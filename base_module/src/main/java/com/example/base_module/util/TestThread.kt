@@ -35,6 +35,7 @@ import kotlin.system.measureTimeMillis
 fun testThread() {
 
     val job = GlobalScope.launch {
+        println(coroutineContext[Job])
         delay(10000)
     }
     PersonBean("", 1)

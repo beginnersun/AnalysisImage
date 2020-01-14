@@ -3,6 +3,7 @@ package com.example.kotlinmvvm.bean
 import android.view.View
 import androidx.room.*
 import com.example.kotlinmvvm.util.AnyConverters
+import org.json.JSONObject
 import java.util.List
 
 @Fts4
@@ -16,7 +17,7 @@ class NewsBean(
     @ColumnInfo(name = "imgextra") val imgextra: ArrayList<Imgextra>,
     @ColumnInfo(name = "imgsrc") val imgsrc: String,
     @ColumnInfo(name = "imgsrc3gtype") val imgsrc3gtype: String,
-    @Ignore val liveInfo: String,
+    @Ignore val liveInfo: JSONObject,
     @ColumnInfo(name = "modelmode") val modelmode: String,
     @ColumnInfo(name = "photosetID") val photosetID: String,
     @ColumnInfo(name = "priority") val priority: Int,

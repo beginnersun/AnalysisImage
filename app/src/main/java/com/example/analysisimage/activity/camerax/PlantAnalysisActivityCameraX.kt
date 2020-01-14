@@ -122,7 +122,7 @@ class PlantAnalysisActivityCameraX : AppCompatActivity() {
         }
 
         capture.setOnClickListener {
-            val imageFile = FileUtil.createTempFile(System.currentTimeMillis().toString() + "", ".jpg")
+            val imageFile = FileUtil.createTempFile(this,System.currentTimeMillis().toString() + "", ".jpg")
             imageCapture?.takePicture(imageFile, object : ImageCapture.OnImageSavedListener {
                 override fun onError(
                     imageCaptureError: ImageCapture.ImageCaptureError,

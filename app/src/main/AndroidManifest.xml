@@ -7,6 +7,9 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
 
+    <!-- 读取图片中的位置信息 -->
+    <uses-permission android:name="android.permission.ACCESS_MEDIA_LOCATION"/>
+
     <!--必须有相机才能安装程序 (如果不支持camera2 会在安装过程中就会因条件不符合而禁止安装-->
     <!--<uses-feature android:name="android.hardware.camera2"-->
     <!--android:required="true"/>-->
@@ -19,7 +22,7 @@
             android:roundIcon="@mipmap/ic_launcher_round"
             android:supportsRtl="true"
             android:theme="@style/AppTheme" tools:replace="android:name">
-        <activity android:name=".MainActivity">
+        <activity android:name=".android10.TestActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

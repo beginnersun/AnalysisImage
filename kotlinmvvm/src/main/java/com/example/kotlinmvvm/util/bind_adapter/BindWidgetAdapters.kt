@@ -33,9 +33,9 @@ object BindAdapters {
 
     @BindingAdapter("click")
     @JvmStatic
-    fun onClick(view: View , method:()->Unit){
+    fun View.onClick(method:()->Unit){
         Log.e("BindAdapter","执行onClick方法")
-        RxView.bindClick(view).subscribe{
+        RxView.bindClick(this).subscribe{
             if (it!=null) {
                 method()
             }
@@ -44,7 +44,7 @@ object BindAdapters {
 
     @BindingAdapter("info", "time")
     @JvmStatic
-    fun setInfo(textView: TextView,count:String,time:String){
-        textView.setText("你好$count $time")
+    fun TextView.setInfo(count:String,time:String){
+        this.text = "你好$count $time"
     }
 }

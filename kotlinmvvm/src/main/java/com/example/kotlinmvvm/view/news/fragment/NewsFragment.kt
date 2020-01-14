@@ -68,11 +68,6 @@ class NewsFragment: BaseFragment(),XRecyclerView.LoadingListener {
             setLoadingMoreEnabled(true)
             setPullRefreshEnabled(true)
             adapter = newsAdapter
-//            addHeaderView(View(context).apply {
-//                layoutParams.width = LinearLayout.LayoutParams.MATCH_PARENT
-//                layoutParams.height = 1
-//                setBackgroundColor(Color.GRAY)
-//            })
         }
         return view
     }

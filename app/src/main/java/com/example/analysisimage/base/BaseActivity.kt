@@ -12,7 +12,8 @@ open abstract class BaseActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_plant)
+//        setContentView(R.layout.activity_plant)
+        initView()
         Log.e(TAG, javaClass.simpleName)
     }
 

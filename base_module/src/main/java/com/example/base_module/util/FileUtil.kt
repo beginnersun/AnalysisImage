@@ -1,5 +1,6 @@
 package com.example.base_module.util
 
+import android.content.Context
 import android.os.Environment
 import android.text.TextUtils
 import android.util.Base64
@@ -29,16 +30,24 @@ class FileUtil {
             return result
         }
 
-        fun createCameraFile(path:String):File{
-            val file = File(Environment.getExternalStorageDirectory().absolutePath + File.separator + path)
+        fun createCameraFile(context: Context, path:String):File{
+            val dir = context.getExternalFilesDir(Environment.DIRECTORY_PICTURES)  //获取本地私有目录  不需要权限并且可以通过File直接访问
+            if (!dir!!.exists()){
+                dir.mkdir()
+            }
+            val file = File(dir,path)
             if (!file.exists()){
                 file.createNewFile()
             }
             return file
         }
 
-        fun createTempFile(name:String,formate:String):File{
-            val file = File(Environment.getExternalStorageDirectory().absolutePath + File.separator + name + formate)
+        fun createTempFile(context: Context, name:String,formate:String):File{
+            val dir = context.getExternalFilesDir(Environment.DIRECTORY_PICTURES)  //获取本地私有目录  不需要权限并且可以通过File直接访问
+            if (!dir!!.exists()){
+                dir.mkdir()
+            }
+            val file = File(dir, name + formate)
             if(!file.exists()){
                 file.createNewFile()
             }
