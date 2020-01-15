@@ -5,12 +5,10 @@ import com.example.base_module.util.LenientGsonConverterFactory
 import com.example.kotlinmvvm.dao.NewsDao
 import com.example.kotlinmvvm.dao.NewsDatabase
 import com.example.kotlinmvvm.interceptor.CustomInterceptor
-import com.example.kotlinmvvm.model.NewsRepository
-import com.example.kotlinmvvm.model.NewsService
-import com.example.kotlinmvvm.model.UserRepository
-import com.example.kotlinmvvm.model.UserService
+import com.example.kotlinmvvm.model.*
 import com.example.kotlinmvvm.vm.MainViewModel
 import com.example.kotlinmvvm.vm.NewsViewModel
+import com.example.kotlinmvvm.vm.StzbViewModel
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import okhttp3.OkHttpClient
@@ -29,18 +27,21 @@ val mainViewModel = module {
     single(named("main")) {
         MainViewModel(UserRepository(get()))
     }
-}
-val newsViewModel = module {
     single(named("news")) {
         NewsViewModel(NewsRepository(get()))
     }
+    single(named("stzb")){
+        StzbViewModel(StzbResponsitory(get()))
+    }
+}
+val newsViewModel = module {
 }
 /**
  * 初始化远程连接model
  */
 val remoteModule = module {
     single<Retrofit> {
-        Retrofit.Builder().baseUrl("https://3g.163.com/touch/reconstruct/article/")
+        Retrofit.Builder().baseUrl("https:")
             .client(OkHttpClient.Builder().apply {
                 addInterceptor(CustomInterceptor())
             }.build())
@@ -50,6 +51,7 @@ val remoteModule = module {
     }
     single<UserService> { get<Retrofit>().create(UserService::class.java) }
     single<NewsService> { get<Retrofit>().create(NewsService::class.java) }
+    single<StzbService> { get<Retrofit>().create(StzbService::class.java)}
 }
 
 val localModule = module{

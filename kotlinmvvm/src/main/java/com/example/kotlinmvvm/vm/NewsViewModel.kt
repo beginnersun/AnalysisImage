@@ -4,9 +4,13 @@ package com.example.kotlinmvvm.vm
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import com.example.kotlinmvvm.base.BaseViewModel
 import com.example.kotlinmvvm.bean.NewsBean
 import com.example.kotlinmvvm.model.NewsRepository
+import kotlinx.coroutines.CoroutineExceptionHandler
+import kotlinx.coroutines.launch
+import kotlin.coroutines.CoroutineContext
 
 class NewsViewModel(private val newsRepository: NewsRepository) : BaseViewModel() {
 

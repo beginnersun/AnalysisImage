@@ -15,19 +15,19 @@ import android.util.Log
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.*
 import java.net.URL
 
 
 class NewsDetailsActivity : AppCompatActivity() {
 
+    private var htmlInfo = ""
 
     private var message: Spanned? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_news_detail)
-        val htmlInfo =
+        htmlInfo =
             "<div style=\"padding: 0px; border: 10px solid rgb(0, 0, 0); width: 840px; margin-top: 10px; margin-bottom: 10px; margin-left: 45px; float: left;\">\n" +
                     "  <div style=\"margin: 2px; padding: 10px; border: 1px solid rgb(0, 0, 0); text-align: center;\">    \n" +
                     "    <table style=\"width: 810px; height: 60px; border-right-color: rgb(0, 0, 0); border-bottom-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); " +
@@ -43,24 +43,36 @@ class NewsDetailsActivity : AppCompatActivity() {
                     "31区,1332区,1335区,1336区,1337区将进行合并，合并后服务器代号为S3221</font></p><p style=\"text-align: left;\"><font face=\"微软雅黑\" size=\"3\"><br></font></p><" +
                     "/td>        </tr>      </tbody>    </table>  </div></div>\\n\\n\\n"
 
-        if (Build.VERSION.SDK_INT >= 24) {
-            Observable.create<Spanned> {
-                emitter ->
-                emitter.onNext(Html.fromHtml(htmlInfo, FROM_HTML_MODE_LEGACY, imgGetter, null))
-            }.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe {
-                spanned ->
-                tv_images.text = spanned
-            }
-        }else{
-            Observable.create<Spanned> {
-                    emitter ->
-                emitter.onNext(Html.fromHtml(htmlInfo,imgGetter, null))
-            }.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe {
-                    spanned ->
-                tv_images.text = spanned
-            }
+        GlobalScope.launch(Dispatchers.Main) {
+            var spanned = delayText()
+            tv_images.text = spanned!!
         }
+
+
+
+//        if (Build.VERSION.SDK_INT >= 24) {
+//            Observable.create<Spanned> {
+//                emitter ->
+//                emitter.onNext(Html.fromHtml(htmlInfo, FROM_HTML_MODE_LEGACY, imgGetter, null))
+//            }.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe {
+//                spanned ->
+//                tv_images.text = spanned
+//            }
+//        }else{
+//            Observable.create<Spanned> {
+//                    emitter ->
+//                emitter.onNext(Html.fromHtml(htmlInfo,imgGetter, null))
+//            }.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe {
+//                    spanned ->
+//                tv_images.text = spanned
+//            }
+//        }
     }
+
+    suspend fun delayText(): Spanned =
+        withContext(Dispatchers.IO) {
+            Html.fromHtml(htmlInfo, imgGetter, null)
+        }
 
 
     //这里面的resource就是fromhtml函数的第一个参数里面的含有的url
@@ -71,7 +83,9 @@ class NewsDetailsActivity : AppCompatActivity() {
             url = URL(source)
             drawable = Drawable.createFromStream(url.openStream(), "") // 获取网路图片
         } catch (e: Exception) {
+            Log.e("出错开始", "1")
             e.printStackTrace()
+            Log.e("出错结束", "2")
             return@ImageGetter null
         }
         drawable!!.setBounds(

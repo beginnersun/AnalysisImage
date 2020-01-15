@@ -5,6 +5,10 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.base_module.widget.LoadingView
 import com.example.kotlinmvvm.vm.vminterface.VmStateListener
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 abstract class BaseActivity:AppCompatActivity() {
 
@@ -14,6 +18,7 @@ abstract class BaseActivity:AppCompatActivity() {
         super.onCreate(savedInstanceState)
         val loadingView = LoadingView(this)
         baseViewModel = setViewModel()
+        
         baseViewModel?.listener = object:VmStateListener{
             override fun error(message: String) {
                 loadingView.cancel()
@@ -38,25 +43,6 @@ abstract class BaseActivity:AppCompatActivity() {
         }
     }
 
-    class OnVmStateListener:VmStateListener{
-        override fun error(message: String) {
-
-        }
-
-        override fun startLoad() {
-
-        }
-
-        override fun endLoad() {
-
-        }
-
-        override fun onSuccess() {
-
-        }
-
-    }
-
     abstract fun setViewModel():BaseViewModel
 
     protected fun onError(message:String){
@@ -64,6 +50,7 @@ abstract class BaseActivity:AppCompatActivity() {
     }
 
     protected fun onStartLoad(){
+
     }
 
     protected fun onEndLoad(){

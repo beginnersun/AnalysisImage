@@ -45,7 +45,7 @@ class NewsFragment: BaseFragment(),XRecyclerView.LoadingListener {
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        type = arguments!!.getString("tag")
+        type = arguments!!.getString("tag")!!
     }
 
     companion object {

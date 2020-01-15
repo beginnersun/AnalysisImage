@@ -81,7 +81,6 @@ class NewsActivity : BaseActivity(),XRecyclerView.LoadingListener{
 //
 //        viewModel.newsData.observe(this, Observer<List<NewsBean>> {
 //            px += it.size
-//
 //        })
     }
 
