@@ -31,7 +31,7 @@ class VideoAdapter(private val context:Context): RecyclerView.Adapter<VideoAdapt
         }
 
         fun bindData(data:VideoBean){
-            binding.data = data
+            binding.item = data
             binding.executePendingBindings()
         }
 
