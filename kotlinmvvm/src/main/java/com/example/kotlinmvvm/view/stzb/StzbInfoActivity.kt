@@ -2,6 +2,7 @@ package com.example.kotlinmvvm.view.stzb
 
 import android.os.Bundle
 import androidx.databinding.DataBindingUtil
+import com.alibaba.android.arouter.facade.annotation.Route
 import com.example.kotlinmvvm.R
 import com.example.kotlinmvvm.base.BaseActivity
 import com.example.kotlinmvvm.base.BaseFragment
@@ -15,6 +16,7 @@ import com.google.android.material.tabs.TabLayout
 import org.koin.core.qualifier.named
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
+@Route(path = "/kotlinmvvm/stzb")
 class StzbInfoActivity:BaseActivity() {
 
     private val viewModel:StzbViewModel by viewModel(named("stzb"))
@@ -25,7 +27,9 @@ class StzbInfoActivity:BaseActivity() {
 
     private val fragmentList = mutableListOf<BaseFragment>()
 
-    private val titleList = listOf("视频","公告")
+    private val titleList = listOf("视频"
+//        ,"公告"
+    )
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,7 +51,7 @@ class StzbInfoActivity:BaseActivity() {
 
     private fun initFragment(){
         fragmentList.add(VideoFragment())
-        fragmentList.add(VideoFragment())
+//        fragmentList.add(VideoFragment())
     }
 
 }

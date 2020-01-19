@@ -4,7 +4,6 @@ import android.view.View
 import androidx.room.*
 import com.example.kotlinmvvm.util.AnyConverters
 import org.json.JSONObject
-import java.util.List
 
 @Fts4
 @Entity(tableName = "news")

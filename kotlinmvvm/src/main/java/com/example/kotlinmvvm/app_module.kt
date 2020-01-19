@@ -19,6 +19,7 @@ import org.koin.dsl.module
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.converter.scalars.ScalarsConverterFactory
 
 /**
  * 初始化需要的ViewModel
@@ -40,18 +41,39 @@ val newsViewModel = module {
  * 初始化远程连接model
  */
 val remoteModule = module {
-    single<Retrofit> {
-        Retrofit.Builder().baseUrl("https:")
+//    single<Retrofit> (named("news_retrofit")){
+//        Retrofit.Builder()
+//            .baseUrl("https://3g.163.com/touch/reconstruct")
+//            .client(OkHttpClient.Builder().apply {
+//                addInterceptor(CustomInterceptor())
+//            }.build())
+//            .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+//            .addConverterFactory(LenientGsonConverterFactory.create(Gson()))
+//            .build()
+//    }
+    single<Retrofit>
+//    (named("stzb_retrofit"))
+    {
+        Retrofit.Builder()
+            .baseUrl("https://mshare.cc.163.com")
             .client(OkHttpClient.Builder().apply {
                 addInterceptor(CustomInterceptor())
             }.build())
-            .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-            .addConverterFactory(LenientGsonConverterFactory.create(Gson()))
+            .addConverterFactory(ScalarsConverterFactory.create())
+//            .addConverterFactory(GsonConverterFactory.create())
+//            .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+//            .addConverterFactory(LenientGsonConverterFactory.create(Gson()))
             .build()
     }
-    single<UserService> { get<Retrofit>().create(UserService::class.java) }
-    single<NewsService> { get<Retrofit>().create(NewsService::class.java) }
-    single<StzbService> { get<Retrofit>().create(StzbService::class.java)}
+    single<UserService> { get<Retrofit>(
+//        named("news_retrofit")
+    ).create(UserService::class.java) }
+    single<NewsService> { get<Retrofit>(
+//        named("news_retrofit")
+    ).create(NewsService::class.java) }
+    single<StzbService> { get<Retrofit>(
+//        named("stzb_retrofit")
+    ).create(StzbService::class.java)}
 }
 
 val localModule = module{

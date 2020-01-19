@@ -1,6 +1,7 @@
 package com.example.kotlinmvvm.view.stzb.fragment
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -38,11 +39,10 @@ class VideoFragment : BaseFragment() {
             .apply {
                 getStzbVideo(page, page_size)
                 videoData.observe(this@VideoFragment, Observer<List<VideoBean>> {
+                    Log.e("信息",it.toString())
                     binding?.recyclerStzb!!.reset()
                     if (page == 1){
-
                     }
-
 
                 })
             }
