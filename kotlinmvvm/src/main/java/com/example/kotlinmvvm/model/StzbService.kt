@@ -19,5 +19,9 @@ interface StzbService {
                                   @Query("gametype")gametype:Int = 478):String
 
 
+    @GET("/api/mobile/index.php")
+    suspend fun getStzbDetailInfo(@Query("version")version:Int,@Query("module")module:String,@Query("charset")charset:String,
+                                  @Query("tid")tid:String,@Query("page")page:Int,@Query("fid")fid:String):String
+
 
 }

@@ -7,9 +7,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.kotlinmvvm.bean.VideoBean
 import com.example.kotlinmvvm.databinding.ItemStzbvideoBinding
 
-class VideoAdapter(private val context:Context): RecyclerView.Adapter<VideoAdapter.ViewHolder>(){
+class VideoAdapter(private val context:Context,private val datas:List<VideoBean> = mutableListOf()): RecyclerView.Adapter<VideoAdapter.ViewHolder>(){
 
-    private val datas:List<VideoBean> = mutableListOf()
+    var itemClick:OnAdapterItemClick? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder.create(parent, LayoutInflater.from(context))
@@ -35,6 +35,10 @@ class VideoAdapter(private val context:Context): RecyclerView.Adapter<VideoAdapt
             binding.executePendingBindings()
         }
 
+    }
+
+    interface OnAdapterItemClick{
+        fun onItemClick(position:Int)
     }
 
 }

@@ -7,9 +7,8 @@
     <androidx.constraintlayout.widget.ConstraintLayout
             xmlns:android="http://schemas.android.com/apk/res/android"
             android:orientation="vertical"
-            android:layout_width="201dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/title_black"
             android:padding="10dp">
 
         <ImageView
@@ -18,7 +17,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 android:layout_width="match_parent"
-                android:layout_height="114dp"
+                android:layout_height="104dp"
                 android:src="@drawable/ic_launcher_background"
                 android:scaleType="fitXY"
                 app:loadPic="@{item.cover}"/>
