@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                                                   xmlns:app="http://schemas.android.com/apk/res-auto"
+                                                   android:orientation="vertical"
+                                                   android:layout_width="match_parent"
+                                                   android:layout_height="match_parent">
+
+    <TextureView
+            android:id="@+id/texture_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+    />
+
+    <TextView
+            android:id="@+id/tv_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="【十九解说战报系列】第六弹--犀利刷地王——经验30万"
+            android:textColor="@color/white"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="20dp"
+            android:textSize="16sp"
+            android:singleLine="true"
+            android:ellipsize="marquee"
+            android:marqueeRepeatLimit="marquee_forever"/>
+
+    <ImageView
+            android:id="@+id/iv_play"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/seek_bar"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="15dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/play"
+            android:background="@color/white"/>
+
+    <TextView
+            android:id="@+id/tv_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="@id/iv_play"
+            app:layout_constraintBottom_toBottomOf="@id/iv_play"
+            app:layout_constraintStart_toEndOf="@id/iv_play"
+            android:layout_marginLeft="8dp"
+            android:textColor="@color/white"
+            android:text="0:04 / 3:56"/>
+
+    <SeekBar
+            android:id="@+id/volume_seekbar"
+            app:layout_constraintEnd_toStartOf="@+id/iv_volume"
+            app:layout_constraintBottom_toBottomOf="@+id/iv_volume"
+            app:layout_constraintTop_toTopOf="@+id/iv_volume"
+            android:layout_width="88dp"
+            android:layout_height="wrap_content"
+            android:maxHeight="3dp"
+            android:max="100"
+            android:progress="55"
+            android:thumb="@drawable/seekbar_thumb"
+            android:progressDrawable="@drawable/seekbar_bg"
+            android:visibility="gone"/>
+
+    <ImageView
+            app:layout_constraintEnd_toStartOf="@+id/iv_full_screen"
+            app:layout_constraintBottom_toBottomOf="@id/iv_play"
+            android:id="@+id/iv_volume"
+            android:layout_marginRight="15dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/volume"
+            android:background="@color/white"/>
+
+    <ImageView
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="@id/iv_play"
+            android:id="@+id/iv_full_screen"
+            android:layout_marginRight="15dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/full_screen"
+            android:background="@color/white"/>
+
+    <SeekBar
+            android:id="@+id/seek_bar"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginBottom="15dp"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:maxHeight="3dp"
+            android:max="100"
+            android:progress="20"
+            android:secondaryProgress="50"
+            android:thumb="@drawable/seekbar_thumb"
+            android:progressDrawable="@drawable/seekbar_bg"
+    />
+
+    <androidx.constraintlayout.widget.Group
+            android:id="@+id/group"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:constraint_referenced_ids="tv_title,iv_play,tv_time,iv_volume,iv_full_screen,seek_bar"
+            android:visibility="visible"
+    />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -161,12 +161,12 @@ class PlantAnalysisActivity : AppCompatActivity() {
 
     private fun captureImage() {
         val requestBuilder = cameraDevice?.createCaptureRequest(CameraDevice.TEMPLATE_STILL_CAPTURE)
-        requestBuilder?.addTarget(imageReader?.surface)  //再加上ImageReader的surface 用来拍摄照片（或者获取单帧图片）
+        requestBuilder?.addTarget(imageReader?.surface!!)  //再加上ImageReader的surface 用来拍摄照片（或者获取单帧图片）
 //        requestBuilder?.set(CaptureRequest.CONTROL_AF_MODE, CaptureRequest.CONTROL_AF_MODE_CONTINUOUS_PICTURE) //自动对焦
         requestBuilder?.set(CaptureRequest.CONTROL_AF_TRIGGER, CameraMetadata.CONTROL_AF_TRIGGER_START) //锁定焦点
         requestBuilder?.set(CaptureRequest.JPEG_ORIENTATION,getJpegOrientation(cameraCharacteristics!!,windowManager.defaultDisplay.rotation))
         requestBuilder?.set(CaptureRequest.JPEG_QUALITY,100)
-        mCameraSession?.capture(requestBuilder?.build(), null, handler)
+        mCameraSession?.capture(requestBuilder?.build()!!, null, handler)
     }
 
     private var degrees = 0
@@ -309,7 +309,7 @@ class PlantAnalysisActivity : AppCompatActivity() {
                  */
                 override fun onConfigured(session: CameraCaptureSession) {
                     mCameraSession = session
-                    session.setRepeatingRequest(requestBuilder?.build(), mCaptureCallback(), handler)  //发起预览请求
+                    session.setRepeatingRequest(requestBuilder?.build()!!, mCaptureCallback(), handler)  //发起预览请求
                 }
 
                 override fun onConfigureFailed(session: CameraCaptureSession) {
@@ -401,7 +401,7 @@ class PlantAnalysisActivity : AppCompatActivity() {
             if (resultCode == Activity.RESULT_OK) {
                 val uri: Uri? = data?.data
                 Glide.with(this).load(uri).into(imageView)
-                val cursor: Cursor = contentResolver.query(uri, arrayOf(MediaStore.Images.Media.DATA), null, null, null)
+                val cursor: Cursor = contentResolver.query(uri!!, arrayOf(MediaStore.Images.Media.DATA), null, null, null)!!
                 if (cursor.moveToFirst()) {
                     var filepath = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.DATA))
                     encodeImageByBase64(filepath)
@@ -507,7 +507,7 @@ class PlantAnalysisActivity : AppCompatActivity() {
         // ImageReader 用来拍照或者接收YUV数据
         // MediaRecorder 用来录制视频
         // MediaCodec 用来录制视频
-        val supportSize = streamConfigurationMap.getOutputSizes(SurfaceTexture::class.java)
+        val supportSize = streamConfigurationMap!!.getOutputSizes(SurfaceTexture::class.java)
         var me_size:Size? = null
         if (supportSize != null) {
             supportSize.forEach { size ->

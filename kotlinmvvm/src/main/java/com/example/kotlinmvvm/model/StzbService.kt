@@ -14,12 +14,12 @@ interface StzbService {
 //    suspend fun getStzbVideoInfo(@Path("page")page:Int,@Path("page_size")size:Int):String
 
 
-    @GET("/mrecord/get_records")
+    @GET("mrecord/get_records")
     suspend fun getStzbVideoInfo(@Query("page")page:Int,@Query("page_size")page_size:Int,@Query("sort")sort:Int = 0,
                                   @Query("gametype")gametype:Int = 478):String
 
 
-    @GET("/api/mobile/index.php")
+    @GET("api/mobile/index.php")
     suspend fun getStzbDetailInfo(@Query("version")version:Int,@Query("module")module:String,@Query("charset")charset:String,
                                   @Query("tid")tid:String,@Query("page")page:Int,@Query("fid")fid:String):String
 

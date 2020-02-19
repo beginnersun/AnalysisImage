@@ -21,8 +21,6 @@ import java.net.URL
 
 class StzbDetailsActivity : AppCompatActivity() {
 
-    private var htmlInfo = ""
-
     private var message: Spanned? = null
 
     private fun Load(){
@@ -32,7 +30,7 @@ class StzbDetailsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_news_detail)
-//        htmlInfo =
+//        var htmlInfo =
 //            "<div style=\"padding: 0px; border: 10px solid rgb(0, 0, 0); width: 840px; margin-top: 10px; margin-bottom: 10px; margin-left: 45px; float: left;\">\n" +
 //                    "  <div style=\"margin: 2px; padding: 10px; border: 1px solid rgb(0, 0, 0); text-align: center;\">    \n" +
 //                    "    <table style=\"width: 810px; height: 60px; border-right-color: rgb(0, 0, 0); border-bottom-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); " +
@@ -47,58 +45,43 @@ class StzbDetailsActivity : AppCompatActivity() {
 //                    " left;\"><font face=\"微软雅黑\" size=\"3\">　　以下是本次合服的方案：</font></p><p style=\"text-align: left;\"><font face=\"微软雅黑\" size=\"3\">　　1329区,13" +
 //                    "31区,1332区,1335区,1336区,1337区将进行合并，合并后服务器代号为S3221</font></p><p style=\"text-align: left;\"><font face=\"微软雅黑\" size=\"3\"><br></font></p><" +
 //                    "/td>        </tr>      </tbody>    </table>  </div></div>\\n\\n\\n"
-
+//
 //        GlobalScope.launch(Dispatchers.Main) {
-//            var spanned = delayText()
+//            var spanned = delayText(htmlInfo)
 //            tv_images.text = spanned!!
 //        }
 
-
-
-//        if (Build.VERSION.SDK_INT >= 24) {
-//            Observable.create<Spanned> {
-//                emitter ->
-//                emitter.onNext(Html.fromHtml(htmlInfo, FROM_HTML_MODE_LEGACY, imgGetter, null))
-//            }.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe {
-//                spanned ->
-//                tv_images.text = spanned
-//            }
-//        }else{
-//            Observable.create<Spanned> {
-//                    emitter ->
-//                emitter.onNext(Html.fromHtml(htmlInfo,imgGetter, null))
-//            }.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe {
-//                    spanned ->
-//                tv_images.text = spanned
-//            }
-//        }
     }
 
-//    suspend fun delayText(): Spanned =
-//        withContext(Dispatchers.IO) {
-//            Html.fromHtml(htmlInfo, imgGetter, null)
-//        }
-//
-//
-//    //这里面的resource就是fromhtml函数的第一个参数里面的含有的url
-//    private val imgGetter: Html.ImageGetter = Html.ImageGetter { source ->
-//        var drawable: Drawable?
-//        val url: URL
-//        try {
-//            url = URL(source)
-//            drawable = Drawable.createFromStream(url.openStream(), "") // 获取网路图片
-//        } catch (e: Exception) {
-//            Log.e("出错开始", "1")
-//            e.printStackTrace()
-//            Log.e("出错结束", "2")
-//            return@ImageGetter null
-//        }
-//        drawable!!.setBounds(
-//            0, 0, drawable!!.intrinsicWidth,
-//            drawable!!.intrinsicHeight
-//        )
-//        drawable
-//    }
+    suspend fun delayText(htmlInfo:String): Spanned =
+        withContext(Dispatchers.IO) {
+            if(Build.VERSION.SDK_INT >= 24){
+                Html.fromHtml(htmlInfo, FROM_HTML_MODE_LEGACY, imgGetter, null)
+            }else {
+                Html.fromHtml(htmlInfo, imgGetter, null)
+            }
+        }
+
+
+    //这里面的resource就是fromhtml函数的第一个参数里面的含有的url
+    private val imgGetter: Html.ImageGetter = Html.ImageGetter { source ->
+        var drawable: Drawable?
+        val url: URL
+        try {
+            url = URL(source)
+            drawable = Drawable.createFromStream(url.openStream(), "") // 获取网路图片
+        } catch (e: Exception) {
+            Log.e("出错开始", "1")
+            e.printStackTrace()
+            Log.e("出错结束", "2")
+            return@ImageGetter null
+        }
+        drawable!!.setBounds(
+            0, 0, drawable!!.intrinsicWidth,
+            drawable!!.intrinsicHeight
+        )
+        drawable
+    }
 
 
 }

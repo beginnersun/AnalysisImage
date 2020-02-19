@@ -31,7 +31,7 @@ val mainViewModel = module {
     single(named("news")) {
         NewsViewModel(NewsRepository(get()))
     }
-    single(named("stzb")){
+    single(named("stzb")) {
         StzbViewModel(StzbResponsitory(get()))
     }
 }
@@ -41,41 +41,46 @@ val newsViewModel = module {
  * 初始化远程连接model
  */
 val remoteModule = module {
-//    single<Retrofit> (named("news_retrofit")){
-//        Retrofit.Builder()
-//            .baseUrl("https://3g.163.com/touch/reconstruct")
-//            .client(OkHttpClient.Builder().apply {
-//                addInterceptor(CustomInterceptor())
-//            }.build())
-//            .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-//            .addConverterFactory(LenientGsonConverterFactory.create(Gson()))
-//            .build()
-//    }
-    single<Retrofit>
-//    (named("stzb_retrofit"))
+    single<Retrofit>(named("news_retrofit")) {
+        Retrofit.Builder()
+            .baseUrl("https://3g.163.com/touch/reconstruct/")
+            .client(OkHttpClient.Builder().apply {
+                addInterceptor(CustomInterceptor())
+            }.build())
+            .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+            .addConverterFactory(LenientGsonConverterFactory.create(Gson()))
+            .build()
+    }
+    single<Retrofit>(named("stzb_retrofit"))
     {
         Retrofit.Builder()
-            .baseUrl("https://mshare.cc.163.com")
+            .baseUrl("https://mshare.cc.163.com/")
             .client(OkHttpClient.Builder().apply {
                 addInterceptor(CustomInterceptor())
             }.build())
             .addConverterFactory(ScalarsConverterFactory.create())
 //            .addConverterFactory(GsonConverterFactory.create())
-//            .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+            .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
 //            .addConverterFactory(LenientGsonConverterFactory.create(Gson()))
             .build()
     }
-    single<UserService> { get<Retrofit>(
-//        named("news_retrofit")
-    ).create(UserService::class.java) }
-    single<NewsService> { get<Retrofit>(
-//        named("news_retrofit")
-    ).create(NewsService::class.java) }
-    single<StzbService> { get<Retrofit>(
-//        named("stzb_retrofit")
-    ).create(StzbService::class.java)}
+    single<UserService> {
+        get<Retrofit>(
+        named("news_retrofit")
+        ).create(UserService::class.java)
+    }
+    single<NewsService> {
+        get<Retrofit>(
+        named("news_retrofit")
+        ).create(NewsService::class.java)
+    }
+    single<StzbService> {
+        get<Retrofit>(
+        named("stzb_retrofit")
+        ).create(StzbService::class.java)
+    }
 }
 
-val localModule = module{
-//    single { Room.databaseBuilder(androidApplication().applicationContext,NewsDatabase::class.java,"news.db").build().newsDao()}
+val localModule = module {
+    //    single { Room.databaseBuilder(androidApplication().applicationContext,NewsDatabase::class.java,"news.db").build().newsDao()}
 }

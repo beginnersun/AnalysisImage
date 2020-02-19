@@ -9,9 +9,9 @@
               android:id="@+id/loading_text"
               android:text="正在加载，请稍等"
               android:layout_centerInParent="true"
+              android:textSize="13sp"
               android:singleLine="true"
               android:ellipsize="marquee"
-              android:textSize="13sp"
               android:marqueeRepeatLimit="marquee_forever"/>
 
     <ProgressBar

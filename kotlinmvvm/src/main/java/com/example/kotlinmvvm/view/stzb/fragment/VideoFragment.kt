@@ -1,5 +1,6 @@
 package com.example.kotlinmvvm.view.stzb.fragment
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -13,12 +14,23 @@ import com.example.kotlinmvvm.R
 import com.example.kotlinmvvm.base.BaseFragment
 import com.example.kotlinmvvm.bean.VideoBean
 import com.example.kotlinmvvm.databinding.FragmentStzbBinding
+import com.example.kotlinmvvm.view.stzb.StzbDetailsActivity
 import com.example.kotlinmvvm.view.stzb.adapter.VideoAdapter
 import com.example.kotlinmvvm.vm.StzbViewModel
+import com.jcodecraeer.xrecyclerview.XRecyclerView
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.qualifier.named
 
-class VideoFragment : BaseFragment(),VideoAdapter.OnAdapterItemClick{
+class VideoFragment : BaseFragment(),VideoAdapter.OnAdapterItemClick,XRecyclerView.LoadingListener{
+    override fun onLoadMore() {
+        page++
+        viewModel.getStzbVideo(page,page_size)
+    }
+
+    override fun onRefresh() {
+        page = 1
+        viewModel.getStzbVideo(page,page_size)
+    }
 
 
     private var page = 1
@@ -45,6 +57,9 @@ class VideoFragment : BaseFragment(),VideoAdapter.OnAdapterItemClick{
         videoAdapter?.itemClick = this
         binding?.recyclerStzb!!.apply {
             layoutManager = GridLayoutManager(activity!!,2)
+            setPullRefreshEnabled(true)
+            setLoadingMoreEnabled(true)
+            setLoadingListener(this@VideoFragment)
             adapter = videoAdapter
         }
         viewModel
@@ -60,11 +75,10 @@ class VideoFragment : BaseFragment(),VideoAdapter.OnAdapterItemClick{
                     videoAdapter?.notifyDataSetChanged()
                 })
             }
-
         return view
     }
 
     override fun onItemClick(position: Int) {
-
+        startActivity(Intent(activity!!,StzbDetailsActivity::class.java))
     }
 }

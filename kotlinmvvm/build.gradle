@@ -17,7 +17,7 @@ android {
     }
 
     defaultConfig {
-        minSdkVersion 15
+        minSdkVersion 26
         targetSdkVersion 29
         versionCode 1
         versionName "1.0"
@@ -72,6 +72,7 @@ dependencies {
     /**
      * RxBinding
      */
+
 //
 //    implementation"org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 //    implementation 'androidx.appcompat:appcompat:1.0.0-beta01'

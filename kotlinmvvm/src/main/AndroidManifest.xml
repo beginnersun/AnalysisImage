@@ -12,7 +12,8 @@
 
         <activity android:name=".view.MainActivity"/>
         <activity android:name=".view.news.NewsActivity"/>
-        <activity android:name=".view.news.NewsDetailsActivity"/>
+        <activity android:name=".view.news.NewsDetailsActivity"
+        android:hardwareAccelerated="true"/>
         <activity android:name=".view.stzb.StzbInfoActivity"/>
 
     </application>
