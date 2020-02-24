@@ -32,6 +32,7 @@ class NoticeAdapter(private var context: Context, private var datas: List<Notice
         }
 
         fun bindView(position:Int,bean: NoticeBean){
+            binding.item = bean
             binding.executePendingBindings()
         }
 
