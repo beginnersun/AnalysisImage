@@ -1,5 +1,6 @@
 package com.example.kotlinmvvm.view.news
 
+import android.content.pm.ActivityInfo
 import android.graphics.drawable.Drawable
 import android.os.Build
 import android.os.Bundle
@@ -12,7 +13,9 @@ import android.os.Message
 import android.text.Html.FROM_HTML_MODE_LEGACY
 import android.text.Spanned
 import android.util.Log
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.databinding.DataBindingUtil
+import com.example.base_module.widget.VideoPlayer
 import com.example.kotlinmvvm.databinding.ActivityNewsDetailBinding
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -21,17 +24,40 @@ import kotlinx.coroutines.*
 import java.net.URL
 
 
-class NewsDetailsActivity : AppCompatActivity() {
+class NewsDetailsActivity : AppCompatActivity() ,VideoPlayer.VideoListenerCallBack{
+    override fun stationChanged(station: Int, message: Message?) {
+
+    }
+
+    override fun fullScreen(full:Boolean) {
+        if (full) {
+            oldHeight = binding!!.videoPlayer.layoutParams.height
+            binding!!.videoPlayer.layoutParams.height = ConstraintLayout.LayoutParams.MATCH_PARENT
+            requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+        }else{
+            binding!!.videoPlayer.layoutParams.height = oldHeight
+            requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+        }
+    }
+
+    override fun share() {
+
+    }
 
     private var htmlInfo = ""
 
     private var message: Spanned? = null
+    private var oldHeight = 0
     private var binding:ActivityNewsDetailBinding? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Log.e("此时","NewsDetailActivity")
         binding = DataBindingUtil.setContentView<ActivityNewsDetailBinding>(this,R.layout.activity_news_detail)
+
+        binding!!.videoPlayer.callBack = this
         binding!!.videoPlayer.setUrl("http://vod.cc.163.com/file/59d3393d4449717ba3d69f9d.mp4")
+
+
 //        binding!!.videoPlayer.start()
 
 //        htmlInfo =

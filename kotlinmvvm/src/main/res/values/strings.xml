@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">KotlinMVVM</string>
     <string name="recommend">跟帖</string>
+    <string name="author">作者：</string>
 </resources>

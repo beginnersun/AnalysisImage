@@ -21,15 +21,15 @@ import com.jcodecraeer.xrecyclerview.XRecyclerView
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.qualifier.named
 
-class VideoFragment : BaseFragment(),VideoAdapter.OnAdapterItemClick,XRecyclerView.LoadingListener{
+class VideoFragment : BaseFragment(), VideoAdapter.OnAdapterItemClick, XRecyclerView.LoadingListener {
     override fun onLoadMore() {
         page++
-        viewModel.getStzbVideo(page,page_size)
+        viewModel.getStzbVideo(page, page_size)
     }
 
     override fun onRefresh() {
         page = 1
-        viewModel.getStzbVideo(page,page_size)
+        viewModel.getStzbVideo(page, page_size)
     }
 
 
@@ -37,12 +37,23 @@ class VideoFragment : BaseFragment(),VideoAdapter.OnAdapterItemClick,XRecyclerVi
     private val page_size = 10
 
     override fun onFirstVisible() {
-
+        viewModel.run {
+            getStzbVideo(page, page_size)
+            videoData.observe(this@VideoFragment, Observer<List<VideoBean>> {
+                Log.e("请求信息", it.toString())
+                binding?.recyclerStzb!!.reset()
+                if (page == 1) {
+                    datas.clear()
+                }
+                datas.addAll(it)
+                videoAdapter?.notifyDataSetChanged()
+            })
+        }
     }
 
-    private val datas:MutableList<VideoBean> = mutableListOf()
+    private val datas: MutableList<VideoBean> = mutableListOf()
 
-    private var videoAdapter:VideoAdapter? = null
+    private var videoAdapter: VideoAdapter? = null
 
     private val viewModel: StzbViewModel by viewModel(named("stzb"))
 
@@ -53,32 +64,19 @@ class VideoFragment : BaseFragment(),VideoAdapter.OnAdapterItemClick,XRecyclerVi
         val view = inflater.inflate(R.layout.fragment_stzb, container, false)
         binding = DataBindingUtil.bind(view)
 
-        videoAdapter = VideoAdapter(activity!!,datas)
+        videoAdapter = VideoAdapter(activity!!, datas)
         videoAdapter?.itemClick = this
         binding?.recyclerStzb!!.apply {
-            layoutManager = GridLayoutManager(activity!!,2)
+            layoutManager = GridLayoutManager(activity!!, 2)
             setPullRefreshEnabled(true)
             setLoadingMoreEnabled(true)
             setLoadingListener(this@VideoFragment)
             adapter = videoAdapter
         }
-        viewModel
-            .apply {
-                getStzbVideo(page, page_size)
-                videoData.observe(this@VideoFragment, Observer<List<VideoBean>> {
-                    Log.e("请求信息",it.toString())
-                    binding?.recyclerStzb!!.reset()
-                    if (page == 1){
-                        datas.clear()
-                    }
-                    datas.addAll(it)
-                    videoAdapter?.notifyDataSetChanged()
-                })
-            }
         return view
     }
 
     override fun onItemClick(position: Int) {
-        startActivity(Intent(activity!!,StzbDetailsActivity::class.java))
+        startActivity(Intent(activity!!, StzbDetailsActivity::class.java).putExtra("url", datas[position].mp4_url))
     }
 }

@@ -1,5 +1,6 @@
 package com.example.kotlinmvvm.view.stzb
 
+import android.content.pm.ActivityInfo
 import android.graphics.drawable.Drawable
 import android.os.Build
 import android.os.Bundle
@@ -12,6 +13,10 @@ import android.os.Message
 import android.text.Html.FROM_HTML_MODE_LEGACY
 import android.text.Spanned
 import android.util.Log
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.databinding.DataBindingUtil
+import com.example.base_module.widget.VideoPlayer
+import com.example.kotlinmvvm.databinding.ActivityStzbDetailBinding
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
@@ -19,17 +24,43 @@ import kotlinx.coroutines.*
 import java.net.URL
 
 
-class StzbDetailsActivity : AppCompatActivity() {
+class StzbDetailsActivity : AppCompatActivity() ,VideoPlayer.VideoListenerCallBack{
+    override fun stationChanged(station: Int, message: Message?) {
+
+    }
+
+    override fun fullScreen(full:Boolean) {
+        if (full) {
+            oldHeight = binding!!.videoPlayer.layoutParams.height
+            binding!!.videoPlayer.layoutParams.height = ConstraintLayout.LayoutParams.MATCH_PARENT
+            requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+        }else{
+            binding!!.videoPlayer.layoutParams.height = oldHeight
+            requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+        }
+    }
+    override fun share() {
+
+    }
 
     private var message: Spanned? = null
+    private var oldHeight = 0
 
     private fun Load(){
 
     }
 
+    private var binding:ActivityStzbDetailBinding? = null
+    private var url:String = ""
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_news_detail)
+        binding = DataBindingUtil.setContentView(this,R.layout.activity_stzb_detail)
+        url = intent.getStringExtra("url")
+        binding!!.videoPlayer!!.setUrl(url)
+        binding!!.videoPlayer!!.callBack = this
+
+
 //        var htmlInfo =
 //            "<div style=\"padding: 0px; border: 10px solid rgb(0, 0, 0); width: 840px; margin-top: 10px; margin-bottom: 10px; margin-left: 45px; float: left;\">\n" +
 //                    "  <div style=\"margin: 2px; padding: 10px; border: 1px solid rgb(0, 0, 0); text-align: center;\">    \n" +

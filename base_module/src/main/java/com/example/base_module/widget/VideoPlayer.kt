@@ -5,7 +5,6 @@ import android.content.Context
 import android.graphics.SurfaceTexture
 import android.media.AudioFocusRequest
 import android.media.AudioManager
-import android.media.MediaPlayer
 import android.net.Uri
 import android.os.Build
 import android.os.Handler
@@ -18,15 +17,21 @@ import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.SeekBar
 import android.widget.TextView
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.Group
 import com.example.base_module.R
-import tv.danmaku.ijk.media.player.IMediaPlayer
+import com.example.base_module.util.SystemVolumeObserver
 import tv.danmaku.ijk.media.player.IjkMediaPlayer
 import java.util.*
+import kotlin.math.absoluteValue
 
 
-class VideoPlayer : FrameLayout, TextureView.SurfaceTextureListener {
+class VideoPlayer : FrameLayout, TextureView.SurfaceTextureListener ,SystemVolumeObserver.OnVolumeChangedListener{
+
+
+    override fun onVolumeChanged(volume: Int) {
+        volumeSeek = true
+        volume_SeekBar?.progress = volume
+    }
 
     constructor(context: Context) : super(context) {
         initView()
@@ -71,10 +76,8 @@ class VideoPlayer : FrameLayout, TextureView.SurfaceTextureListener {
     private var timer = Timer()
 
     private var timerSeek = false
-
-    fun setTitle() {
-
-    }
+    private var volumeSeek = false
+    private var fullScreen = false
 
     fun setUrl(url: String) {
         mUrl = url
@@ -125,6 +128,40 @@ class VideoPlayer : FrameLayout, TextureView.SurfaceTextureListener {
             gestureDetector?.onTouchEvent(event)
             true
         }
+
+        ivPlay!!.setOnClickListener{
+            if (mCurrentState == VIDEO_STATE_PAUSE){
+                ivPlay!!.setImageResource(R.mipmap.play)
+                start()
+                timer?.schedule(task,0,1000)
+            }else if (mCurrentState == VIDEO_STATE_START){
+                ivPlay!!.setImageResource(R.mipmap.pause)
+                mediaPlayer?.pause()
+                timer.cancel()
+            }
+        }
+
+        ivVolume!!.setOnClickListener {
+            volume_SeekBar?.visibility = if(volume_SeekBar?.visibility == View.VISIBLE) View.GONE else View.VISIBLE
+        }
+
+        ivFullScreen!!.setOnClickListener {
+            fullScreen = !fullScreen
+            if (callBack != null) {
+                callBack!!.fullScreen(fullScreen)
+            }
+            if (fullScreen){
+                ivFullScreen!!.setImageResource(R.mipmap.fullscreen)
+            }else{
+                ivFullScreen!!.setImageResource(R.mipmap.fullscreen_exit)
+            }
+        }
+
+        group!!.postDelayed({
+            group?.visibility = GONE
+        },3000)
+
+
     }
 
     private var mediaPositionHandler = Handler{
@@ -146,7 +183,7 @@ class VideoPlayer : FrameLayout, TextureView.SurfaceTextureListener {
         Log.e("VideoPlayer","initGestureDetector")
         gestureDetector = GestureDetector(context, object : GestureDetector.SimpleOnGestureListener() {
             override fun onShowPress(e: MotionEvent?) {
-                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+
             }
 
             override fun onSingleTapUp(e: MotionEvent?): Boolean {  //轻触屏幕  单击（抬手便会执行）
@@ -159,7 +196,29 @@ class VideoPlayer : FrameLayout, TextureView.SurfaceTextureListener {
                 return true
             }
 
+            /**
+             * 在拖动时 触发  distanceX 与  distanceY 代表x y方向上移动的距离
+             * @param e1  起始位置
+             * @param e2  结束位置
+             * 如果起点位于左半边那么 上下滑动改变亮度  右半边改变音量
+             */
             override fun onScroll(e1: MotionEvent?, e2: MotionEvent?, distanceX: Float, distanceY: Float): Boolean {
+                Log.e("VideoPlayer","参数值 e1: ${e1?.x} ${e1?.y}")
+                Log.e("VideoPlayer","参数值 e2: ${e2?.x} ${e2?.y}")
+                Log.e("VideoPlayer","参数值 distanceX:${distanceX}")
+                Log.e("VideoPlayer","参数值 distanceY:${distanceY}")
+                if (e1!!.x > textureView!!.width/2){    //大于表示在右半边 改变音量
+                    if (distanceY.absoluteValue >= 20){
+                        if (distanceY > 0){
+                            addAdjustVolume(AudioManager.ADJUST_RAISE,AudioManager.FLAG_SHOW_UI)
+                        }else{
+                            addAdjustVolume(AudioManager.ADJUST_LOWER,AudioManager.FLAG_SHOW_UI)
+                        }
+                    }
+                }else{
+
+                }
+
                 return true
             }
 
@@ -213,25 +272,32 @@ class VideoPlayer : FrameLayout, TextureView.SurfaceTextureListener {
      * 调整音量
      * @param direction  AudioManager.ADJUST_LOWER 调小
      *                    AudioManager.ADJUST_RAISE 调大
-     * @param flags AudioManager.FLAG_SHOW_UI 显示进度
-     * @param flags AudioManager.PLAY_SOUND 播放声音
+     * @param flags AudioManager.FLAG_FLAG_SHOW_UI 显示进度
+     * @param flags AudioManager.FLAG_SHOW_UI 播放声音
      */
     fun addAdjustVolume(direction: Int, flags: Int) {
         audioManager?.adjustStreamVolume(AudioManager.STREAM_MUSIC, direction, flags)
         mVolume = audioManager?.getStreamVolume(AudioManager.STREAM_MUSIC)!!
+        Log.e("VideoPlayer","当前音量${mVolume}")
     }
 
     /**
      * 直接设置音量大小
      */
-    fun setStreamVolume(streamType: Int, volume: Int, flags: Int) {
+    fun setStreamVolume(volume: Int, flags: Int) {
         mVolume = volume
-        audioManager?.setStreamVolume(streamType, volume, flags)
+        timerSeek = true
         volume_SeekBar?.progress = mVolume
+        audioManager?.setStreamVolume(AudioManager.STREAM_MUSIC, volume, flags)
+        Log.e("VideoPlayer","当前音量set${mVolume}")
+    }
+
+    fun addAdjustBrightness(){
+
     }
 
     /**
-     * 获取当前音量
+     * 初始化音量信息
      */
     fun getVolume() = mVolume
 
@@ -246,8 +312,27 @@ class VideoPlayer : FrameLayout, TextureView.SurfaceTextureListener {
         volume_SeekBar?.max = maxVolume
         mVolume = audioManager?.getStreamVolume(AudioManager.STREAM_MUSIC)!!
         volume_SeekBar?.progress = mVolume
+
+
+        volume_SeekBar?.setOnSeekBarChangeListener(object:SeekBar.OnSeekBarChangeListener{
+            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+                if (!volumeSeek) {
+                    setStreamVolume(progress, AudioManager.FLAG_SHOW_UI)
+                }else{
+                    volumeSeek = false
+                }
+            }
+            override fun onStartTrackingTouch(seekBar: SeekBar?) {
+            }
+            override fun onStopTrackingTouch(seekBar: SeekBar?) {
+            }
+        })
+        SystemVolumeObserver.instance.registerVolumeBroadCast(this)
     }
 
+    /**
+     * 初始化视图渲染
+     */
     private fun initTexTureView() {
         if (textureView != null) {
             Log.e("VideoPlayer","initTexTureView")
@@ -279,7 +364,15 @@ class VideoPlayer : FrameLayout, TextureView.SurfaceTextureListener {
             }
 
             mediaPlayer!!.setOnTimedTextListener { _, text ->
-                Log.e("VideoPlayer",text.text)
+                Log.e("VideoPlayer TimedText",text.text)
+            }
+
+            mediaPlayer!!.setOnSeekCompleteListener {
+                Log.e("VideoPlayer","播放进度完成")
+            }
+
+            mediaPlayer!!.setOnCompletionListener {
+                Log.e("VideoPlayer","播放完成")
             }
         }
     }
@@ -366,6 +459,7 @@ class VideoPlayer : FrameLayout, TextureView.SurfaceTextureListener {
         }
         mediaPlayer?.setSurface(surface)
         mediaPlayer?._prepareAsync()
+        ivPlay!!.setImageResource(R.mipmap.pause)
 
     }
 
@@ -381,6 +475,7 @@ class VideoPlayer : FrameLayout, TextureView.SurfaceTextureListener {
             audioManager!!.abandonAudioFocus(null)
         }
         timer.cancel()
+        SystemVolumeObserver.instance.unregisterVolume()
         IjkMediaPlayer.native_profileEnd()
     }
 
@@ -403,9 +498,19 @@ class VideoPlayer : FrameLayout, TextureView.SurfaceTextureListener {
      */
     interface VideoListenerCallBack {
 
+        /**
+         * VIDEO_STATE_START = 0x01  //开始播放
+         * VIDEO_STATE_PAUSE = 0x02  //暂停
+         * VIDEO_STATE_STOP = 0x03   //停止
+         * VIDEO_STATE_ERROR = 0x04  //出错
+         */
         fun stationChanged(station: Int, message: Message?)
 
-        fun fullScreen()
+        /**
+         * 跳转到全屏
+         */
+        fun fullScreen(full:Boolean)
+
 
         fun share()
     }

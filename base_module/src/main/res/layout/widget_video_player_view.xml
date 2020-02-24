@@ -35,7 +35,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@mipmap/play"
-            android:background="@color/white"/>
+    />
 
     <TextView
             android:id="@+id/tv_time"
@@ -69,8 +69,7 @@
             android:layout_marginRight="15dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@mipmap/volume"
-            android:background="@color/white"/>
+            android:src="@mipmap/volume"/>
 
     <ImageView
             app:layout_constraintEnd_toEndOf="parent"
@@ -79,8 +78,7 @@
             android:layout_marginRight="15dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@mipmap/full_screen"
-            android:background="@color/white"/>
+            android:src="@mipmap/fullscreen"/>
 
     <SeekBar
             android:id="@+id/seek_bar"

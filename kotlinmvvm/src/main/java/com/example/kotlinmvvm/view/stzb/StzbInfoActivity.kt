@@ -46,7 +46,6 @@ class StzbInfoActivity:BaseActivity() {
             }
             setupWithViewPager(binding?.viewpager)
         }
-
     }
 
     private fun initFragment(){

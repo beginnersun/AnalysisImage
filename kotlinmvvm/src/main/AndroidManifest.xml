@@ -13,8 +13,16 @@
         <activity android:name=".view.MainActivity"/>
         <activity android:name=".view.news.NewsActivity"/>
         <activity android:name=".view.news.NewsDetailsActivity"
-        android:hardwareAccelerated="true"/>
+                  android:configChanges="orientation|screenSize"
+                  android:hardwareAccelerated="true"
+                  android:theme="@style/Theme.AppCompat.NoActionBar"/>
         <activity android:name=".view.stzb.StzbInfoActivity"/>
+        <activity android:name=".view.stzb.StzbDetailsActivity"
+                  android:hardwareAccelerated="true"/>
+
+        <activity android:name=".view.VideoPlayerActivity"
+                  android:screenOrientation="landscape"
+                  android:hardwareAccelerated="true"/>
 
     </application>
 

@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.kotlinmvvm.base.BaseViewModel
+import com.example.kotlinmvvm.bean.NoticeBean
 import com.example.kotlinmvvm.bean.VideoBean
 import com.example.kotlinmvvm.model.StzbResponsitory
 import kotlinx.coroutines.CoroutineExceptionHandler
@@ -13,6 +14,9 @@ class StzbViewModel constructor(private val responsitory: StzbResponsitory) : Ba
 
     val videoData: MutableLiveData<List<VideoBean>> by lazy {
         MutableLiveData<List<VideoBean>>()
+    }
+    val videoNotice:MutableLiveData<List<NoticeBean>> by lazy {
+        MutableLiveData<List<NoticeBean>>()
     }
 
     fun getStzbVideo(page: Int, size: Int) {
@@ -28,6 +32,16 @@ class StzbViewModel constructor(private val responsitory: StzbResponsitory) : Ba
             Log.e("加载结果${beans.size}","请求")
             videoData.value = beans
 //            listener?.endLoad()
+        }
+    }
+
+    fun getStzbNotice(page:Int){
+        viewModelScope.launch(CoroutineExceptionHandler{ _,e ->
+            e.printStackTrace()
+            listener?.error(e.message!!)
+        }) {
+            var notices = responsitory.getStzbNotice(page)
+            videoNotice.value = notices
         }
     }
 
