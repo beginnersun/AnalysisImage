@@ -3,6 +3,7 @@ package com.example.kotlinmvvm.model
 import android.util.Log
 import com.example.base_module.util.NetWorkState
 import com.example.kotlinmvvm.bean.NoticeBean
+import com.example.kotlinmvvm.bean.NoticeDetailsBean
 import com.example.kotlinmvvm.bean.VideoBean
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
@@ -30,5 +31,11 @@ class StzbResponsitory(val stzbService: StzbService,val stzbNoticeService: StzbN
         return Gson().fromJson<List<NoticeBean>>(list.toString(),object :TypeToken<List<NoticeBean>>(){}.type)
     }
 
+    suspend fun getStzbDetail(tid:Int):List<NoticeDetailsBean>{
+        val result = stzbNoticeService.getStzbNotice(1,module = "viewthread",tid = tid)
+        val json = JSONObject(result)
+        val list = json.optJSONObject("Variables").optJSONArray("postlist")
+        return Gson().fromJson<List<NoticeDetailsBean>>(list.toString(),object :TypeToken<List<NoticeDetailsBean>>(){}.type)
+    }
 
 }

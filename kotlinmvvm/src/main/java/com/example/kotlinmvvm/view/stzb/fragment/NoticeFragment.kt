@@ -1,22 +1,31 @@
 package com.example.kotlinmvvm.view.stzb.fragment
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
+import com.example.kotlinmvvm.OnItemClickListener
 import com.example.kotlinmvvm.R
 import com.example.kotlinmvvm.base.BaseFragment
 import com.example.kotlinmvvm.bean.NoticeBean
 import com.example.kotlinmvvm.databinding.FragmentStzbNoticeBinding
+import com.example.kotlinmvvm.view.stzb.StzbDetailsActivity
 import com.example.kotlinmvvm.view.stzb.adapter.NoticeAdapter
 import com.example.kotlinmvvm.vm.StzbViewModel
 import com.jcodecraeer.xrecyclerview.XRecyclerView
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.qualifier.named
 
-class NoticeFragment:BaseFragment(),XRecyclerView.LoadingListener {
+class NoticeFragment:BaseFragment(),XRecyclerView.LoadingListener ,OnItemClickListener{
+    override fun onItemClick(position: Int) {
+        var intent = Intent(activity,StzbDetailsActivity::class.java)
+        intent.putExtra("tid",data[position].tid)
+        startActivity(intent)
+    }
+
     override fun onRefresh() {
         page = 1
         getNoticeList()
@@ -31,7 +40,7 @@ class NoticeFragment:BaseFragment(),XRecyclerView.LoadingListener {
     private val viewModel: StzbViewModel by viewModel(named("stzb"))
     private var page:Int = 1
     private val data = mutableListOf<NoticeBean>()
-    private var adapter:NoticeAdapter = NoticeAdapter(context!!,data)
+    private var noticeAdapter:NoticeAdapter = NoticeAdapter(context!!,data)
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         var view = inflater.inflate(R.layout.fragment_stzb_notice,container,false)
@@ -41,9 +50,9 @@ class NoticeFragment:BaseFragment(),XRecyclerView.LoadingListener {
             setLoadingMoreEnabled(true)
             setPullRefreshEnabled(true)
             setLoadingListener(this@NoticeFragment)
-            adapter = adapter
+            adapter = noticeAdapter
         }
-
+        noticeAdapter.setOnItemClick(this)
         return view
     }
 
@@ -60,7 +69,7 @@ class NoticeFragment:BaseFragment(),XRecyclerView.LoadingListener {
                     data.clear()
                 }
                 data.addAll(it)
-                adapter.notifyDataSetChanged()
+                noticeAdapter.notifyDataSetChanged()
             })
         }
     }

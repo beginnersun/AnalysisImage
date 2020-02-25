@@ -7,21 +7,21 @@ import android.os.Bundle
 import android.text.Html
 import androidx.appcompat.app.AppCompatActivity
 import com.example.kotlinmvvm.R
-import kotlinx.android.synthetic.main.activity_news_detail.*
-import android.os.Handler
 import android.os.Message
 import android.text.Html.FROM_HTML_MODE_LEGACY
 import android.text.Spanned
 import android.util.Log
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.Observer
 import com.example.base_module.widget.VideoPlayer
+import com.example.kotlinmvvm.bean.NoticeDetailsBean
 import com.example.kotlinmvvm.databinding.ActivityStzbDetailBinding
-import io.reactivex.Observable
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
+import com.example.kotlinmvvm.vm.StzbDetailsViewModel
 import kotlinx.coroutines.*
+import org.koin.core.qualifier.named
 import java.net.URL
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
 class StzbDetailsActivity : AppCompatActivity() ,VideoPlayer.VideoListenerCallBack{
@@ -43,22 +43,45 @@ class StzbDetailsActivity : AppCompatActivity() ,VideoPlayer.VideoListenerCallBa
 
     }
 
-    private var message: Spanned? = null
     private var oldHeight = 0
+    private var tid:Int = 0
+    private val details = mutableListOf<NoticeDetailsBean>()
+    private var noticeDetails:NoticeDetailsBean? = null
 
-    private fun Load(){
+    private fun load(){
+        GlobalScope.launch (Dispatchers.Main){
+            viewModel.getDetail(tid)
+        }
+    }
+
+    private fun initInfo(info:MutableList<NoticeDetailsBean>){
+        for (value in info){
+            if (value.first.compareTo("0") == 0){
+                noticeDetails = value
+            }else if (value.first.compareTo("1") == 0){
+                details.add(value)
+            }
+        }
 
     }
 
     private var binding:ActivityStzbDetailBinding? = null
+    private val viewModel:StzbDetailsViewModel by viewModel(named("stzb_notice_details"))
     private var url:String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this,R.layout.activity_stzb_detail)
+        tid = intent.getIntExtra("tid",0)
         url = intent.getStringExtra("url")
-        binding!!.videoPlayer!!.setUrl(url)
-        binding!!.videoPlayer!!.callBack = this
+        load()
+        viewModel.detailData.observe(this, Observer {
+            details.clear()
+            initInfo(it.toMutableList())
+        })
+
+//        binding!!.videoPlayer!!.setUrl(url)
+//        binding!!.videoPlayer!!.callBack = this
 
 
 //        var htmlInfo =

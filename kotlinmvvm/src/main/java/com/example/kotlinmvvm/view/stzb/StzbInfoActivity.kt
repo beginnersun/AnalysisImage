@@ -10,6 +10,7 @@ import com.example.kotlinmvvm.base.BaseViewModel
 import com.example.kotlinmvvm.databinding.ActivityStzbBinding
 import com.example.kotlinmvvm.view.news.adapter.FragmentManagerdapter
 import com.example.kotlinmvvm.view.news.fragment.NewsFragment
+import com.example.kotlinmvvm.view.stzb.fragment.NoticeFragment
 import com.example.kotlinmvvm.view.stzb.fragment.VideoFragment
 import com.example.kotlinmvvm.vm.StzbViewModel
 import com.google.android.material.tabs.TabLayout
@@ -28,7 +29,7 @@ class StzbInfoActivity:BaseActivity() {
     private val fragmentList = mutableListOf<BaseFragment>()
 
     private val titleList = listOf("视频"
-//        ,"公告"
+        ,"公告"
     )
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -50,6 +51,7 @@ class StzbInfoActivity:BaseActivity() {
 
     private fun initFragment(){
         fragmentList.add(VideoFragment())
+        fragmentList.add(NoticeFragment())
 //        fragmentList.add(VideoFragment())
     }
 

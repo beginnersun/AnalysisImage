@@ -5,12 +5,19 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
+import com.example.kotlinmvvm.OnItemClickListener
 import com.example.kotlinmvvm.R
 import com.example.kotlinmvvm.bean.NoticeBean
 import com.example.kotlinmvvm.databinding.ItemStzbNoticeBinding
 
 class NoticeAdapter(private var context: Context, private var datas: List<NoticeBean>) :
     RecyclerView.Adapter<NoticeAdapter.NoticeViewHolder>() {
+
+    private var onItemCLick:OnItemClickListener? = null
+
+    fun setOnItemClick(onItemClickListener: OnItemClickListener){
+        this.onItemCLick = onItemClickListener
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NoticeViewHolder =
         NoticeViewHolder.createViewHolder(parent, LayoutInflater.from(context))
@@ -21,7 +28,6 @@ class NoticeAdapter(private var context: Context, private var datas: List<Notice
     override fun onBindViewHolder(holder: NoticeViewHolder, position: Int) {
         holder.bindView(position,datas[position])
     }
-
 
     class NoticeViewHolder(var binding: ItemStzbNoticeBinding) : RecyclerView.ViewHolder(binding.root) {
 

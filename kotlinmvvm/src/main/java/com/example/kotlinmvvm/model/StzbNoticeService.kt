@@ -8,9 +8,8 @@ interface StzbNoticeService {
     @GET("api/mobile/index.php")
     suspend fun getStzbNotice(
         @Query("page") page: Int,
-        @Query("version") version: Int = 163, @Query("module") module: String = "forumdisplay", @Query("charset") charset: String = "utf-8", @Query(
-            "fid"
-        ) fid: Int = 565
-        ): String
+        @Query("version") version: Int = 163, @Query("module") module: String = "forumdisplay", @Query("charset") charset: String = "utf-8",
+        @Query("fid") fid: Int = 565, @Query("tid") tid: Int = -1
+    ): String
 
 }

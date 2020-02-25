@@ -8,6 +8,7 @@ import com.example.kotlinmvvm.interceptor.CustomInterceptor
 import com.example.kotlinmvvm.model.*
 import com.example.kotlinmvvm.vm.MainViewModel
 import com.example.kotlinmvvm.vm.NewsViewModel
+import com.example.kotlinmvvm.vm.StzbDetailsViewModel
 import com.example.kotlinmvvm.vm.StzbViewModel
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
@@ -33,6 +34,9 @@ val mainViewModel = module {
     }
     single(named("stzb")) {
         StzbViewModel(StzbResponsitory(get(),get()))
+    }
+    single(named("stzn_notice_details")){
+        StzbDetailsViewModel(StzbResponsitory(get(),get()))
     }
 }
 val newsViewModel = module {

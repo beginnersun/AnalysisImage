@@ -67,7 +67,6 @@ class NewsAdapter(private val context: Context) : RecyclerView.Adapter<NewsAdapt
 
         fun bindData(bean:NewsBean){
             binding.item = bean
-            View.VISIBLE
             if (bean.imgextra!= null && TextUtils.equals(bean.imgsrc3gtype,"2")) {
                 binding.images = bean.imgextra
                 Log.e("图集",bean.imgextra.toString())
