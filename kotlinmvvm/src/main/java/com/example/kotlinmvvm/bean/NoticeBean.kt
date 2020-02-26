@@ -1,5 +1,7 @@
 package com.example.kotlinmvvm.bean
 
+import android.view.View
+
 data class NoticeBean(
     val attachment: String,
     val author: String,
@@ -29,11 +31,16 @@ data class NoticeBean(
     val thread_thumb: List<Any>,
     val tid: String,
     val typeid: String,
-    val views: String,
-    val imageHeadUrl: String = "https://mgame-uc.netease.com/avatar.php?uid=$authorid&size=small",
-val showNew:Boolean = new.compareTo("1") == 0,
-val showImage:Boolean = attachment.compareTo("32") == 0
-)
+    val views: String
+) {
+
+    val imageHeadUrl: String
+        get() = "https://mgame-uc.netease.com/avatar.php?uid=$authorid&size=small"
+    val showNew: Int
+        get() = if (new.compareTo("1") == 0) View.VISIBLE else View.GONE
+    val showImage: Int
+        get() = if (status.compareTo("32") == 0) View.VISIBLE else View.GONE
+}
 
 data class Reply(
     val author: String,

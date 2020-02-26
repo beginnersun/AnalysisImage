@@ -15,6 +15,7 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
 import com.example.base_module.rxbinding.RxView
 import com.example.base_module.util.TimeUtil
+import com.example.kotlinmvvm.R
 import com.example.kotlinmvvm.util.RichUtil
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -26,9 +27,13 @@ object BindAdapters {
     @BindingAdapter("loadPic")
     @JvmStatic
     fun setUrl(imageView: ImageView, url: String) {
-        val requestOptions = RequestOptions().transform(RoundedCorners(10))
+        val requestOptions = RequestOptions().transform(RoundedCorners(10)).placeholder(R.mipmap.ic_launcher)
         if (!TextUtils.isEmpty(url)) {
-            Glide.with(imageView.context).load(url.replace("http", "https")).apply(requestOptions).into(imageView)
+            if (!url.contains("https")){
+                Glide.with(imageView.context).load(url.replace("http", "https")).apply(requestOptions).into(imageView)
+            }else{
+                Glide.with(imageView.context).load(url).apply(requestOptions).into(imageView)
+            }
         }else{
 
         }
@@ -58,15 +63,13 @@ object BindAdapters {
         text = "你好$count $time"
     }
 
-    @BindingAdapter("info")
+    @BindingAdapter("rich")
     @JvmStatic
-    fun TextView.setRich(info:String){
-        GlobalScope.launch {
-            var spanned = RichUtil.delayText(info)
+    fun TextView.setRich(rich:String){
+        GlobalScope.launch (Dispatchers.Main){
+            var spanned = RichUtil.delayText(rich)
             text = spanned
         }
     }
-
-
 
 }

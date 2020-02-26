@@ -8,10 +8,12 @@
     <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingTop="8dp"
-            android:paddingLeft="8dp"
-            android:paddingRight="8dp"
-            android:layout_marginTop="10dp">
+            android:paddingTop="10dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:paddingBottom="10dp"
+            android:layout_marginTop="10dp"
+    android:background="@color/white">
 
         <TextView
                 android:id="@+id/tv_tag_new"
@@ -24,7 +26,10 @@
                 android:includeFontPadding="false"
                 android:textColor="@color/white"
                 android:textSize="13sp"
-                android:padding="2.5dp"
+                android:paddingTop="1.5dp"
+                android:paddingBottom="1.5dp"
+                android:paddingLeft="2.7dp"
+                android:paddingRight="2.7dp"
                 android:visibility="@{item.showNew}"/>
 
         <TextView
@@ -39,7 +44,10 @@
                 android:includeFontPadding="false"
                 android:textColor="@color/white"
                 android:textSize="13sp"
-                android:padding="2.5dp"
+                android:paddingTop="1.5dp"
+                android:paddingBottom="1.5dp"
+                android:paddingLeft="2.7dp"
+                android:paddingRight="2.7dp"
                 android:visibility="@{item.showImage}"/>
 
         <TextView
@@ -53,18 +61,20 @@
                 android:text="@{item.subject}"
                 android:textSize="15sp"
                 android:lineSpacingExtra="5dp"
+                android:textColor="@color/text_black"
         />
 
         <ImageView
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tv_title"
-                android:layout_marginTop="5dp"
+                android:layout_marginTop="10dp"
                 android:id="@+id/iv_image_head"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
                 app:loadPic="@{item.imageHeadUrl}"
         />
 
+        <!--app:loadPic="@{item.imageHeadUrl}"-->
         <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -75,7 +85,9 @@
                 app:layout_constraintVertical_chainStyle="packed"
                 android:text="@{@string/author + item.author}"
                 android:layout_marginLeft="5dp"
-                android:textSize="10sp"/>
+                android:textSize="12sp"/>
+
+
 
         <TextView
                 android:layout_width="wrap_content"
@@ -84,10 +96,10 @@
                 app:layout_constraintTop_toBottomOf="@id/tv_author_name"
                 app:layout_constraintBottom_toBottomOf="@id/iv_image_head"
                 android:layout_marginLeft="5dp"
-                android:layout_marginTop="1dp"
+                android:layout_marginTop="5dp"
                 android:id="@+id/tv_time"
                 android:text="@{item.dateline}"
-                android:textSize="10sp"/>
+                android:textSize="12sp"/>
 
         <TextView
                 android:id="@+id/tv_comments"
@@ -97,7 +109,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@{item.replies}"
+                android:gravity="center_vertical"
                 android:drawableLeft="@mipmap/comment"
+                android:textSize="12sp"
                 android:drawablePadding="2dp"/>
 
         <TextView
@@ -109,7 +123,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@{item.views}"
+                android:gravity="center_vertical"
                 android:drawableLeft="@mipmap/view"
+                android:textSize="12sp"
                 android:drawablePadding="2dp"/>
 
 

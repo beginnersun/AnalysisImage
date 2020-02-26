@@ -1,7 +1,9 @@
 package com.example.kotlinmvvm.view.stzb.adapter
 
 import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
@@ -27,6 +29,9 @@ class NoticeAdapter(private var context: Context, private var datas: List<Notice
 
     override fun onBindViewHolder(holder: NoticeViewHolder, position: Int) {
         holder.bindView(position,datas[position])
+        if (onItemCLick!=null) {
+            holder.setItemClickListener(onItemCLick!!)
+        }
     }
 
     class NoticeViewHolder(var binding: ItemStzbNoticeBinding) : RecyclerView.ViewHolder(binding.root) {
@@ -34,12 +39,21 @@ class NoticeAdapter(private var context: Context, private var datas: List<Notice
         companion object {
             fun createViewHolder(parent: ViewGroup, inflater: LayoutInflater) =
                 NoticeViewHolder(DataBindingUtil.bind(inflater.inflate(R.layout.item_stzb_notice, parent, false))!!)
-
         }
 
         fun bindView(position:Int,bean: NoticeBean){
-            binding.item = bean
-            binding.executePendingBindings()
+            if (bean!=null) {
+                binding.item = bean
+                Log.e("imageUrl", bean.imageHeadUrl)
+                Log.e("View Station", bean.showImage.toString() + "   " + bean.showNew)
+                binding.executePendingBindings()
+            }
+        }
+
+        fun setItemClickListener(itemClickListener: OnItemClickListener){
+            binding?.root.setOnClickListener {
+                itemClickListener.onItemClick(adapterPosition)
+            }
         }
 
     }

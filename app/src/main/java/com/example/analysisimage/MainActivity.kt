@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.util.Log
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.alibaba.android.arouter.launcher.ARouter
+import com.bumptech.glide.Glide
 import com.example.base_module.util.SharedPreferenceUtil
 import kotlinx.android.synthetic.main.activity_main.*
 import okhttp3.OkHttpClient
@@ -26,7 +27,7 @@ class MainActivity : AppCompatActivity() {
          * 声明一个匿名类  object:xxxxx{    override fun .....(){ 覆写的方法}    }
          */
         first.setOnClickListener { view ->
-            ARouter.getInstance().build("/kotlinmvvm/news").navigation()
+            ARouter.getInstance().build("/kotlinmvvm/stzb").navigation()
         }
 
         Thread {

@@ -21,6 +21,8 @@ data class NoticeDetailsBean(
     val status: String,
     val subject: String,
     val tid: String,
-    val username: String,
-    val imageHeadUrl: String = "https://mgame-uc.netease.com/avatar.php?uid=$authorid&size=small"
-)
+    val username: String
+
+){
+    val imageHeadUrl: String  get() = "https://mgame-uc.netease.com/avatar.php?uid=$authorid&size=small"
+}

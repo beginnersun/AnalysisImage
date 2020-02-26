@@ -35,7 +35,7 @@ val mainViewModel = module {
     single(named("stzb")) {
         StzbViewModel(StzbResponsitory(get(),get()))
     }
-    single(named("stzn_notice_details")){
+    single(named("stzb_notice_details")){
         StzbDetailsViewModel(StzbResponsitory(get(),get()))
     }
 }

@@ -26,16 +26,19 @@ class StzbResponsitory(val stzbService: StzbService,val stzbNoticeService: StzbN
 
     suspend fun getStzbNotice(page:Int):List<NoticeBean>{
         val result = stzbNoticeService.getStzbNotice(page)
+        Log.e("请求数据","收到数据$result")
         val json = JSONObject(result)
         val list = json.optJSONObject("Variables").optJSONArray("forum_threadlist")
+        Log.e("请求数据",list.toString())
         return Gson().fromJson<List<NoticeBean>>(list.toString(),object :TypeToken<List<NoticeBean>>(){}.type)
     }
 
-    suspend fun getStzbDetail(tid:Int):List<NoticeDetailsBean>{
+    suspend fun getStzbDetail(tid:String):List<NoticeDetailsBean>{
         val result = stzbNoticeService.getStzbNotice(1,module = "viewthread",tid = tid)
         val json = JSONObject(result)
         val list = json.optJSONObject("Variables").optJSONArray("postlist")
-        return Gson().fromJson<List<NoticeDetailsBean>>(list.toString(),object :TypeToken<List<NoticeDetailsBean>>(){}.type)
+        val listBeans =  Gson().fromJson<List<NoticeDetailsBean>>(list.toString(),object :TypeToken<List<NoticeDetailsBean>>(){}.type)
+        return listBeans
     }
 
 }

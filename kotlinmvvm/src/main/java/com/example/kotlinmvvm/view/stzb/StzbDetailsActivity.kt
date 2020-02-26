@@ -14,9 +14,13 @@ import android.util.Log
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.base_module.widget.VideoPlayer
+import com.example.kotlinmvvm.base.BaseActivity
+import com.example.kotlinmvvm.base.BaseViewModel
 import com.example.kotlinmvvm.bean.NoticeDetailsBean
 import com.example.kotlinmvvm.databinding.ActivityStzbDetailBinding
+import com.example.kotlinmvvm.view.stzb.adapter.CommentAdapter
 import com.example.kotlinmvvm.vm.StzbDetailsViewModel
 import kotlinx.coroutines.*
 import org.koin.core.qualifier.named
@@ -24,7 +28,9 @@ import java.net.URL
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
-class StzbDetailsActivity : AppCompatActivity() ,VideoPlayer.VideoListenerCallBack{
+class StzbDetailsActivity : BaseActivity() ,VideoPlayer.VideoListenerCallBack{
+    override fun setViewModel(): BaseViewModel  = viewModel
+
     override fun stationChanged(station: Int, message: Message?) {
 
     }
@@ -44,9 +50,10 @@ class StzbDetailsActivity : AppCompatActivity() ,VideoPlayer.VideoListenerCallBa
     }
 
     private var oldHeight = 0
-    private var tid:Int = 0
+    private var tid:String = ""
     private val details = mutableListOf<NoticeDetailsBean>()
     private var noticeDetails:NoticeDetailsBean? = null
+    private var commentAdapter:CommentAdapter = CommentAdapter(this,details)
 
     private fun load(){
         GlobalScope.launch (Dispatchers.Main){
@@ -56,13 +63,15 @@ class StzbDetailsActivity : AppCompatActivity() ,VideoPlayer.VideoListenerCallBa
 
     private fun initInfo(info:MutableList<NoticeDetailsBean>){
         for (value in info){
-            if (value.first.compareTo("0") == 0){
+            if (value.first.compareTo("1") == 0){
                 noticeDetails = value
-            }else if (value.first.compareTo("1") == 0){
+            }else if (value.first.compareTo("0") == 0){
                 details.add(value)
             }
         }
-
+        binding?.data = noticeDetails
+        Log.e("data数据",binding?.data.toString())
+        commentAdapter.notifyDataSetChanged()
     }
 
     private var binding:ActivityStzbDetailBinding? = null
@@ -71,14 +80,25 @@ class StzbDetailsActivity : AppCompatActivity() ,VideoPlayer.VideoListenerCallBa
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         binding = DataBindingUtil.setContentView(this,R.layout.activity_stzb_detail)
-        tid = intent.getIntExtra("tid",0)
-        url = intent.getStringExtra("url")
+
+        binding?.model = viewModel
+
+        tid = intent.getStringExtra("tid")
+        binding?.commentRecyclerView!!.run {
+            layoutManager = LinearLayoutManager(this@StzbDetailsActivity)
+            adapter = commentAdapter
+        }
         load()
         viewModel.detailData.observe(this, Observer {
             details.clear()
             initInfo(it.toMutableList())
         })
+
+
+
+
 
 //        binding!!.videoPlayer!!.setUrl(url)
 //        binding!!.videoPlayer!!.callBack = this

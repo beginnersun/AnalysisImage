@@ -40,7 +40,9 @@ class StzbViewModel constructor(private val responsitory: StzbResponsitory) : Ba
             e.printStackTrace()
             listener?.error(e.message!!)
         }) {
+            Log.e("请求","开始请求")
             var notices = responsitory.getStzbNotice(page)
+            Log.e("请求","收到数据$notices")
             videoNotice.value = notices
         }
     }

@@ -2,11 +2,13 @@ package com.example.kotlinmvvm.view.stzb.fragment
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.kotlinmvvm.OnItemClickListener
 import com.example.kotlinmvvm.R
 import com.example.kotlinmvvm.base.BaseFragment
@@ -40,19 +42,21 @@ class NoticeFragment:BaseFragment(),XRecyclerView.LoadingListener ,OnItemClickLi
     private val viewModel: StzbViewModel by viewModel(named("stzb"))
     private var page:Int = 1
     private val data = mutableListOf<NoticeBean>()
-    private var noticeAdapter:NoticeAdapter = NoticeAdapter(context!!,data)
+    private var noticeAdapter:NoticeAdapter? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         var view = inflater.inflate(R.layout.fragment_stzb_notice,container,false)
         binding = DataBindingUtil.bind(view)
 
+        noticeAdapter = NoticeAdapter(context!!,data)
         binding?.recyclerNotice!!.run {
             setLoadingMoreEnabled(true)
             setPullRefreshEnabled(true)
             setLoadingListener(this@NoticeFragment)
+            layoutManager = LinearLayoutManager(context)
             adapter = noticeAdapter
         }
-        noticeAdapter.setOnItemClick(this)
+        noticeAdapter?.setOnItemClick(this)
         return view
     }
 
@@ -64,12 +68,14 @@ class NoticeFragment:BaseFragment(),XRecyclerView.LoadingListener ,OnItemClickLi
         viewModel.run {
             getStzbNotice(page)
             videoNotice.observe(this@NoticeFragment, Observer {
+                Log.e("收到数据",it.toString())
                 binding?.recyclerNotice!!.reset()
                 if (page == 1) {
                     data.clear()
                 }
                 data.addAll(it)
-                noticeAdapter.notifyDataSetChanged()
+                Log.e("收到数据","${data.size}")
+                noticeAdapter?.notifyDataSetChanged()
             })
         }
     }

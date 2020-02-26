@@ -2,4 +2,8 @@
     <string name="app_name">KotlinMVVM</string>
     <string name="recommend">跟帖</string>
     <string name="author">作者：</string>
+    <string name="discussion">[交流讨论]</string>
+    <string name="praise">点赞</string>
+    <string name="collect">收藏</string>
+    <string name="share">分享</string>
 </resources>

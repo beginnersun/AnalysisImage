@@ -2,7 +2,10 @@
 <layout xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
-
+        <import type="androidx.lifecycle.MutableLiveData"/>
+        <import type="com.example.kotlinmvvm.bean.NoticeDetailsBean"/>
+        <variable name="data" type="NoticeDetailsBean"/>
+        <variable name="model" type="com.example.kotlinmvvm.vm.StzbDetailsViewModel"/>
     </data>
 
     <FrameLayout
@@ -52,7 +55,7 @@
                         android:id="@+id/tv_title"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:text="[交流讨论]张机该不该削"
+                        android:text="@{data.subject}"
                         android:textSize="15sp"
                         android:padding="8dp"/>
 
@@ -65,13 +68,15 @@
                 <ImageView
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/tv_title"
-                        android:layout_marginLeft="8dp"
-                        android:layout_marginTop="8dp"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginTop="10dp"
                         android:id="@+id/iv_author_head"
                         android:layout_width="38dp"
                         android:layout_height="38dp"
-                        android:src="@mipmap/ic_launcher"
                 />
+
+
+                <!--app:loadPic="@{data.imageHeadUrl}"-->
 
                 <TextView
                         android:id="@+id/tv_author_name"
@@ -81,7 +86,7 @@
                         android:textSize="10sp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="喜鹊儿"
+                        android:text="@{data.author}"
                         android:textColor="#ed5754"
                         android:layout_marginLeft="3dp"/>
 
@@ -90,7 +95,7 @@
                         app:layout_constraintStart_toStartOf="@id/tv_author_name"
                         app:layout_constraintTop_toBottomOf="@id/tv_author_name"
                         app:layout_constraintBottom_toBottomOf="@id/iv_author_head"
-                        android:text="2019-6-9 11:35"
+                        android:text="@{data.dateline}"
                         android:textSize="10sp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"/>
@@ -120,6 +125,8 @@
                         android:id="@+id/tv_content"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"/>
+
+                <!--app:rich="@{data.message}"-->
 
                 <TextView
                         android:id="@+id/tv_share"
@@ -176,6 +183,7 @@
                 />
 
                 <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/comment_recycler_view"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/line_content"
                         android:layout_marginTop="10dp"

@@ -14,13 +14,14 @@ class StzbDetailsViewModel(private var stzbResponsitory:StzbResponsitory):BaseVi
         MutableLiveData<List<NoticeDetailsBean>>()
     }
 
-    suspend fun getDetail(tid:Int){
+    suspend fun getDetail(tid:String){
         viewModelScope.launch(CoroutineExceptionHandler{ _,e ->
             if (e!=null) {
                 e.printStackTrace()
                 listener?.error(e.message!!)
             }
         }) {
+            listener?.startLoad()
             detailData.value = stzbResponsitory.getStzbDetail(tid)
 
         }

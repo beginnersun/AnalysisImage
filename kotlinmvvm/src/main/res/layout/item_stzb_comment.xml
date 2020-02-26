@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
         <variable name="item" type="com.example.kotlinmvvm.bean.NoticeDetailsBean"/>
-        <variable name="position" type="Integer"/>
+        <variable name="level" type="String"/>
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -18,7 +19,7 @@
                 android:id="@+id/iv_author_head"
                 android:layout_width="38dp"
                 android:layout_height="38dp"
-                android:src="@mipmap/ic_launcher"
+                app:loadPic="@{item.imageHeadUrl}"
         />
 
         <TextView
@@ -31,7 +32,7 @@
                 android:layout_height="wrap_content"
                 android:textColor="#ed5754"
                 android:layout_marginLeft="3dp"
-        android:text="@{item.author}"/>
+                android:text="@{item.author}"/>
 
         <TextView
                 android:id="@+id/tv_time"
@@ -41,7 +42,7 @@
                 android:textSize="10sp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-        android:text="@{item.dateline}"/>
+                android:text="@{item.dateline}"/>
 
         <TextView
                 android:layout_width="wrap_content"
@@ -58,7 +59,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintEnd_toEndOf="parent"
-                android:text="沙发"
+                android:text="@{level}"
                 android:textSize="10sp"
                 app:layout_constraintTop_toTopOf="@id/tv_author_name"
                 android:textColor="#37ACFF"
@@ -78,7 +79,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 android:layout_marginLeft="3dp"
                 android:layout_marginTop="15dp"
-                android:text="@{item.message}"
+                app:rich="@{item.message}"
                 android:lineSpacingExtra="8dp"
                 android:id="@+id/tv_content"
                 android:layout_width="wrap_content"
