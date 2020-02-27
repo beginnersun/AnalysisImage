@@ -11,6 +11,9 @@ import android.os.Message
 import android.text.Html.FROM_HTML_MODE_LEGACY
 import android.text.Spanned
 import android.util.Log
+import android.webkit.WebSettings
+import android.webkit.WebView
+import android.webkit.WebViewClient
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
@@ -23,81 +26,98 @@ import com.example.kotlinmvvm.databinding.ActivityStzbDetailBinding
 import com.example.kotlinmvvm.view.stzb.adapter.CommentAdapter
 import com.example.kotlinmvvm.vm.StzbDetailsViewModel
 import kotlinx.coroutines.*
-import org.koin.core.qualifier.named
 import java.net.URL
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
-class StzbDetailsActivity : BaseActivity() ,VideoPlayer.VideoListenerCallBack{
-    override fun setViewModel(): BaseViewModel  = viewModel
+class StzbDetailsActivity : BaseActivity(), VideoPlayer.VideoListenerCallBack {
+    override fun setViewModel(): BaseViewModel = viewModel
 
     override fun stationChanged(station: Int, message: Message?) {
 
     }
 
-    override fun fullScreen(full:Boolean) {
+    override fun fullScreen(full: Boolean) {
         if (full) {
             oldHeight = binding!!.videoPlayer.layoutParams.height
             binding!!.videoPlayer.layoutParams.height = ConstraintLayout.LayoutParams.MATCH_PARENT
             requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
-        }else{
+        } else {
             binding!!.videoPlayer.layoutParams.height = oldHeight
             requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
         }
     }
+
     override fun share() {
 
     }
 
     private var oldHeight = 0
-    private var tid:String = ""
+    private var tid: String = ""
     private val details = mutableListOf<NoticeDetailsBean>()
-    private var noticeDetails:NoticeDetailsBean? = null
-    private var commentAdapter:CommentAdapter = CommentAdapter(this,details)
+    private var noticeDetails: NoticeDetailsBean? = null
+    private var commentAdapter: CommentAdapter = CommentAdapter(this, details)
 
-    private fun load(){
-        GlobalScope.launch (Dispatchers.Main){
-            viewModel.getDetail(tid)
-        }
+    private fun load() {
+        viewModel.getDetail(tid)
     }
 
-    private fun initInfo(info:MutableList<NoticeDetailsBean>){
-        for (value in info){
-            if (value.first.compareTo("1") == 0){
+    private fun initInfo(info: MutableList<NoticeDetailsBean>) {
+        for (value in info) {
+            if (value.first.compareTo("1") == 0) {
                 noticeDetails = value
-            }else if (value.first.compareTo("0") == 0){
+            } else if (value.first.compareTo("0") == 0) {
                 details.add(value)
             }
         }
         binding?.data = noticeDetails
-        Log.e("data数据",binding?.data.toString())
+        binding?.webView!!.loadDataWithBaseURL(
+            null,
+            "<style>img{ max-width:100%;height:auto}</style> \r\n ${noticeDetails!!.message}",
+            "text/html",
+            "UTF-8",
+            ""
+        )
+        Log.e("data数据", binding?.data.toString())
         commentAdapter.notifyDataSetChanged()
     }
 
-    private var binding:ActivityStzbDetailBinding? = null
-    private val viewModel:StzbDetailsViewModel by viewModel(named("stzb_notice_details"))
-    private var url:String = ""
+    private var binding: ActivityStzbDetailBinding? = null
+    private val viewModel: StzbDetailsViewModel by viewModel()
+    private var url: String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        binding = DataBindingUtil.setContentView(this,R.layout.activity_stzb_detail)
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_stzb_detail)
 
         binding?.model = viewModel
 
         tid = intent.getStringExtra("tid")
+        Log.e("获取到的tid", tid)
+        Log.e("获取的ViewModel", viewModel.toString())
         binding?.commentRecyclerView!!.run {
             layoutManager = LinearLayoutManager(this@StzbDetailsActivity)
             adapter = commentAdapter
         }
+        binding?.webView!!.settings.run {
+            useWideViewPort = true
+            loadWithOverviewMode = true
+            javaScriptEnabled = true
+            domStorageEnabled = true
+            cacheMode = WebSettings.LOAD_NO_CACHE
+            textZoom = 200
+        }
+        binding?.webView!!.webViewClient = WebViewClient()
+        binding?.webView!!.isHorizontalScrollBarEnabled = false
+        binding?.webView!!.isVerticalScrollBarEnabled = false
         load()
+
+
         viewModel.detailData.observe(this, Observer {
             details.clear()
             initInfo(it.toMutableList())
         })
-
-
-
 
 
 //        binding!!.videoPlayer!!.setUrl(url)
@@ -127,15 +147,24 @@ class StzbDetailsActivity : BaseActivity() ,VideoPlayer.VideoListenerCallBack{
 
     }
 
-    suspend fun delayText(htmlInfo:String): Spanned =
+    suspend fun delayText(htmlInfo: String): Spanned =
         withContext(Dispatchers.IO) {
-            if(Build.VERSION.SDK_INT >= 24){
+            if (Build.VERSION.SDK_INT >= 24) {
                 Html.fromHtml(htmlInfo, FROM_HTML_MODE_LEGACY, imgGetter, null)
-            }else {
+            } else {
                 Html.fromHtml(htmlInfo, imgGetter, null)
             }
         }
 
+
+    override fun onDestroy() {
+        binding?.webView?.run {
+            loadDataWithBaseURL(null, "", "text/html", "utf-8", null);
+            clearHistory()
+            destroy()
+        }
+        super.onDestroy()
+    }
 
     //这里面的resource就是fromhtml函数的第一个参数里面的含有的url
     private val imgGetter: Html.ImageGetter = Html.ImageGetter { source ->

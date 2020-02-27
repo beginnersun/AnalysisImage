@@ -13,6 +13,7 @@ import androidx.databinding.BindingAdapter
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
+import com.example.base_module.Constants
 import com.example.base_module.rxbinding.RxView
 import com.example.base_module.util.TimeUtil
 import com.example.kotlinmvvm.R
@@ -26,10 +27,10 @@ import java.net.URL
 object BindAdapters {
     @BindingAdapter("loadPic")
     @JvmStatic
-    fun setUrl(imageView: ImageView, url: String) {
+    fun setUrl(imageView: ImageView, url: String?) {
         val requestOptions = RequestOptions().transform(RoundedCorners(10)).placeholder(R.mipmap.ic_launcher)
         if (!TextUtils.isEmpty(url)) {
-            if (!url.contains("https")){
+            if (!url!!.contains("https")){
                 Glide.with(imageView.context).load(url.replace("http", "https")).apply(requestOptions).into(imageView)
             }else{
                 Glide.with(imageView.context).load(url).apply(requestOptions).into(imageView)
@@ -41,8 +42,8 @@ object BindAdapters {
 
     @BindingAdapter("differenceTime")
     @JvmStatic
-    fun setUrl(textView: TextView, time: String) {
-        textView.text = TimeUtil.getTimeDifferenceWithCurrent(time)
+    fun setUrl(textView: TextView, time: String?) {
+        textView.text = TimeUtil.getTimeDifferenceWithCurrent(time!!)
     }
 
 
@@ -59,16 +60,19 @@ object BindAdapters {
 
     @BindingAdapter("info", "time")
     @JvmStatic
-    fun TextView.setInfo(count:String,time:String){
+    fun TextView.setInfo(count:String?,time:String?){
         text = "你好$count $time"
     }
 
     @BindingAdapter("rich")
     @JvmStatic
-    fun TextView.setRich(rich:String){
-        GlobalScope.launch (Dispatchers.Main){
-            var spanned = RichUtil.delayText(rich)
-            text = spanned
+    fun TextView.setRich(rich:String?){
+        if (!TextUtils.isEmpty(rich)) {
+            GlobalScope.launch(Dispatchers.Main) {
+                Log.e("富文本图片大小","$width $height ${View.MeasureSpec.getSize(measuredWidth)} ${View.MeasureSpec.getSize(measuredHeight)}")
+                var spanned = RichUtil.delayText(rich!!, Constants.SCREEN_WIDTH,height = height)
+                text = spanned
+            }
         }
     }
 

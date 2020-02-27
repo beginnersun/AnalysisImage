@@ -33,10 +33,10 @@ val mainViewModel = module {
         NewsViewModel(NewsRepository(get()))
     }
     single(named("stzb")) {
-        StzbViewModel(StzbResponsitory(get(),get()))
+        StzbViewModel(StzbResponsitory(get(), get()))
     }
-    single(named("stzb_notice_details")){
-        StzbDetailsViewModel(StzbResponsitory(get(),get()))
+    factory{
+        StzbDetailsViewModel(StzbResponsitory(get(), get()))
     }
 }
 val newsViewModel = module {
@@ -68,7 +68,7 @@ val remoteModule = module {
 //            .addConverterFactory(LenientGsonConverterFactory.create(Gson()))
             .build()
     }
-    single<Retrofit>(named("stzb_video")){
+    single<Retrofit>(named("stzb_video")) {
         Retrofit.Builder()
             .baseUrl("https://stzb.16163.com/")
             .client(OkHttpClient.Builder().apply {
@@ -80,21 +80,23 @@ val remoteModule = module {
     }
     single<UserService> {
         get<Retrofit>(
-        named("news_retrofit")
+            named("news_retrofit")
         ).create(UserService::class.java)
     }
     single<NewsService> {
         get<Retrofit>(
-        named("news_retrofit")
+            named("news_retrofit")
         ).create(NewsService::class.java)
     }
     single<StzbService> {
         get<Retrofit>(
-        named("stzb_retrofit")
+            named("stzb_retrofit")
         ).create(StzbService::class.java)
     }
-    single<StzbNoticeService>{
-        get<Retrofit>(named("stzb_video")).create(StzbNoticeService::class.java)
+    single<StzbNoticeService> {
+        get<Retrofit>(
+            named("stzb_video")
+        ).create(StzbNoticeService::class.java)
     }
 }
 

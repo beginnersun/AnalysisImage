@@ -121,17 +121,32 @@
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/tv_time"
                         android:layout_marginTop="20dp"
-                        android:layout_marginLeft="8dp"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginRight="10dp"
+                        android:padding="2dp"
                         android:id="@+id/tv_content"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
+                        app:rich="@{data.message}"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                android:visibility="gone"/>
 
-                <!--app:rich="@{data.message}"-->
+                <WebView
+                        android:id="@+id/webView"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/tv_time"
+                        android:layout_marginTop="20dp"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginRight="10dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:nestedScrollingEnabled="false"
+                />
+
 
                 <TextView
                         android:id="@+id/tv_share"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/tv_content"
+                        app:layout_constraintTop_toBottomOf="@id/webView"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="20dp"
@@ -142,6 +157,7 @@
                         android:drawableLeft="@mipmap/share"
                         android:textSize="12sp"
                         android:drawablePadding="3dp"
+                        android:onClick="@{() -> model.refresh()}"
                 />
 
                 <TextView
@@ -196,7 +212,6 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
 
         </androidx.core.widget.NestedScrollView>
-
 
 
     </FrameLayout>

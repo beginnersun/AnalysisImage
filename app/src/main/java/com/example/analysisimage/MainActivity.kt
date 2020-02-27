@@ -2,10 +2,11 @@ package com.example.analysisimage
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.DisplayMetrics
 import android.util.Log
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.alibaba.android.arouter.launcher.ARouter
-import com.bumptech.glide.Glide
+import com.example.base_module.Constants
 import com.example.base_module.util.SharedPreferenceUtil
 import kotlinx.android.synthetic.main.activity_main.*
 import okhttp3.OkHttpClient
@@ -38,6 +39,13 @@ class MainActivity : AppCompatActivity() {
             }
         }.start()
 
+
+        var outMetrics = DisplayMetrics()
+        windowManager.defaultDisplay.getMetrics(outMetrics)
+        var widthPixels = outMetrics.widthPixels
+        var heightPixels = outMetrics.heightPixels
+        Constants.SCREEN_WIDTH = widthPixels
+        Constants.SCREEN_HEIGHT = heightPixels
     }
 
     private fun getImageRecognitionToken(apiKey: String, secretKey: String): String {

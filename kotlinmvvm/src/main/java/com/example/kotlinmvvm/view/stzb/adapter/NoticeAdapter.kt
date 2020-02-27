@@ -52,7 +52,11 @@ class NoticeAdapter(private var context: Context, private var datas: List<Notice
 
         fun setItemClickListener(itemClickListener: OnItemClickListener){
             binding?.root.setOnClickListener {
-                itemClickListener.onItemClick(adapterPosition)
+//                Log.e("点击位置1","$position")
+//                Log.e("点击位置2","$layoutPosition")
+//                Log.e("点击位置3","$adapterPosition")
+//                Log.e("点击位置4","$oldPosition")
+                itemClickListener.onItemClick(layoutPosition)
             }
         }
 

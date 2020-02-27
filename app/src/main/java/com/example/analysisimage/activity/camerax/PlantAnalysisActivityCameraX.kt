@@ -13,7 +13,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.camera.core.*
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import com.example.analysisimage.Constants
+import com.example.base_module.Constants
 import com.example.analysisimage.R
 import com.example.analysisimage.bean.PlantBean
 import com.example.analysisimage.network.BaseRequestCallBack

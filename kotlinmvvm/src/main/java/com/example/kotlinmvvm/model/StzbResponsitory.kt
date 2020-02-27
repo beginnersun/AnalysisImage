@@ -34,6 +34,7 @@ class StzbResponsitory(val stzbService: StzbService,val stzbNoticeService: StzbN
     }
 
     suspend fun getStzbDetail(tid:String):List<NoticeDetailsBean>{
+        Log.e("获取到的stzbNoticeService",stzbNoticeService.toString())
         val result = stzbNoticeService.getStzbNotice(1,module = "viewthread",tid = tid)
         val json = JSONObject(result)
         val list = json.optJSONObject("Variables").optJSONArray("postlist")

@@ -1,4 +1,4 @@
-package com.example.analysisimage
+package com.example.base_module
 
 import android.os.Environment
 import java.io.File
@@ -18,6 +18,9 @@ class Constants {
 
 
         const val GET_KUAISHOU_VIDEO = "https://live.kuaishou.com/rest/wd/live/liveStream/myfollow" //快手关注的视频信息
+
+        var SCREEN_WIDTH:Int = 0
+        var SCREEN_HEIGHT:Int = 0
     }
 
 }

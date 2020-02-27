@@ -24,7 +24,8 @@ import org.koin.core.qualifier.named
 class NoticeFragment:BaseFragment(),XRecyclerView.LoadingListener ,OnItemClickListener{
     override fun onItemClick(position: Int) {
         var intent = Intent(activity,StzbDetailsActivity::class.java)
-        intent.putExtra("tid",data[position].tid)
+        Log.e("传入的tid 与 对应的主题 ${data[position-1].subject}",data[position-1].tid)
+        intent.putExtra("tid",data[position-1].tid)
         startActivity(intent)
     }
 

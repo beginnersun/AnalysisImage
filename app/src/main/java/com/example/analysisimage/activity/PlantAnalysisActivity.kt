@@ -21,7 +21,7 @@ import android.util.Size
 import android.view.Surface
 import android.view.TextureView
 import com.bumptech.glide.Glide
-import com.example.analysisimage.Constants
+import com.example.base_module.Constants
 import com.example.analysisimage.R
 import com.example.analysisimage.bean.PlantBean
 import com.example.analysisimage.network.BaseRequestCallBack
