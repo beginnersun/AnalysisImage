@@ -130,6 +130,7 @@
                         android:layout_height="wrap_content"
                 android:visibility="gone"/>
 
+
                 <WebView
                         android:id="@+id/webView"
                         app:layout_constraintStart_toStartOf="parent"
@@ -140,6 +141,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:nestedScrollingEnabled="false"
+                        android:layerType="hardware"
                 />
 
 
@@ -157,7 +159,7 @@
                         android:drawableLeft="@mipmap/share"
                         android:textSize="12sp"
                         android:drawablePadding="3dp"
-                        android:onClick="@{() -> model.refresh()}"
+                        app:click="@{() -> model.refresh()}"
                 />
 
                 <TextView
@@ -173,6 +175,7 @@
                         android:drawableLeft="@mipmap/collect"
                         android:textSize="12sp"
                         android:drawablePadding="3dp"
+                        android:layerType="hardware"
                 />
 
                 <TextView

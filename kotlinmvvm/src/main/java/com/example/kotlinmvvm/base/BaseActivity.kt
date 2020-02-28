@@ -13,31 +13,28 @@ import kotlinx.coroutines.withContext
 abstract class BaseActivity:AppCompatActivity() {
 
     private var baseViewModel:BaseViewModel? =  null
+    private var loadingView:LoadingView? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val loadingView = LoadingView(this)
         baseViewModel = setViewModel()
-        
+        loadingView = LoadingView(this)
         baseViewModel?.listener = object:VmStateListener{
             override fun error(message: String) {
-                loadingView.cancel()
+                cancelLoading()
                 onError(message)
             }
 
             override fun startLoad() {
-                loadingView.show()
-                onStartLoad()
+                showLoading()
             }
 
             override fun endLoad() {
-                loadingView.cancel()
-                onEndLoad()
+                endLoading()
             }
 
-            override fun onSuccess() {
-                loadingView.dismiss()
-                onLoadSucess()
+            override fun success() {
+                onSuccess()
             }
 
         }
@@ -49,15 +46,25 @@ abstract class BaseActivity:AppCompatActivity() {
         Toast.makeText(this,message,Toast.LENGTH_LONG).show()
     }
 
-    protected fun onStartLoad(){
+    protected fun onSuccess(){
 
     }
 
-    protected fun onEndLoad(){
-
+    override fun onDestroy() {
+        loadingView = null
+        super.onDestroy()
     }
 
-    protected fun onLoadSucess(){
-
+    protected fun showLoading(){
+        loadingView?.show()
     }
+
+    protected fun endLoading(){
+        loadingView?.dismiss()
+    }
+
+    protected fun cancelLoading(){
+        loadingView?.cancel()
+    }
+
 }

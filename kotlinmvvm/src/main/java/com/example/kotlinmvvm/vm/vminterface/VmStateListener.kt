@@ -8,6 +8,6 @@ interface VmStateListener {
 
     fun endLoad()
 
-    fun onSuccess()
+    fun success()
 
 }

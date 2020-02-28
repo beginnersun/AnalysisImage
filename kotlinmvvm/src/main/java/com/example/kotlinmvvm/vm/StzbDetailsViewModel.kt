@@ -33,7 +33,6 @@ class StzbDetailsViewModel(private var stzbResponsitory:StzbResponsitory):BaseVi
 
     fun refresh(){
             job = viewModelScope.launch {
-
                 detailData.value = stzbResponsitory.getStzbDetail("7402903")
             }
 //        }
