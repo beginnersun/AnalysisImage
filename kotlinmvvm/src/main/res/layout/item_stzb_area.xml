@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <variable name="data" type="com.example.kotlinmvvm.bean.AreaInfo"/>
+    </data>
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="8dp"
+            android:paddingBottom="5dp"
+            android:background="#0A090F">
+
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@{data.date}"
+                android:textColor="#B9E8B1"
+                android:textSize="14sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/tv_time"
+                android:id="@+id/tv_date"
+                app:layout_constraintHorizontal_chainStyle="spread"
+        />
+
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@{data.time}"
+                android:textColor="@color/white"
+                android:textSize="14sp"
+                app:layout_constraintTop_toTopOf="@id/tv_date"
+                app:layout_constraintStart_toEndOf="@id/tv_date"
+                app:layout_constraintEnd_toEndOf="@id/tv_number"
+                android:id="@+id/tv_time"
+                app:layout_constraintHorizontal_chainStyle="spread"
+
+        />
+
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@{data.number}"
+                android:textColor="@color/white"
+                android:textSize="14sp"
+                app:layout_constraintTop_toTopOf="@id/tv_date"
+                app:layout_constraintStart_toEndOf="@id/tv_time"
+                app:layout_constraintEnd_toStartOf="@id/tv_name"
+                android:id="@+id/tv_number"
+                app:layout_constraintHorizontal_chainStyle="spread"
+        />
+
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@{data.name}"
+                android:textColor="#BB9959"
+                android:textSize="14sp"
+                app:layout_constraintStart_toEndOf="@id/tv_number"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/tv_date"
+                android:id="@+id/tv_name"
+                app:layout_constraintHorizontal_chainStyle="spread"
+        />
+
+        <View
+                style="@style/horizontal"
+                app:layout_constraintTop_toBottomOf="@id/tv_date"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginTop="5dp"
+
+        />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

@@ -52,6 +52,8 @@ class StzbDetailsActivity : BaseActivity(), VideoPlayer.VideoListenerCallBack {
     private val details = mutableListOf<NoticeDetailsBean>()
     private var noticeDetails: NoticeDetailsBean? = null
     private var commentAdapter: CommentAdapter = CommentAdapter(this, details)
+    private var binding: ActivityStzbDetailBinding? = null
+    private val viewModel: StzbDetailsViewModel by viewModel()
 
     private fun load() {
         viewModel.getDetail(tid)
@@ -82,8 +84,6 @@ class StzbDetailsActivity : BaseActivity(), VideoPlayer.VideoListenerCallBack {
 
     }
 
-    private var binding: ActivityStzbDetailBinding? = null
-    private val viewModel: StzbDetailsViewModel by viewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

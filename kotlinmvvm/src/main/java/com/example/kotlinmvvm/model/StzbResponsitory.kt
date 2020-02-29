@@ -2,6 +2,7 @@ package com.example.kotlinmvvm.model
 
 import android.util.Log
 import com.example.base_module.util.NetWorkState
+import com.example.kotlinmvvm.bean.NoticeAreaBean
 import com.example.kotlinmvvm.bean.NoticeBean
 import com.example.kotlinmvvm.bean.NoticeDetailsBean
 import com.example.kotlinmvvm.bean.VideoBean
@@ -40,6 +41,13 @@ class StzbResponsitory(val stzbService: StzbService,val stzbNoticeService: StzbN
         val list = json.optJSONObject("Variables").optJSONArray("postlist")
         val listBeans =  Gson().fromJson<List<NoticeDetailsBean>>(list.toString(),object :TypeToken<List<NoticeDetailsBean>>(){}.type)
         return listBeans
+    }
+
+    suspend fun getStzbNewArea(page:Int):List<NoticeAreaBean>{
+        val result = stzbNoticeService.getStzbNewArea(page)
+        val json = JSONObject(result)
+        val list = json.optJSONObject("Variables").optJSONArray("forum_threadlist")
+        return Gson().fromJson<List<NoticeAreaBean>>(list.toString(),object : TypeToken<List<NoticeAreaBean>>(){}.type)
     }
 
 }

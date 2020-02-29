@@ -27,6 +27,7 @@
                   android:screenOrientation="landscape"
                   android:hardwareAccelerated="true"/>
 
+        <activity android:name=".view.stzb.StzbNewAreaActivity"/>
     </application>
 
 </manifest>
