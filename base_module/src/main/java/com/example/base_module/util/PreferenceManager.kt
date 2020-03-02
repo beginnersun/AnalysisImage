@@ -450,7 +450,7 @@ class TestTrust(val map:Map<String,Any?>){
     //可观察属性 传入的函数在赋值后执行
     val b by Delegates.observable("没有值那就先给个初始值"){
         property, oldValue, newValue ->
-        println("the property is ${property.name}  old = $oldValue   ->     new = $newValue")
+        println("the property is ${property.name}  old = $oldValue   ->     new_tag = $newValue")
     }
     // 可修改  传入的函数用来判断是否修改值
     val b_1:String by Delegates.vetoable("继续给个初始值"){

@@ -6,10 +6,7 @@ import com.example.kotlinmvvm.dao.NewsDao
 import com.example.kotlinmvvm.dao.NewsDatabase
 import com.example.kotlinmvvm.interceptor.CustomInterceptor
 import com.example.kotlinmvvm.model.*
-import com.example.kotlinmvvm.vm.MainViewModel
-import com.example.kotlinmvvm.vm.NewsViewModel
-import com.example.kotlinmvvm.vm.StzbDetailsViewModel
-import com.example.kotlinmvvm.vm.StzbViewModel
+import com.example.kotlinmvvm.vm.*
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import okhttp3.OkHttpClient
@@ -37,6 +34,12 @@ val mainViewModel = module {
     }
     factory{
         StzbDetailsViewModel(StzbResponsitory(get(), get()))
+    }
+    single {
+        StzbNewAreaViewModel(StzbResponsitory(get(),get()))
+    }
+    single {
+        StzbGalleryViewModel(StzbResponsitory(get(),get()))
     }
 }
 val newsViewModel = module {

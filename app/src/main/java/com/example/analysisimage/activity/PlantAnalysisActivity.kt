@@ -206,17 +206,17 @@ class PlantAnalysisActivity : AppCompatActivity() {
 //
 //            Image mImage = reader.acquireNextImage();
 //            ByteBuffer buffer = mImage.getPlanes()[0].getBuffer();
-//            byte[] data = new byte[buffer.remaining()];
+//            byte[] data = new_tag byte[buffer.remaining()];
 //            buffer.get(data);
-//            String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+//            String timeStamp = new_tag SimpleDateFormat("yyyyMMdd_HHmmss").format(new_tag Date());
 //            Camera2Util.createSavePath(Camera2Config.PATH_SAVE_PIC);//判断有没有这个文件夹，没有的话需要创建
 //            picSavePath = Camera2Config.PATH_SAVE_PIC + "IMG_" + timeStamp + ".jpg";
 //            FileOutputStream fos = null;
 //            try {
-//                fos = new FileOutputStream(picSavePath);
+//                fos = new_tag FileOutputStream(picSavePath);
 //                fos.write(data, 0, data.length);
 //
-//                Message msg = new Message();
+//                Message msg = new_tag Message();
 //                msg.what = CAPTURE_OK;
 //                msg.obj = picSavePath;
 //                mCameraHandler.sendMessage(msg);

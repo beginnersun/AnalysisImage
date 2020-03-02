@@ -2,6 +2,7 @@ package com.example.kotlinmvvm.view.stzb.adapter
 
 import android.content.Context
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
@@ -40,7 +41,7 @@ class AreaAdapter(private var context:Context,private var datas:MutableList<Area
         }
 
         fun setItemClickListener(itemClickListener: OnItemClickListener){
-            binding?.root.setOnClickListener {
+            binding.root.setOnClickListener {
                 itemClickListener.onItemClick(layoutPosition)
             }
         }

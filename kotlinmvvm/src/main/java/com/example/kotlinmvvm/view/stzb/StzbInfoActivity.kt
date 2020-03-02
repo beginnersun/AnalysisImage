@@ -9,11 +9,9 @@ import com.example.kotlinmvvm.base.BaseFragment
 import com.example.kotlinmvvm.base.BaseViewModel
 import com.example.kotlinmvvm.databinding.ActivityStzbBinding
 import com.example.kotlinmvvm.view.news.adapter.FragmentManagerdapter
-import com.example.kotlinmvvm.view.news.fragment.NewsFragment
 import com.example.kotlinmvvm.view.stzb.fragment.NoticeFragment
 import com.example.kotlinmvvm.view.stzb.fragment.VideoFragment
 import com.example.kotlinmvvm.vm.StzbViewModel
-import com.google.android.material.tabs.TabLayout
 import org.koin.core.qualifier.named
 import org.koin.androidx.viewmodel.ext.android.viewModel
 

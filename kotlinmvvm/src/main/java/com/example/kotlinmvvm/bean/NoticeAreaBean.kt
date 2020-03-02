@@ -1,5 +1,7 @@
 package com.example.kotlinmvvm.bean
 
+import android.util.Log
+
 data class NoticeAreaBean(
     val attachment: String,
     val author: String,
@@ -41,22 +43,35 @@ data class NoticeAreaBean(
             if (value.compareTo('：') != 0 || value.compareTo('）') == 0){
                 sb.append(value)
             }
+            Log.e("数据变1",sb.toString())
             if (sb.toString().compareTo(("《率土之滨》")) == 0){
-                sb.reverse()
+                Log.e("数据变2",sb.toString())
+                sb.setLength(0)
+                Log.e("数据变3",sb.toString())
             }else if(value.compareTo('日') == 0){
                 date = sb.toString()
-                sb.reverse()
+                Log.e("数据",date)
+                sb.setLength(0)
+                Log.e("数据变4",sb.toString())
             }else if(value.compareTo('点') == 0){
                 time = sb.toString()
-                sb.reverse()
+                Log.e("数据",time)
+                sb.setLength(0)
+                Log.e("数据变5",sb.toString())
             }else if (value.compareTo('（') == 0){
-                sb.reverse()
+                Log.e("数据变6",sb.toString())
+                sb.setLength(0)
+                Log.e("数据变7",sb.toString())
             }else if (value.compareTo('区') == 0){
                 number = sb.toString()
-                sb.reverse()
+                Log.e("数据",number)
+                sb.setLength(0)
+                Log.e("数据变8",sb.toString())
             }else if (value.compareTo('）') == 0){
-                name = sb.toString()
-                sb.reverse()
+                name = sb.deleteCharAt(sb.length-1).toString()
+                Log.e("数据",name)
+                Log.e("数据变9",sb.toString())
+                sb.setLength(0)
             }
         }
         return AreaInfo(date,time,number,name)

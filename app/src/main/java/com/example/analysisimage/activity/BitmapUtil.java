@@ -37,7 +37,7 @@ public class BitmapUtil {
     }
 //
 //    public static byte[] rotateYUV420Degree90(byte[] data, int imageWidth, int imageHeight) {
-//        byte[] yuv = new byte[imageWidth * imageHeight * 3 / 2];
+//        byte[] yuv = new_tag byte[imageWidth * imageHeight * 3 / 2];
 //        // Rotate the Y luma
 //        int i = 0;
 //        for (int x = 0; x < imageWidth; x++) {
@@ -88,11 +88,11 @@ public class BitmapUtil {
     }
 
 //    public static Bitmap getBitmapImageFromYUV(byte[] data, int width, int height) {
-//        YuvImage yuvimage = new YuvImage(data, ImageFormat.NV21, width, height, null);
-//        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-//        yuvimage.compressToJpeg(new Rect(0, 0, width, height), 80, baos);
+//        YuvImage yuvimage = new_tag YuvImage(data, ImageFormat.NV21, width, height, null);
+//        ByteArrayOutputStream baos = new_tag ByteArrayOutputStream();
+//        yuvimage.compressToJpeg(new_tag Rect(0, 0, width, height), 80, baos);
 //        byte[] jdata = baos.toByteArray();
-//        BitmapFactory.Options bitmapFatoryOptions = new BitmapFactory.Options();
+//        BitmapFactory.Options bitmapFatoryOptions = new_tag BitmapFactory.Options();
 //        bitmapFatoryOptions.inPreferredConfig = Bitmap.Config.RGB_565;
 //        Bitmap bmp = BitmapFactory.decodeByteArray(jdata, 0, jdata.length, bitmapFatoryOptions);
 //        return bmp;

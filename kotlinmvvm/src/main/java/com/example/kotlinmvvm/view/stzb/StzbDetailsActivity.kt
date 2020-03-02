@@ -70,6 +70,7 @@ class StzbDetailsActivity : BaseActivity(), VideoPlayer.VideoListenerCallBack {
         }
 //
         binding?.data = noticeDetails
+
 //        binding?.webView!!.loadUrl("https://v.163.com/paike/V8H1BIE6U/VAG52A1KT.html")
         binding?.webView!!.loadDataWithBaseURL(
             null,

@@ -4,8 +4,10 @@
     <data>
         <import type="androidx.lifecycle.MutableLiveData"/>
         <import type="com.example.kotlinmvvm.bean.NoticeDetailsBean"/>
+        <import type="android.view.View"/>
         <variable name="data" type="NoticeDetailsBean"/>
         <variable name="model" type="com.example.kotlinmvvm.vm.StzbDetailsViewModel"/>
+        <variable name="goodsNull" type="Integer"/>
     </data>
 
     <FrameLayout
@@ -56,6 +58,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:text="@{data.subject}"
+                        android:textColor="#5a5a5a"
                         android:textSize="15sp"
                         android:padding="8dp"/>
 
@@ -160,6 +163,11 @@
                         android:textSize="12sp"
                         android:drawablePadding="3dp"
                         app:click="@{() -> model.refresh()}"
+                        android:paddingLeft="10dp"
+                        android:paddingRight="10dp"
+                        android:paddingTop="5dp"
+                        android:paddingBottom="5dp"
+                        android:background="#EFF1F3"
                 />
 
                 <TextView
@@ -176,6 +184,11 @@
                         android:textSize="12sp"
                         android:drawablePadding="3dp"
                         android:layerType="hardware"
+                        android:paddingLeft="10dp"
+                        android:paddingRight="10dp"
+                        android:paddingTop="5dp"
+                        android:paddingBottom="5dp"
+                        android:background="#EFF1F3"
                 />
 
                 <TextView
@@ -191,6 +204,11 @@
                         android:drawableLeft="@mipmap/praise"
                         android:textSize="12sp"
                         android:drawablePadding="3dp"
+                        android:paddingLeft="10dp"
+                        android:paddingRight="10dp"
+                        android:paddingTop="5dp"
+                        android:paddingBottom="5dp"
+                        android:background="#EFF1F3"
                 />
 
                 <View
@@ -201,13 +219,26 @@
                         app:layout_constraintTop_toBottomOf="@id/tv_share"
                 />
 
+                <TextView
+                        android:id="@+id/goods_null"
+                        android:layout_width="match_parent"
+                          android:layout_height="70dp"
+                        android:text="没有数据了哦~"
+                        android:textSize="13sp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/line_content"
+                        android:gravity="center"
+                        android:visibility="@{goodsNull}"
+                />
+
                 <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/comment_recycler_view"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/line_content"
                         android:layout_marginTop="10dp"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
+                        android:layout_height="wrap_content"
+                android:visibility="@{goodsNull == View.VISIBLE ? View.GONE:View.VISIBLE}">
 
                 </androidx.recyclerview.widget.RecyclerView>
 
