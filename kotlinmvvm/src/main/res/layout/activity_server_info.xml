@@ -9,14 +9,10 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-        <com.jcodecraeer.xrecyclerview.XRecyclerView
-                android:id="@+id/recycler_gallery"
+        <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recycler_server"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp">
-
-        </com.jcodecraeer.xrecyclerview.XRecyclerView>
+                android:layout_height="match_parent"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

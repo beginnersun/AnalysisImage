@@ -28,7 +28,7 @@ class MainActivity : AppCompatActivity() {
          * 声明一个匿名类  object:xxxxx{    override fun .....(){ 覆写的方法}    }
          */
         first.setOnClickListener { view ->
-            ARouter.getInstance().build("/kotlinmvvm/area").navigation()
+            ARouter.getInstance().build("/kotlinmvvm/gallery").navigation()
         }
 
         Thread {

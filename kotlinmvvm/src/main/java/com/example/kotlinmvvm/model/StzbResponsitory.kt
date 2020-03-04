@@ -47,8 +47,8 @@ class StzbResponsitory(val stzbService: StzbService,val stzbNoticeService: StzbN
         return Gson().fromJson<List<NoticeAreaBean>>(list.toString(),object : TypeToken<List<NoticeAreaBean>>(){}.type)
     }
 
-    suspend fun getFellowGallery():List<StzbFellowGalleryBean>{
-        val result = stzbNoticeService.getStzbNotice(1,fid = 1537)
+    suspend fun getFellowGallery(page:Int):List<StzbFellowGalleryBean>{
+        val result = stzbNoticeService.getStzbNotice(page,fid = 1537)
         val json = JSONObject(result)
         val list = json.optJSONObject("Variables").optJSONArray("forum_threadlist")
         return Gson().fromJson<List<StzbFellowGalleryBean>>(list.toString(),object : TypeToken<List<StzbFellowGalleryBean>>(){}.type)

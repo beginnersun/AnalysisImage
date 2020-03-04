@@ -28,6 +28,7 @@
                   android:hardwareAccelerated="true"/>
 
         <activity android:name=".view.stzb.StzbNewAreaActivity"/>
+        <activity android:name=".view.stzb.StzbFellowGalleryActivity"/>
     </application>
 
 </manifest>

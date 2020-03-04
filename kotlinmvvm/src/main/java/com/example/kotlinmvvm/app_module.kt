@@ -41,6 +41,9 @@ val mainViewModel = module {
     single {
         StzbGalleryViewModel(StzbResponsitory(get(),get()))
     }
+    single{
+        StzbServerInfoViewModel(StzbServerInfoResponsitory(get()))
+    }
 }
 val newsViewModel = module {
 }
@@ -81,6 +84,16 @@ val remoteModule = module {
             .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
             .build()
     }
+    single<Retrofit>(named("stzb_server_info")){
+        Retrofit.Builder()
+            .baseUrl("https://g10bigdata.webapp.163.com/")
+            .client(OkHttpClient.Builder().apply {
+                addInterceptor(CustomInterceptor())
+            }.build())
+            .addConverterFactory(ScalarsConverterFactory.create())
+            .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+            .build()
+    }
     single<UserService> {
         get<Retrofit>(
             named("news_retrofit")
@@ -100,6 +113,11 @@ val remoteModule = module {
         get<Retrofit>(
             named("stzb_video")
         ).create(StzbNoticeService::class.java)
+    }
+    single<StzbServerInfoService>{
+        get<Retrofit>(
+            named("stzb_server_info")
+        ).create(StzbServerInfoService::class.java)
     }
 }
 

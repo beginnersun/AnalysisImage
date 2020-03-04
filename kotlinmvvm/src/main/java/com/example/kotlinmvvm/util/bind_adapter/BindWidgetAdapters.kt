@@ -9,6 +9,7 @@ import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.databinding.BindingAdapter
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
@@ -34,6 +35,29 @@ object BindAdapters {
                 Glide.with(imageView.context).load(url.replace("http", "https")).apply(requestOptions).into(imageView)
             }else{
                 Glide.with(imageView.context).load(url).apply(requestOptions).into(imageView)
+            }
+        }else{
+
+        }
+    }
+
+    @BindingAdapter("url","width","height","scale")
+    @JvmStatic
+    fun ImageView.loadImageWithSize(url:String,width:String,height:String,scale:Float){
+        var params = layoutParams as ConstraintLayout.LayoutParams
+        val srcWidth = Integer.parseInt(width)
+        val srcHeight = Integer.parseInt(height)
+        val ivWidth = Constants.SCREEN_WIDTH / 2 - 60
+        val ivHeight = (ivWidth * scale).toInt()
+        params.width = ivWidth
+        params.height = ivHeight
+        layoutParams = params
+        val requestOptions = RequestOptions().transform(RoundedCorners(10)).placeholder(R.mipmap.ic_launcher).override(ivWidth,ivHeight)
+        if (!TextUtils.isEmpty(url)) {
+            if (!url!!.contains("https")){
+                Glide.with(context).load(url.replace("http", "https")).apply(requestOptions).into(this)
+            }else{
+                Glide.with(context).load(url).apply(requestOptions).into(this)
             }
         }else{
 

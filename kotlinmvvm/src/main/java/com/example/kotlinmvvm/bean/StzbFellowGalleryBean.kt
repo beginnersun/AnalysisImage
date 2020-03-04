@@ -31,7 +31,9 @@ data class StzbFellowGalleryBean(
     val tid: String,
     val typeid: String,
     val views: String
-)
+){
+    var scale:Float = 0f
+}
 
 data class Cover(
     val h: String,
