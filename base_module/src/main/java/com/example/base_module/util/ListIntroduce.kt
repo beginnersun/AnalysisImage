@@ -24,6 +24,8 @@ fun testListCollection(){
     testMap["2"] to "2"
     testMutableMap["2"] = "2"
 
+    testMap.isEmpty()
+
     val numbers = listOf("one", "two", "three", "four")
     numbers.associateWith { it.length>3 }
 }

@@ -29,6 +29,8 @@
 
         <activity android:name=".view.stzb.StzbNewAreaActivity"/>
         <activity android:name=".view.stzb.StzbFellowGalleryActivity"/>
+        <activity android:name=".view.stzb.StzbServerActivity"/>
+        <activity android:name=".view.stzb.StzbServerDetailActivity"/>
     </application>
 
 </manifest>
