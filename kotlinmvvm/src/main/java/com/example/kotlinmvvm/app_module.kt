@@ -44,6 +44,9 @@ val mainViewModel = module {
     single{
         StzbServerInfoViewModel(StzbServerInfoResponsitory(get()))
     }
+    factory {
+        StzbServerDetailsViewModel(StzbServerInfoResponsitory(get()))
+    }
 }
 val newsViewModel = module {
 }
