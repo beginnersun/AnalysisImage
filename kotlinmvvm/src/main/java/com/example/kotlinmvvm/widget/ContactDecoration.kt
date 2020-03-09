@@ -1,4 +1,4 @@
-package com.example.kotlinmvvm.util
+package com.example.kotlinmvvm.widget
 
 import android.graphics.Canvas
 import android.graphics.Color
@@ -101,12 +101,12 @@ class ContactDecoration constructor() : ItemDecoration() {
             Log.e("碰撞动画","${child.height}   ${child.top}    ${titleHeight}   $first")
             if (child.height + child.top < titleHeight){   //child.top  +  child.height  (就是当前屏幕上他还剩余的大小  当child有一部分被遮挡时他的top就是遮挡高度的负值 而height不会变所以想加就是剩余大小)
                 // 当剩余大小与titleHeight相等时代表即将相撞
-                c.save()
+                c.save()  //保存当前画布的信息然后重新生成一个位图
                 flag = true
-                c.translate(0f, (child.height+child.top - titleHeight).toFloat())
+                c.translate(0f, (child.height+child.top - titleHeight).toFloat()) //改变当前坐标系的原点的位置为0,(child.height+child.top - titleHeight)
             }
         }
-
+        //如果执行过 translate  那么坐标系的原点会改变  虽然绘drawRect与drawText方法中参数没变 但是实际在整个画布中已经改变了
         c.drawRect(parent.paddingLeft.toFloat(),
             parent.paddingTop.toFloat(),
             (parent.right - parent.paddingRight).toFloat(),
@@ -117,7 +117,8 @@ class ContactDecoration constructor() : ItemDecoration() {
             (parent.paddingTop+titleHeight - (titleHeight - mTextHeight) / 2 - mTextBaselineOffset).toFloat()
             ,textPaint)
 
-        if (flag){
+        if (flag){   //如果 画布上移过 那么 还原画布之前的状态然后就会产生一个上移的效果  (也可以说还原为原来的坐标系  如果不执行restore那么相当于没变）
+            // 以上效果仅仅是为了将文字内容绘制的位置上移    也可以直接调用drawText改变绘制位置 但是比较麻烦  如果直接使用translate会比较简单
             c.restore()
         }
     }

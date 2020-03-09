@@ -33,6 +33,7 @@
                 android:textColor="#B9E8B1"
                 android:textSize="14sp"
                 android:text="@{data.serverName}"
+                android:minWidth="60dp"
                 app:layout_constraintTop_toTopOf="@id/tv_date"
                 app:layout_constraintStart_toEndOf="@id/tv_date"
                 app:layout_constraintEnd_toEndOf="@id/tv_number"

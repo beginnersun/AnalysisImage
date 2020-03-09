@@ -14,7 +14,7 @@ import com.example.kotlinmvvm.R
 import com.example.kotlinmvvm.base.BaseFragment
 import com.example.kotlinmvvm.bean.NoticeBean
 import com.example.kotlinmvvm.databinding.FragmentStzbNoticeBinding
-import com.example.kotlinmvvm.util.ContactDecoration
+import com.example.kotlinmvvm.widget.ContactDecoration
 import com.example.kotlinmvvm.view.stzb.StzbDetailsActivity
 import com.example.kotlinmvvm.view.stzb.adapter.NoticeAdapter
 import com.example.kotlinmvvm.vm.StzbViewModel

@@ -4,23 +4,26 @@ import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
 import android.os.Bundle
 import android.util.Log
+import android.util.TimeUtils
 import android.view.MotionEvent
 import android.view.View
-import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.Observer
 import com.alibaba.android.arouter.facade.annotation.Route
+import com.example.base_module.util.TimeUtil
 import com.example.kotlinmvvm.R
 import com.example.kotlinmvvm.base.BaseActivity
 import com.example.kotlinmvvm.base.BaseViewModel
 import com.example.kotlinmvvm.databinding.ActivityServerDetailBinding
-import kotlinx.android.synthetic.main.activity_server_detail.*
+import com.example.kotlinmvvm.vm.StzbServerDetailsViewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 @Route(path = "/kotlinmvvm/server_detail")
-class StzbServerDetailActivity : AppCompatActivity(), View.OnTouchListener {
+class StzbServerDetailActivity : BaseActivity(), View.OnTouchListener {
 
-//    override fun setViewModel(): BaseViewModel {
-//        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-//    }
+    override fun setViewModel(): BaseViewModel = viewModel
+
+    private val viewModel:StzbServerDetailsViewModel by viewModel()
 
     private var binding: ActivityServerDetailBinding? = null
     private var currentPosition = 0
@@ -34,14 +37,28 @@ class StzbServerDetailActivity : AppCompatActivity(), View.OnTouchListener {
     private var satisfied = false
     private val animatorSet = AnimatorSet()
 
+    private var server_id = ""
+
+    private fun load(){
+        viewModel.getServerDetails(server_id, TimeUtil.getCurrentDate())
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_server_detail)
+        server_id = intent.getStringExtra("id")
 
         clViews.add(binding?.unionRank!!)
         clViews.add(binding?.unionInfo!!)
 
         initTouchListener()
+        viewModel.serverData.observe(this, Observer {
+            binding?.first = it[0]
+            binding?.second = it[1]
+            binding?.third = it[2]
+        })
+        load()
+
     }
 
     private fun initTouchListener() {
@@ -56,6 +73,10 @@ class StzbServerDetailActivity : AppCompatActivity(), View.OnTouchListener {
             }
         }
     }
+
+
+
+
 
     override fun onTouch(v: View?, event: MotionEvent?): Boolean {
         when (event!!.action) {

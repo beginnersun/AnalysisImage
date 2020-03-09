@@ -11,7 +11,7 @@ import com.example.kotlinmvvm.base.BaseActivity
 import com.example.kotlinmvvm.base.BaseViewModel
 import com.example.kotlinmvvm.bean.ServerBean
 import com.example.kotlinmvvm.databinding.ActivityServerInfoBinding
-import com.example.kotlinmvvm.util.ContactDecoration
+import com.example.kotlinmvvm.widget.ContactDecoration
 import com.example.kotlinmvvm.view.stzb.adapter.ServerAdapter
 import com.example.kotlinmvvm.vm.StzbServerInfoViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel

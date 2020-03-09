@@ -6,6 +6,12 @@ import java.util.*
 
 object TimeUtil {
 
+    fun getCurrentDate():String{
+        val calendar = Calendar.getInstance()
+        val sf = SimpleDateFormat("yyyyMMdd")
+        return sf.format(calendar.time)
+    }
+
     /**
      * 此处的格式为
      * 2019-12-27 10:25:59

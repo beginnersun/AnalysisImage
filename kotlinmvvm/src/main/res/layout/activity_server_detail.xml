@@ -1,8 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto">
+<layout xmlns:tools="http://schemas.android.com/tools" xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
-
+        <import type="com.example.kotlinmvvm.bean.UnionBean"/>
+        <variable name="first" type="UnionBean"/>
+        <variable name="second" type="UnionBean"/>
+        <variable name="third" type="UnionBean"/>
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -17,7 +21,8 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintBottom_toTopOf="@+id/union_info">
+                app:layout_constraintBottom_toTopOf="@+id/union_info"
+                android:visibility="gone">
 
             <ImageView
                     app:layout_constraintStart_toStartOf="parent"
@@ -33,7 +38,7 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    android:layout_marginTop="180dp"
+                    android:layout_marginTop="190dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@mipmap/bg_union_rank"
@@ -69,7 +74,7 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="恒丨江湖饭店"
+                    android:text="@{first.alliance_name}"
                     android:maxLines="1"
                     android:maxEms="10"
                     android:ellipsize="end"
@@ -99,7 +104,7 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="12870"
+                    android:text="@{first.power}"
                     android:textColor="#FEEAB3"
                     android:textSize="17sp"
                     android:textStyle="bold"
@@ -114,7 +119,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="17sp"
-                    android:text="人  数：59"
+                    android:text="@{@string/population + first.role_count}"
                     android:background="@drawable/bg_union_number"
                     android:gravity="center"/>
 
@@ -168,7 +173,7 @@
                         app:layout_constraintEnd_toEndOf="parent"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="烟雨盟"
+                        android:text="@{second.alliance_name}"
                         android:maxLines="1"
                         android:maxEms="6"
                         android:ellipsize="end"
@@ -198,7 +203,7 @@
                         app:layout_constraintEnd_toEndOf="parent"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="12870"
+                        android:text="@{second.power}"
                         android:textColor="#FEEAB3"
                         android:textSize="17sp"
                         android:textStyle="bold"
@@ -213,7 +218,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textSize="17sp"
-                        android:text="人  数：59"
+                        android:text="@{@string/population + second.role_count}"
                         android:background="@drawable/bg_union_number"
                         android:gravity="center"/>
 
@@ -268,7 +273,7 @@
                         app:layout_constraintEnd_toEndOf="parent"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="和平饭店"
+                        android:text="@{second.alliance_name}"
                         android:maxLines="1"
                         android:maxEms="7"
                         android:ellipsize="end"
@@ -298,7 +303,7 @@
                         app:layout_constraintEnd_toEndOf="parent"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="12870"
+                        android:text="@{second.power}"
                         android:textColor="#FEEAB3"
                         android:textSize="17sp"
                         android:textStyle="bold"
@@ -313,21 +318,32 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textSize="17sp"
-                        android:text="人  数：59"
+                        android:text="@{@string/population + third.role_count}"
                         android:background="@drawable/bg_union_number"
                         android:gravity="center"/>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <ImageView
+                    android:id="@+id/iv_bottom"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/cl_second"
                     android:layout_margin="20dp"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_width="384dp"
+                    android:layout_height="58dp"
                     android:scaleType="fitCenter"
                     android:src="@mipmap/bottom_title"/>
+
+            <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recyclerview_allies"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/iv_bottom"
+                    android:layout_marginTop="20dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"/>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -337,17 +353,51 @@
                 android:layout_height="match_parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/union_rank">
+                app:layout_constraintTop_toBottomOf="@id/union_rank"
+                android:visibility="visible"
+                android:background="#010103" app:layout_constraintHorizontal_bias="1.0">
 
-            <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+            <ImageView
+                    android:id="@+id/info_title"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    android:text="你好水电费474"
-                    android:background="@color/white"
+                    android:src="@mipmap/city_top_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="fitStart"/>
+
+            <!--app:layout_constraintTop_toTopOf="parent"-->
+            <ImageView
+                    android:id="@+id/iv_map"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:layout_marginTop="180dp"
+                    android:layout_width="800px"
+                    android:layout_height="417px"
+                    android:src="@mipmap/stzb_map"
             />
+
+            <View
+                    android:id="@+id/ponit_view"
+                    android:layout_width="800px"
+                    android:layout_height="417px"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:layout_marginTop="180dp"
+            />
+
+            <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recycler_city"
+                    android:layout_marginTop="450dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"/>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
