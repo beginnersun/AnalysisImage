@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <variable name="item" type="com.example.kotlinmvvm.bean.ServerCityBean"/>
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:paddingTop="2dp"
+            android:paddingBottom="2dp">
+
+        <TextView
+                android:id="@+id/tv_area"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/tv_level"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@{item.areaName}"
+                android:textSize="14sp"
+                android:layout_marginLeft="10dp"/>
+
+        <TextView
+                android:id="@+id/tv_level"
+                app:layout_constraintStart_toEndOf="@id/tv_area"
+                app:layout_constraintTop_toTopOf="@id/tv_area"
+                app:layout_constraintEnd_toStartOf="@+id/tv_city_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@{item.level}"
+                android:textSize="14sp"/>
+
+        <TextView
+                android:id="@+id/tv_city_name"
+                app:layout_constraintStart_toEndOf="@id/tv_level"
+                app:layout_constraintTop_toTopOf="@id/tv_area"
+                app:layout_constraintEnd_toStartOf="@+id/tv_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@{item.city_name}"
+                android:layout_marginLeft="8dp"
+                android:textSize="14sp"/>
+
+        <TextView
+                android:id="@+id/tv_time"
+                app:layout_constraintStart_toEndOf="@id/tv_city_name"
+                app:layout_constraintTop_toTopOf="@id/tv_area"
+                app:layout_constraintEnd_toStartOf="@+id/tv_point"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@{item.pve_when}"
+                android:layout_marginLeft="8dp"
+                android:textSize="14sp"/>
+
+        <TextView
+                android:id="@+id/tv_point"
+                app:layout_constraintStart_toEndOf="@id/tv_time"
+                app:layout_constraintTop_toTopOf="@id/tv_area"
+                app:layout_constraintEnd_toStartOf="@id/tv_union_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="被"
+                android:layout_marginLeft="8dp"
+                android:textSize="14sp"/>
+
+        <TextView
+                android:id="@+id/tv_union_name"
+                app:layout_constraintStart_toEndOf="@id/tv_point"
+                app:layout_constraintTop_toTopOf="@id/tv_area"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@{item.occupyName}"
+                android:layout_marginLeft="8dp"
+                android:textSize="14sp"/>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

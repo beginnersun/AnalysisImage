@@ -22,7 +22,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintBottom_toTopOf="@+id/union_info"
-                android:visibility="gone">
+                android:visibility="visible">
 
             <ImageView
                     app:layout_constraintStart_toStartOf="parent"
@@ -104,7 +104,7 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@{first.power}"
+                    android:text="@{String.valueOf(first.power)}"
                     android:textColor="#FEEAB3"
                     android:textSize="17sp"
                     android:textStyle="bold"
@@ -203,7 +203,7 @@
                         app:layout_constraintEnd_toEndOf="parent"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@{second.power}"
+                        android:text="@{String.valueOf(second.power)}"
                         android:textColor="#FEEAB3"
                         android:textSize="17sp"
                         android:textStyle="bold"
@@ -303,7 +303,7 @@
                         app:layout_constraintEnd_toEndOf="parent"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@{second.power}"
+                        android:text="@{String.valueOf(third.power)}"
                         android:textColor="#FEEAB3"
                         android:textSize="17sp"
                         android:textStyle="bold"
@@ -355,7 +355,8 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/union_rank"
                 android:visibility="visible"
-                android:background="#010103" app:layout_constraintHorizontal_bias="1.0">
+                android:background="#010103"
+                app:layout_constraintHorizontal_bias="1.0">
 
             <ImageView
                     android:id="@+id/info_title"
@@ -391,13 +392,13 @@
 
             <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/recycler_city"
-                    android:layout_marginTop="450dp"
+                    android:layout_margin="20dp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/iv_map"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:visibility="gone"/>
+                    android:maxHeight="180dp"/>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

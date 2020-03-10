@@ -9,21 +9,16 @@ import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 
-class StzbServerInfoViewModel(private val responsitory: StzbServerInfoResponsitory):BaseViewModel() {
+class StzbServerInfoViewModel(private val responsitory: StzbServerInfoResponsitory) : BaseViewModel() {
 
-    val serverData:MutableLiveData<List<ServerBean>> by lazy {
+    val serverData: MutableLiveData<List<ServerBean>> by lazy {
         MutableLiveData<List<ServerBean>>()
     }
 
-    fun getServerList(){
-        viewModelScope.launch(CoroutineExceptionHandler{_,e ->
-            listener?.error(e.message!!)
-        }) {
-            listener?.startLoad()
+    fun getServerList() {
+        launch({
             serverData.value = responsitory.getServerList()
-            listener?.endLoad()
-            cancel()
-        }
+        })
     }
 
 }

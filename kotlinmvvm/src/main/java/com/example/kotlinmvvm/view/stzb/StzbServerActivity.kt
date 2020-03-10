@@ -1,11 +1,13 @@
 package com.example.kotlinmvvm.view.stzb
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.alibaba.android.arouter.facade.annotation.Route
+import com.example.kotlinmvvm.OnItemClickListener
 import com.example.kotlinmvvm.R
 import com.example.kotlinmvvm.base.BaseActivity
 import com.example.kotlinmvvm.base.BaseViewModel
@@ -17,7 +19,11 @@ import com.example.kotlinmvvm.vm.StzbServerInfoViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 @Route(path = "/kotlinmvvm/server")
-class StzbServerActivity:BaseActivity() {
+class StzbServerActivity:BaseActivity() ,OnItemClickListener{
+    override fun onItemClick(position: Int) {
+        startActivity(Intent(this,StzbServerDetailActivity::class.java).putExtra("id","${serverBeans[position].server_id}"))
+    }
+
     override fun setViewModel(): BaseViewModel = viewModel
 
     private val viewModel:StzbServerInfoViewModel by viewModel()
@@ -45,11 +51,10 @@ class StzbServerActivity:BaseActivity() {
             serverBeans.clear()
             serverBeans.addAll(it)
             initServerInfo(serverBeans)
-//            binding?.recyclerServer!!.addItemDecoration(ContactDecoration(map))
-//            binding?.recyclerServer!!.adapter = serverAdapter
             serverAdapter.notifyDataSetChanged()
-//            Log.e("处理数据","2")
         })
+
+        serverAdapter.onItemClick = this
     }
 
     private fun initServerInfo(list:List<ServerBean>){

@@ -1,5 +1,6 @@
 package com.example.kotlinmvvm.model
 
+import android.util.Log
 import com.example.kotlinmvvm.bean.ServerBean
 import com.example.kotlinmvvm.bean.ServerCityBean
 import com.example.kotlinmvvm.bean.UnionBean
@@ -17,14 +18,15 @@ class StzbServerInfoResponsitory(private val service:StzbServerInfoService) {
 
     suspend fun getServerRank(server_id:String,date:String):List<UnionBean>{
         val result = service.getServerRank(server_id,date)
+        Log.e("排名结果result","$result")
         val list = JSONObject(result).optJSONArray("allies")
-        return Gson().fromJson<List<UnionBean>>(list.toString(),object :TypeToken<UnionBean>(){}.type)
+        return Gson().fromJson<List<UnionBean>>(list.toString(),object :TypeToken<List<UnionBean>>(){}.type)
     }
 
     suspend fun getServerCityInfo(server_id: String,date: String):List<ServerCityBean>{
         val result = service.getServerCityInfo(server_id,date)
         val list = JSONObject(result).optJSONArray("city_info")
-        return Gson().fromJson<List<ServerCityBean>>(list.toString(),object :TypeToken<ServerCityBean>(){}.type)
+        return Gson().fromJson<List<ServerCityBean>>(list.toString(),object :TypeToken<List<ServerCityBean>>(){}.type)
     }
 
 }
