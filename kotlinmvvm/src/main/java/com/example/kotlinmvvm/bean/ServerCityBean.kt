@@ -1,5 +1,7 @@
 package com.example.kotlinmvvm.bean
 
+import android.text.TextUtils
+
 data class ServerCityBean(
     val alliance_name: String,
     val city_level: Int,
@@ -12,8 +14,8 @@ data class ServerCityBean(
 ) {
     val level: String
         get() =
-            "${city_level}级"
-    val areaName: String get() = "【${region_name}】"
+            if (city_level != 0) "${city_level}级" else ""
+    val areaName: String get() = if (!TextUtils.isEmpty(region_name)) {"【${region_name}】"} else ""
 
-    val occupyName:String get() = "$alliance_name  占领"
+    val occupyName:String get() = if (!TextUtils.isEmpty(alliance_name)){ "被  $alliance_name  占领"} else ""
 }

@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.PointF
 import android.util.AttributeSet
 import android.util.DisplayMetrics
+import android.util.Log
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearSmoothScroller
 import androidx.recyclerview.widget.RecyclerView
@@ -38,7 +39,7 @@ class AutoLinearLayoutManager : LinearLayoutManager {
         }
 
         override fun calculateSpeedPerPixel(displayMetrics: DisplayMetrics?): Float {
-            return 15f / displayMetrics!!.density
+            return 15f / displayMetrics!!.density * 1.5f
         }
     }
 

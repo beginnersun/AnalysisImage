@@ -25,6 +25,7 @@ class StzbServerInfoResponsitory(private val service:StzbServerInfoService) {
 
     suspend fun getServerCityInfo(server_id: String,date: String):List<ServerCityBean>{
         val result = service.getServerCityInfo(server_id,date)
+        Log.e("显示结果","$result")
         val list = JSONObject(result).optJSONArray("city_info")
         return Gson().fromJson<List<ServerCityBean>>(list.toString(),object :TypeToken<List<ServerCityBean>>(){}.type)
     }

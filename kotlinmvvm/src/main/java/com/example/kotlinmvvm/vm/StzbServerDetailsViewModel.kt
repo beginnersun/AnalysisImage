@@ -1,15 +1,13 @@
 package com.example.kotlinmvvm.vm
 
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.kotlinmvvm.base.BaseViewModel
 import com.example.kotlinmvvm.bean.ServerCityBean
 import com.example.kotlinmvvm.bean.UnionBean
 import com.example.kotlinmvvm.model.StzbServerInfoResponsitory
-import kotlinx.coroutines.CoroutineExceptionHandler
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.cancel
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 
 class StzbServerDetailsViewModel(private val stzbServerInfoResponsitory: StzbServerInfoResponsitory):BaseViewModel() {
 
@@ -23,14 +21,18 @@ class StzbServerDetailsViewModel(private val stzbServerInfoResponsitory: StzbSer
 
     fun getServerDetails(server_id:String,date:String){
         launch({
-            serverData.value = stzbServerInfoResponsitory.getServerRank(server_id,date)
+            Log.e("网络请求","获取1$server_id")
+            val value1 = async { stzbServerInfoResponsitory.getServerRank(server_id,date) }
+            Log.e("网络请求","获取2$server_id")
+            val value2 = async { stzbServerInfoResponsitory.getServerCityInfo(server_id,date) }
+            serverData.value = value1.await()
+            cityData.value = value2.await()
         })
     }
 
-    fun getCityInfo(server_id: String,date: String){
-        launch({
-            cityData.value = stzbServerInfoResponsitory.getServerCityInfo(server_id,date)
-        })
-    }
+//    fun getCityInfo(server_id: String,date: String){
+//        launch({
+//        })
+//    }
 
 }

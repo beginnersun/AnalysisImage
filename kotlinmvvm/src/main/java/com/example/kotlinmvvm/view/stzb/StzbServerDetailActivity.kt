@@ -47,10 +47,12 @@ class StzbServerDetailActivity : BaseActivity(), View.OnTouchListener {
     private var serverId = ""
     private val cityBeans:MutableList<ServerCityBean> = mutableListOf()
     private val cityAdapter = CityAdapter(this,cityBeans)
+    private var back = false
+    private var allCount = 0
 
     private fun load(){
         viewModel.getServerDetails(serverId, TimeUtil.getCurrentDate())
-        viewModel.getCityInfo(serverId,TimeUtil.getCurrentDate())
+//        viewModel.getCityInfo(serverId,TimeUtil.getCurrentDate())
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -65,16 +67,37 @@ class StzbServerDetailActivity : BaseActivity(), View.OnTouchListener {
 
         val verticalManager = AutoLinearLayoutManager(this)
         binding?.recyclerCity!!.run {
-            layoutManager = LinearLayoutManager(this@StzbServerDetailActivity)
+            layoutManager = AutoLinearLayoutManager(this@StzbServerDetailActivity)
             addOnScrollListener(object :RecyclerView.OnScrollListener(){
                 override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                     super.onScrollStateChanged(recyclerView, newState)
-                    if (currentPosition == 1){
+                    val position = (layoutManager as LinearLayoutManager).findFirstVisibleItemPosition()
+                    if (back && position == 0){
+                        cityAdapter.setChoosePosition(position)
+                        back = false
+                        recyclerView.smoothScrollToPosition(cityAdapter.itemCount)
+                    }
+                }
 
+                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                    super.onScrolled(recyclerView, dx, dy)
+                    val position = (layoutManager as LinearLayoutManager).findFirstVisibleItemPosition()
+                    Log.e("滚动中","${position+1}  ${cityBeans.size}")
+                    if (position + 1 == cityBeans.size){
+                        recyclerView.scrollToPosition(0)
+                        back = true
+                    }else {
+                        if (!back) {
+                            cityAdapter.setChoosePosition(position + 1)
+                        }
                     }
                 }
             })
             adapter = cityAdapter
+        }
+
+        binding?.ivMap!!.setOnClickListener {
+            binding?.recyclerCity!!.smoothScrollToPosition(cityAdapter.itemCount)
         }
 
 
@@ -85,8 +108,11 @@ class StzbServerDetailActivity : BaseActivity(), View.OnTouchListener {
         })
         viewModel.cityData.observe(this, Observer {
             cityBeans.clear()
+            allCount = it.size
             cityBeans.addAll(it)
+            Log.e("数据大小1","${cityBeans.size}")
             cityAdapter.notifyDataSetChanged()
+            Log.e("数据大小2","${cityAdapter.itemCount}")
         })
         load()
 
@@ -133,11 +159,11 @@ class StzbServerDetailActivity : BaseActivity(), View.OnTouchListener {
         return true
     }
 
-    private fun InfoChanged(){
+    private fun infoChanged(){
+        currentPosition = targetPosition
         when(currentPosition){
             0 -> {}
             1 -> {
-                binding?.recyclerCity!!.smoothScrollToPosition(cityAdapter.itemCount-1)
             }
             2 -> {}
             3 -> {}
@@ -164,11 +190,25 @@ class StzbServerDetailActivity : BaseActivity(), View.OnTouchListener {
         )
         val animatorSet = AnimatorSet()
         animatorSet.play(currentAnimator).with(targetAnimator)
-        animatorSet.duration = 2000
+        animatorSet.duration = 1000
+        animatorSet.addListener(animatorSetListener)
         animatorSet.start()
+    }
 
+    private val animatorSetListener = object :Animator.AnimatorListener{
+        override fun onAnimationRepeat(animation: Animator?) {
+        }
 
-        InfoChanged()
+        override fun onAnimationEnd(animation: Animator?) {
+            infoChanged()
+        }
+
+        override fun onAnimationCancel(animation: Animator?) {
+        }
+
+        override fun onAnimationStart(animation: Animator?) {
+        }
+
     }
 
     /**
@@ -187,12 +227,13 @@ class StzbServerDetailActivity : BaseActivity(), View.OnTouchListener {
         var targetAnimator = ObjectAnimator.ofFloat(
             clViews[targetPosition],
             "translationY",
-            clViews[currentPosition].translationY,
+            -clViews[currentPosition].bottom.toFloat(),
             0f
         )
         val animatorSet = AnimatorSet()
         animatorSet.play(currentAnimator).with(targetAnimator)
-        animatorSet.duration = 2000
+        animatorSet.duration = 1000
+        animatorSet.addListener(animatorSetListener)
         animatorSet.start()
     }
 
