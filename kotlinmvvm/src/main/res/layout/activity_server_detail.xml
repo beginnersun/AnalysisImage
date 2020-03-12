@@ -380,8 +380,8 @@
                     android:src="@mipmap/stzb_map"
             />
 
-            <View
-                    android:id="@+id/ponit_view"
+            <com.example.kotlinmvvm.widget.PointView
+                    android:id="@+id/point_view"
                     android:layout_width="800px"
                     android:layout_height="417px"
                     app:layout_constraintStart_toStartOf="parent"

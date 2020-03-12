@@ -39,7 +39,8 @@ class AutoLinearLayoutManager : LinearLayoutManager {
         }
 
         override fun calculateSpeedPerPixel(displayMetrics: DisplayMetrics?): Float {
-            return 15f / displayMetrics!!.density * 1.5f
+            Log.e("速度大小","${500/(22 * displayMetrics!!.density)}")
+            return 500 / (22 * displayMetrics!!.density)
         }
     }
 

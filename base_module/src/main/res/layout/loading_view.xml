@@ -17,9 +17,9 @@
     <ProgressBar
             android:id="@+id/progress_bar"
             android:layout_width="100dp"
-                 android:layout_height="100dp"
-                 android:indeterminateDuration="650"
-                 android:indeterminateDrawable="@drawable/loadingbar"
+            android:layout_height="100dp"
+            android:indeterminateDuration="650"
+            android:indeterminateDrawable="@drawable/loadingbar"
     />
 
 </RelativeLayout>

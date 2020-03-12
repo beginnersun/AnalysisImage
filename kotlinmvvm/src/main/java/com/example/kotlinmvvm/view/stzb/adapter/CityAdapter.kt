@@ -14,7 +14,7 @@ import com.example.kotlinmvvm.databinding.ItemServerCityInfoBinding
 class CityAdapter(private val context: Context, private val datas: MutableList<ServerCityBean>) :
     RecyclerView.Adapter<CityAdapter.ViewHolder>() {
 
-    var oldPosition: Int = -1
+    var oldPosition: Int = 0
     private var choosePosition: Int = 0
     private val map: MutableMap<Int, ViewHolder> = mutableMapOf()
 
@@ -40,6 +40,9 @@ class CityAdapter(private val context: Context, private val datas: MutableList<S
         if (datas.size != 0 && position < datas.size) {
             map[position] = holder
             holder.bindData(position, datas[position % datas.size])
+            if (position == 0){
+                holder.onSelected()
+            }
         }else{
             holder.bindData(position,ServerCityBean("",0,"",0,"","",0, mutableListOf()))
         }
@@ -74,7 +77,6 @@ class CityAdapter(private val context: Context, private val datas: MutableList<S
             binding?.tvLevel.setTextColor(Color.parseColor("#ffffff"))
             binding?.tvTime.setTextColor(Color.parseColor("#ffffff"))
             binding?.tvUnionName.setTextColor(Color.parseColor("#ffffff"))
-
         }
 
 

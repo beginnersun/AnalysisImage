@@ -48,7 +48,6 @@ class ContactDecoration constructor() : ItemDecoration() {
         super.getItemOffsets(outRect, view, parent, state)
         val position = (view.layoutParams as RecyclerView.LayoutParams).viewAdapterPosition
         val height = if (map!!.keys.contains(position)) titleHeight else 0
-        Log.e("判断你是否需要", "$height           $position")
         outRect.set(0, height, 0, 0)
 //        outRect.set(0,50,0,20)
     }

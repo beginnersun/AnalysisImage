@@ -3,6 +3,7 @@ package com.example.kotlinmvvm.view.stzb
 import android.animation.Animator
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
+import android.graphics.PointF
 import android.os.Bundle
 import android.util.Log
 import android.util.TimeUtils
@@ -65,7 +66,6 @@ class StzbServerDetailActivity : BaseActivity(), View.OnTouchListener {
 
         initTouchListener()
 
-        val verticalManager = AutoLinearLayoutManager(this)
         binding?.recyclerCity!!.run {
             layoutManager = AutoLinearLayoutManager(this@StzbServerDetailActivity)
             addOnScrollListener(object :RecyclerView.OnScrollListener(){
@@ -82,7 +82,7 @@ class StzbServerDetailActivity : BaseActivity(), View.OnTouchListener {
                 override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                     super.onScrolled(recyclerView, dx, dy)
                     val position = (layoutManager as LinearLayoutManager).findFirstVisibleItemPosition()
-                    Log.e("滚动中","${position+1}  ${cityBeans.size}")
+                    Log.e("当前位置","$position")
                     if (position + 1 == cityBeans.size){
                         recyclerView.scrollToPosition(0)
                         back = true
@@ -98,6 +98,7 @@ class StzbServerDetailActivity : BaseActivity(), View.OnTouchListener {
 
         binding?.ivMap!!.setOnClickListener {
             binding?.recyclerCity!!.smoothScrollToPosition(cityAdapter.itemCount)
+            binding?.pointView!!.start()
         }
 
 
@@ -109,13 +110,26 @@ class StzbServerDetailActivity : BaseActivity(), View.OnTouchListener {
         viewModel.cityData.observe(this, Observer {
             cityBeans.clear()
             allCount = it.size
+            initCityPoint(it)
             cityBeans.addAll(it)
-            Log.e("数据大小1","${cityBeans.size}")
             cityAdapter.notifyDataSetChanged()
-            Log.e("数据大小2","${cityAdapter.itemCount}")
+            cityAdapter.setChoosePosition(0)
         })
         load()
 
+    }
+
+    private fun initCityPoint(cityBeas:List<ServerCityBean>){
+        val pointDatas:MutableList<PointF> = mutableListOf()
+        for (item in cityBeas){
+            val pointf = PointF(item.wid[0].toFloat(),item.wid[1].toFloat())
+            pointDatas.add(pointf)
+        }
+        binding?.pointView!!.run {
+            setDatas(pointDatas)
+            setRadiusLarge(50f)
+            setRadiusSmall(10f)
+        }
     }
 
     private fun initTouchListener() {
