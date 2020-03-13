@@ -35,6 +35,9 @@
         </activity>
 
         <activity android:name=".activity.camerax.PlantAnalysisActivityCameraX"/>
+
+        <activity android:name=".DownLoadActivity">
+        </activity>
     </application>
 
 </manifest>

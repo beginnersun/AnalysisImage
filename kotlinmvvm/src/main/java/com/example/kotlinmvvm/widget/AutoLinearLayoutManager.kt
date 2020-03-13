@@ -27,9 +27,13 @@ class AutoLinearLayoutManager : LinearLayoutManager {
     )
 
     override fun smoothScrollToPosition(recyclerView: RecyclerView?, state: RecyclerView.State?, position: Int) {
-        val linerScroller = SlowLinearScroller(recyclerView!!.context)
-        linerScroller.targetPosition = position
-        startSmoothScroll(linerScroller)
+        if (position != 0) {
+            val linerScroller = SlowLinearScroller(recyclerView!!.context)
+            linerScroller.targetPosition = position
+            startSmoothScroll(linerScroller)
+        }else{
+            super.smoothScrollToPosition(recyclerView, state, position)
+        }
     }
 
     inner class SlowLinearScroller(context: Context):LinearSmoothScroller(context){
@@ -39,8 +43,8 @@ class AutoLinearLayoutManager : LinearLayoutManager {
         }
 
         override fun calculateSpeedPerPixel(displayMetrics: DisplayMetrics?): Float {
-            Log.e("速度大小","${500/(22 * displayMetrics!!.density)}")
-            return 500 / (22 * displayMetrics!!.density)
+            Log.e("速度大小","${650/(22 * displayMetrics!!.density)}")
+            return 650 / (22 * displayMetrics!!.density)
         }
     }
 

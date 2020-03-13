@@ -1,5 +1,6 @@
 package com.example.base_module
 
+import android.graphics.Color
 import android.os.Environment
 import java.io.File
 
@@ -21,6 +22,11 @@ class Constants {
 
         var SCREEN_WIDTH:Int = 0
         var SCREEN_HEIGHT:Int = 0
+
+        val normalColor:MutableList<Int> = mutableListOf(Color.YELLOW,Color.RED,Color.GREEN,Color.parseColor("#FF0000"),
+            Color.BLUE,Color.parseColor("#FF7F00"),Color.parseColor("#00FFFF"),Color.parseColor("#8B00FF"),
+            Color.LTGRAY,Color.parseColor("#8B3E2F"))
+
     }
 
 }
