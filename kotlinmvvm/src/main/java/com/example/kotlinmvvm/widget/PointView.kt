@@ -58,10 +58,8 @@ class PointView : View {
     }
 
     override fun onDraw(canvas: Canvas?) {
-//        Log.e("描点","绘制${index}个点")
         if (pointDatas != null && pointDatas.size != 0) {
             for (i in 0 until index) {
-//                Log.e("描点","绘制${i}个")
                 if (i != index - 1) {
                     drawPointSmall(canvas!!, i)
                 } else {
