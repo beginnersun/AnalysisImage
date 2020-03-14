@@ -6,6 +6,7 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.Path
 import android.util.AttributeSet
+import android.util.Log
 import android.view.View
 
 class ArrowView : View {
@@ -20,15 +21,16 @@ class ArrowView : View {
     private var mHeightMode = MeasureSpec.AT_MOST
     private var mWidth = 0
     private var mHeight = 0
-    private val defaultWidth = 50
+    private val defaultWidth = 25
     private val defaultHeight = 45
     private var radius = 2.5f //点的半径
     private var space = 5f  //间距
     private var arrowTop = 0f
-    private var arrowRadius = 3f
-    private var arrowHeiht = 10f
+    private var arrowRadius = 8.2f
+    private var arrowHeight = 10f
 
     private var centerX = 0f
+    private var mPaddingTop = 0f
 
     constructor(context: Context?) : super(context)
 
@@ -47,7 +49,7 @@ class ArrowView : View {
         mWidth = MeasureSpec.getSize(widthMeasureSpec)
         mHeight = MeasureSpec.getSize(heightMeasureSpec)
         mWidthMode = MeasureSpec.getMode(widthMeasureSpec)
-        mHeight = MeasureSpec.getMode(heightMeasureSpec)
+        mHeightMode = MeasureSpec.getMode(heightMeasureSpec)
 
         setMeasuredDimension(
             if (mWidthMode == MeasureSpec.EXACTLY) mWidth else defaultWidth,
@@ -58,31 +60,35 @@ class ArrowView : View {
     private fun init() {
         arrowPaint.isAntiAlias = true
         arrowPaint.color = Color.WHITE
-        arrowPaint.style = Paint.Style.FILL_AND_STROKE
+        arrowPaint.strokeWidth = radius
+        arrowPaint.style = Paint.Style.STROKE
 
         dotPaint.isAntiAlias = true
         dotPaint.color = Color.WHITE
-        dotPaint.strokeWidth = radius
+        dotPaint.style = Paint.Style.FILL_AND_STROKE
     }
 
     private fun initSizeInfo(){
         centerX = (mWidth / 2).toFloat()
         if (defaultWidth == mWidth || defaultHeight == mHeight){
-            arrowTop = mHeight - arrowHeiht
-        }else{
+        } else{
             var scale = 0f
-            if ( mWidth / mHeight > defaultWidth / defaultHeight ){
-                scale = mHeight*1f / defaultHeight
-            }
-            space *= scale
-            arrowHeiht *= scale
-            radius *= scale
-            arrowRadius *= scale
-            arrowTop = mHeight - arrowHeiht
+            scale = (mWidth * 1f / defaultWidth).coerceAtMost(mHeight * 1f / defaultHeight)
+            Log.e("绘制比例大小","$scale   ${mWidth * 1f / defaultWidth}       ${mHeight * 1f / defaultHeight}")
+            space = 5f * scale
+            arrowHeight = 10f * scale
+            radius = 2.5f * scale
+            arrowRadius = 8.2f* scale
+
+            mPaddingTop = mHeight - space * 4 - radius*6 - arrowHeight
+            arrowPaint.strokeWidth = radius
         }
+        arrowTop = mHeight - arrowHeight
+        Log.e("绘制数据大小:"," $centerX    $space     $radius     $arrowRadius      $arrowTop     $arrowHeight")
     }
 
     override fun onDraw(canvas: Canvas?) {
+        Log.e("绘制数据大小","$mWidth      $mHeight")
         initSizeInfo()
         for (i in 1..3){
             drawDot(canvas!!,i)
@@ -91,14 +97,19 @@ class ArrowView : View {
     }
 
     private fun drawDot(canvas: Canvas,i:Int){
-        canvas.drawCircle(centerX,i*space + (i-1)*radius*2 + radius,radius,dotPaint)
+        Log.e("绘制点","$i    $centerX     ${i*space + (i-1)*radius*2 + radius}    $radius")
+        canvas.drawCircle(centerX,mPaddingTop+i*space + (i-1)*radius*2 + radius,radius,dotPaint)
     }
 
     private fun drawArrow(canvas: Canvas){
         val path = Path()
+        arrowPaint.strokeJoin = Paint.Join.ROUND
+        Log.e("绘制线" ,"${centerX-arrowRadius}    $arrowTop    $centerX     $mHeight       ${centerX + arrowRadius}")
         path.moveTo(centerX - arrowRadius,arrowTop)
-        path.lineTo(centerX,mHeight.toFloat())
+        path.lineTo(centerX,mHeight.toFloat()-radius)
         path.lineTo(centerX + arrowRadius,arrowTop)
         canvas.drawPath(path,arrowPaint)
+        canvas.drawCircle(centerX - arrowRadius,arrowTop,radius/2f,dotPaint)
+        canvas.drawCircle(centerX + arrowRadius,arrowTop,radius/2f,dotPaint)
     }
 }
