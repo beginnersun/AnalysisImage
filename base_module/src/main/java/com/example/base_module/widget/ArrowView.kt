@@ -1,5 +1,9 @@
 package com.example.base_module.widget
 
+import android.animation.Animator
+import android.animation.AnimatorSet
+import android.animation.ObjectAnimator
+import android.animation.ValueAnimator
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Color
@@ -8,6 +12,9 @@ import android.graphics.Path
 import android.util.AttributeSet
 import android.util.Log
 import android.view.View
+import android.view.animation.AccelerateInterpolator
+import android.view.animation.DecelerateInterpolator
+import com.example.base_module.Constants
 
 class ArrowView : View {
 
@@ -31,6 +38,11 @@ class ArrowView : View {
 
     private var centerX = 0f
     private var mPaddingTop = 0f
+
+    private var oldTransotionY = 0f
+    private val animatorSet = AnimatorSet()
+
+    var duration = 1000L
 
     constructor(context: Context?) : super(context)
 
@@ -101,15 +113,43 @@ class ArrowView : View {
         canvas.drawCircle(centerX,mPaddingTop+i*space + (i-1)*radius*2 + radius,radius,dotPaint)
     }
 
+    fun start(){
+        oldTransotionY = translationY
+        val animatorStart = ObjectAnimator.ofFloat(this,"translationY",translationY, 0f)
+        val animatorEnd = ObjectAnimator.ofFloat(this,"translationY",0f, oldTransotionY)
+        animatorStart.interpolator = AccelerateInterpolator(2f)
+        animatorEnd.interpolator = DecelerateInterpolator(2f)
+        animatorSet.play(animatorStart).before(animatorEnd)
+        animatorSet.duration = duration
+        animatorSet.start()
+        animatorSet.addListener(object:Animator.AnimatorListener{
+            override fun onAnimationEnd(animation: Animator?) {
+                animatorSet.start()
+            }
+
+            override fun onAnimationCancel(animation: Animator?) {
+            }
+
+            override fun onAnimationStart(animation: Animator?) {
+            }
+
+            override fun onAnimationRepeat(animation: Animator?) {
+            }
+        })
+    }
+
+    fun cancel(){
+        animatorSet.cancel()
+    }
+
     private fun drawArrow(canvas: Canvas){
         val path = Path()
         arrowPaint.strokeJoin = Paint.Join.ROUND
-        Log.e("绘制线" ,"${centerX-arrowRadius}    $arrowTop    $centerX     $mHeight       ${centerX + arrowRadius}")
         path.moveTo(centerX - arrowRadius,arrowTop)
         path.lineTo(centerX,mHeight.toFloat()-radius)
         path.lineTo(centerX + arrowRadius,arrowTop)
         canvas.drawPath(path,arrowPaint)
-        canvas.drawCircle(centerX - arrowRadius,arrowTop,radius/2f,dotPaint)
-        canvas.drawCircle(centerX + arrowRadius,arrowTop,radius/2f,dotPaint)
+        canvas.drawCircle(centerX - arrowRadius,arrowTop,radius/2.5f,dotPaint)
+        canvas.drawCircle(centerX + arrowRadius,arrowTop,radius/2.5f,dotPaint)
     }
 }

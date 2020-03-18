@@ -9,6 +9,7 @@ import android.util.Log
 import android.util.TimeUtils
 import android.view.MotionEvent
 import android.view.View
+import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
@@ -25,6 +26,7 @@ import com.example.kotlinmvvm.databinding.ActivityServerDetailBinding
 import com.example.kotlinmvvm.view.stzb.adapter.CityAdapter
 import com.example.kotlinmvvm.vm.StzbServerDetailsViewModel
 import com.example.kotlinmvvm.widget.AutoLinearLayoutManager
+import kotlinx.android.synthetic.main.activity_server_detail.view.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 @Route(path = "/kotlinmvvm/server_detail")
@@ -76,11 +78,9 @@ class StzbServerDetailActivity : BaseActivity(), View.OnTouchListener {
                 override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                     super.onScrollStateChanged(recyclerView, newState)
                     val position = (layoutManager as LinearLayoutManager).findFirstVisibleItemPosition()
-                    Log.e("当前停止后","$position      $back")
                     if (back && position == 0){
                         cityAdapter.setChoosePosition(position)
                         back = false
-                        Log.e("执行动画重绘","1")
                         binding?.pointView!!.resetPoint()
                         recyclerView.smoothScrollToPosition(cityAdapter.itemCount)
                         binding?.pointView!!.start()
@@ -90,11 +90,9 @@ class StzbServerDetailActivity : BaseActivity(), View.OnTouchListener {
                 override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                     super.onScrolled(recyclerView, dx, dy)
                     val position = (layoutManager as LinearLayoutManager).findFirstVisibleItemPosition()
-                    Log.e("当前位置","$position")
                     if (oldPosition != position) {
                         oldPosition = position
                         if (position == cityBeans.size) {
-                            Log.e("执行动画重绘","跳转到0")
                             back = true
                             recyclerView.smoothScrollToPosition(0)
                         } else {
@@ -112,6 +110,9 @@ class StzbServerDetailActivity : BaseActivity(), View.OnTouchListener {
         binding?.ivMap!!.setOnClickListener {
             binding?.recyclerCity!!.smoothScrollToPosition(cityAdapter.itemCount)
             binding?.pointView!!.start()
+        }
+        binding?.pointView!!.setOnClickListener {
+            nextPage()
         }
 
 
@@ -219,6 +220,10 @@ class StzbServerDetailActivity : BaseActivity(), View.OnTouchListener {
      * 播放下一个页面
      */
     private fun nextPage() {
+        if (currentPosition +1 == clViews.size){
+            Toast.makeText(this,"当前已是最后一页!",Toast.LENGTH_LONG).show()
+            return
+        }
         targetPosition = (currentPosition + 1) % clViews.size
         var currentAnimator = ObjectAnimator.ofFloat(
             clViews[currentPosition],
@@ -237,6 +242,12 @@ class StzbServerDetailActivity : BaseActivity(), View.OnTouchListener {
         animatorSet.duration = 1000
         animatorSet.addListener(animatorSetListener)
         animatorSet.start()
+
+    }
+
+    override fun onResume() {
+        super.onResume()
+        binding?.arrowDown!!.start()
     }
 
     private val animatorSetListener = object :Animator.AnimatorListener{
@@ -259,6 +270,10 @@ class StzbServerDetailActivity : BaseActivity(), View.OnTouchListener {
      * 返回上一个页面
      */
     private fun prePage() {
+        if (currentPosition == 0){
+            Toast.makeText(this,"当前已是第一页!",Toast.LENGTH_LONG).show()
+            return
+        }
         targetPosition = (currentPosition - 1) % clViews.size
         //当前页面的Y值从0变为view的长度 （下拉到完全看不见）
         var currentAnimator = ObjectAnimator.ofFloat(
@@ -285,5 +300,7 @@ class StzbServerDetailActivity : BaseActivity(), View.OnTouchListener {
         super.onStop()
         animatorSet.reverse()
         animatorSet.cancel()
+        binding?.arrowDown!!.cancel()
+//        binding?.arrowDown!!.()
     }
 }

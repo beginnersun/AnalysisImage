@@ -17,11 +17,12 @@ import org.json.JSONObject
 @Route(path = "app/main")
 class MainActivity : AppCompatActivity() {
 
-    val apiKey: String = "PdszjNdLcEG4rMpQR2ELHbIl"
-    val secretKey: String = "ph4d4TOqnArWF5i8Z6GmBIYk6fowTwxI"
-    val client: OkHttpClient = OkHttpClient();
+    private val apiKey: String = "PdszjNdLcEG4rMpQR2ELHbIl"
+    private val secretKey: String = "ph4d4TOqnArWF5i8Z6GmBIYk6fowTwxI"
+    private val client: OkHttpClient = OkHttpClient();
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setTheme(R.style.AppTheme)
         SharedPreferenceUtil.init(applicationContext)
         setContentView(R.layout.activity_main)
         /**

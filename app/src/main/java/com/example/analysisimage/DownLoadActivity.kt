@@ -1,26 +1,38 @@
 package com.example.analysisimage
 
+import android.app.ActivityManager
+import android.content.Context
 import android.os.Bundle
-import android.os.Environment
-import android.os.PersistableBundle
-import android.util.Log
-import android.widget.Toast
+import android.util.DisplayMetrics
 import androidx.appcompat.app.AppCompatActivity
-import com.example.analysisimage.util.FileUtils
-import kotlinx.android.synthetic.main.activity_down_load.*
-import java.io.FileOutputStream
-import java.lang.Exception
-import java.net.HttpURLConnection
-import java.net.URL
+import com.example.base_module.Constants
+import com.example.base_module.widget.ArrowView
+import com.example.kotlinmvvm.widget.PointView
 
 
 class DownLoadActivity:AppCompatActivity() {
 
     val url = "http://txmov2.a.yximgs.com/upic/2020/03/09/16/BMjAyMDAzMDkxNjA1NDVfMTU0MjIwMDcwXzI0NzAxNjA4Njg3XzBfMw==_b_B802ad12caaec2e43d51e347346bf554e.mp4"
 
+    private var pointView:ArrowView? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.ic_arrow_down)
+        setContentView(R.layout.activity_load_multidex)
+//        var outMetrics = DisplayMetrics()
+//        windowManager.defaultDisplay.getMetrics(outMetrics)
+//        var widthPixels = outMetrics.widthPixels
+//        var heightPixels = outMetrics.heightPixels
+//        Constants.SCREEN_WIDTH = widthPixels
+//        Constants.SCREEN_HEIGHT = heightPixels
+//        pointView = findViewById(R.id.pointView)
+//
+//        pointView!!.post {
+//            pointView!!.start()
+//        }
+//
+//        val activityManager:ActivityManager = getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
+
 //
 //        val downRunnbale = DownRunnable(url)
 //        val thread = Thread(downRunnbale)
