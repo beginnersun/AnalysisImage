@@ -9,12 +9,14 @@ import android.util.Log
 import android.util.TimeUtils
 import android.view.MotionEvent
 import android.view.View
+import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.alibaba.android.arouter.facade.annotation.Route
+import com.example.base_module.Constants.URL.normalColor
 import com.example.base_module.util.TimeUtil
 import com.example.kotlinmvvm.R
 import com.example.kotlinmvvm.base.BaseActivity
@@ -24,6 +26,7 @@ import com.example.kotlinmvvm.databinding.ActivityServerDetailBinding
 import com.example.kotlinmvvm.view.stzb.adapter.CityAdapter
 import com.example.kotlinmvvm.vm.StzbServerDetailsViewModel
 import com.example.kotlinmvvm.widget.AutoLinearLayoutManager
+import kotlinx.android.synthetic.main.activity_server_detail.view.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 @Route(path = "/kotlinmvvm/server_detail")
@@ -50,6 +53,9 @@ class StzbServerDetailActivity : BaseActivity(), View.OnTouchListener {
     private val cityAdapter = CityAdapter(this,cityBeans)
     private var back = false
     private var allCount = 0
+    private val colorMap:MutableMap<String,Int> = mutableMapOf()
+    private var colorIndex = 0
+    private var oldPosition = -1
 
     private fun load(){
         viewModel.getServerDetails(serverId, TimeUtil.getCurrentDate())
@@ -75,20 +81,25 @@ class StzbServerDetailActivity : BaseActivity(), View.OnTouchListener {
                     if (back && position == 0){
                         cityAdapter.setChoosePosition(position)
                         back = false
+                        binding?.pointView!!.resetPoint()
                         recyclerView.smoothScrollToPosition(cityAdapter.itemCount)
+                        binding?.pointView!!.start()
                     }
                 }
 
                 override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                     super.onScrolled(recyclerView, dx, dy)
                     val position = (layoutManager as LinearLayoutManager).findFirstVisibleItemPosition()
-                    Log.e("当前位置","$position")
-                    if (position + 1 == cityBeans.size){
-                        recyclerView.scrollToPosition(0)
-                        back = true
-                    }else {
-                        if (!back) {
-                            cityAdapter.setChoosePosition(position + 1)
+                    if (oldPosition != position) {
+                        oldPosition = position
+                        if (position == cityBeans.size) {
+                            back = true
+                            recyclerView.smoothScrollToPosition(0)
+                        } else {
+                            if (!back) {
+                                binding?.pointView!!.nextPoint()
+                                cityAdapter.setChoosePosition(position)
+                            }
                         }
                     }
                 }
@@ -99,6 +110,9 @@ class StzbServerDetailActivity : BaseActivity(), View.OnTouchListener {
         binding?.ivMap!!.setOnClickListener {
             binding?.recyclerCity!!.smoothScrollToPosition(cityAdapter.itemCount)
             binding?.pointView!!.start()
+        }
+        binding?.pointView!!.setOnClickListener {
+            nextPage()
         }
 
 
@@ -121,14 +135,23 @@ class StzbServerDetailActivity : BaseActivity(), View.OnTouchListener {
 
     private fun initCityPoint(cityBeas:List<ServerCityBean>){
         val pointDatas:MutableList<PointF> = mutableListOf()
+        val colorDatas:MutableList<Int> = mutableListOf()
         for (item in cityBeas){
+            if (colorMap.keys.contains(item.alliance_name)){
+                item.color = colorMap[item.alliance_name]!!
+            }else{
+                colorMap[item.alliance_name] = normalColor[colorIndex++% normalColor.size]
+                item.color = colorMap[item.alliance_name]!!
+            }
             val pointf = PointF(item.wid[0].toFloat(),item.wid[1].toFloat())
+            colorDatas.add(item.color)
             pointDatas.add(pointf)
         }
         binding?.pointView!!.run {
             setDatas(pointDatas)
-            setRadiusLarge(50f)
-            setRadiusSmall(10f)
+            setRadiusLarge(14f)
+            setRadiusSmall(8f)
+            setPointColor(colorDatas)
         }
     }
 
@@ -175,9 +198,17 @@ class StzbServerDetailActivity : BaseActivity(), View.OnTouchListener {
 
     private fun infoChanged(){
         currentPosition = targetPosition
+        if (currentPosition != 1){
+            binding?.pointView!!.resetPoint()
+            back = true
+            binding?.recyclerCity!!.scrollToPosition(0)
+        }
         when(currentPosition){
             0 -> {}
             1 -> {
+                back = false
+                binding?.recyclerCity!!.smoothScrollToPosition(cityAdapter.itemCount)
+                binding?.pointView!!.start()
             }
             2 -> {}
             3 -> {}
@@ -189,6 +220,10 @@ class StzbServerDetailActivity : BaseActivity(), View.OnTouchListener {
      * 播放下一个页面
      */
     private fun nextPage() {
+        if (currentPosition +1 == clViews.size){
+            Toast.makeText(this,"当前已是最后一页!",Toast.LENGTH_LONG).show()
+            return
+        }
         targetPosition = (currentPosition + 1) % clViews.size
         var currentAnimator = ObjectAnimator.ofFloat(
             clViews[currentPosition],
@@ -207,6 +242,12 @@ class StzbServerDetailActivity : BaseActivity(), View.OnTouchListener {
         animatorSet.duration = 1000
         animatorSet.addListener(animatorSetListener)
         animatorSet.start()
+
+    }
+
+    override fun onResume() {
+        super.onResume()
+        binding?.arrowDown!!.start()
     }
 
     private val animatorSetListener = object :Animator.AnimatorListener{
@@ -229,6 +270,10 @@ class StzbServerDetailActivity : BaseActivity(), View.OnTouchListener {
      * 返回上一个页面
      */
     private fun prePage() {
+        if (currentPosition == 0){
+            Toast.makeText(this,"当前已是第一页!",Toast.LENGTH_LONG).show()
+            return
+        }
         targetPosition = (currentPosition - 1) % clViews.size
         //当前页面的Y值从0变为view的长度 （下拉到完全看不见）
         var currentAnimator = ObjectAnimator.ofFloat(
@@ -255,5 +300,7 @@ class StzbServerDetailActivity : BaseActivity(), View.OnTouchListener {
         super.onStop()
         animatorSet.reverse()
         animatorSet.cancel()
+        binding?.arrowDown!!.cancel()
+//        binding?.arrowDown!!.()
     }
 }

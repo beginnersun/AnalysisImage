@@ -22,7 +22,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintBottom_toTopOf="@+id/union_info"
-                android:visibility="visible">
+                android:visibility="gone">
 
             <ImageView
                     app:layout_constraintStart_toStartOf="parent"
@@ -273,7 +273,7 @@
                         app:layout_constraintEnd_toEndOf="parent"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@{second.alliance_name}"
+                        android:text="@{third.alliance_name}"
                         android:maxLines="1"
                         android:maxEms="7"
                         android:ellipsize="end"
@@ -354,7 +354,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/union_rank"
-                android:visibility="visible"
+                android:visibility="gone"
                 android:background="#010103"
                 app:layout_constraintHorizontal_bias="1.0">
 
@@ -401,6 +401,21 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
+        <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <com.example.base_module.widget.ArrowView
+                android:id="@+id/arrow_down"
+                android:layout_width="25dp"
+                android:layout_height="60dp"
+                android:translationY="-40dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

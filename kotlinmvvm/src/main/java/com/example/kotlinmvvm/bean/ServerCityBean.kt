@@ -1,5 +1,6 @@
 package com.example.kotlinmvvm.bean
 
+import android.graphics.Color
 import android.text.TextUtils
 
 data class ServerCityBean(
@@ -18,4 +19,6 @@ data class ServerCityBean(
     val areaName: String get() = if (!TextUtils.isEmpty(region_name)) {"【${region_name}】"} else ""
 
     val occupyName:String get() = if (!TextUtils.isEmpty(alliance_name)){ "被  $alliance_name  占领"} else ""
+
+    var color:Int = Color.BLACK
 }
