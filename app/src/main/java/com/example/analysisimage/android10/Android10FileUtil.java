@@ -52,12 +52,12 @@ public class Android10FileUtil {
         ContentValues values = new ContentValues();
         values.put(MediaStore.Audio.Media.DISPLAY_NAME, fileName);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            values.put(MediaStore.Images.Media.RELATIVE_PATH, type.getPath() + File.separator + fileName);
+//            values.put(MediaStore.Images.Media.RELATIVE_PATH, type.getPath() + File.separator + fileName);
         } else {
             values.put(MediaStore.Images.Media.DATA, type.getPath() + File.separator + fileName);
         }
         values.put(MediaStore.Images.Media.MIME_TYPE, "image/JPEG");
-        Uri uri = context.getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,values);
+        Uri uri = context.getContentResolver().insert(MediaStore.Images.Media.INTERNAL_CONTENT_URI,values);
         if (uri != null){
             OutputStream outputStream = context.getContentResolver().openOutputStream(uri);
             if (outputStream!=null){

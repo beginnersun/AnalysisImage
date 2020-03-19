@@ -7,6 +7,7 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Environment;
 import android.os.ParcelFileDescriptor;
+import android.provider.DocumentsContract;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -39,6 +40,14 @@ public class TestActivity extends BaseActivity implements View.OnClickListener{
         testReadOrWriteFile();
 
         requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},1);
+
+        try {
+            String path = Android10FileUtil.saveBitmap(this,BitmapFactory.decodeResource(getResources(),R.mipmap.server_bg),"ccbb.png", Android10FileUtil.FileType.Image);
+            Log.e("图片保存位置",path);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
 
         first.setOnClickListener(this);
         second.setOnClickListener(this);
@@ -117,13 +126,14 @@ public class TestActivity extends BaseActivity implements View.OnClickListener{
                 OpenDocument();
                 break;
             case R.id.third:
-                createFile();
+                OpenDocumentAndDelete();
                 break;
         }
     }
 
     private static int REQUEST_IMAGE_GET = 3;
     private static int REQUEST_IMAGE_OPEN = 2;
+    private static int REQUEST_IMAGE_OPEN_DELETE = 4;
     private static int REQUEST_DOCUMENT = 1;
 
     public void OpenDocument(){
@@ -148,6 +158,14 @@ public class TestActivity extends BaseActivity implements View.OnClickListener{
         if (intent.resolveActivity(getPackageManager()) != null) {
             startActivityForResult(intent, REQUEST_IMAGE_GET);
         }
+    }
+
+    public void OpenDocumentAndDelete(){
+        Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+        intent.setType("*/*");
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+        // Only the system receives the ACTION_OPEN_DOCUMENT, so no need to test.
+        startActivityForResult(intent, REQUEST_IMAGE_OPEN_DELETE);
     }
 
     @Override
@@ -175,6 +193,9 @@ public class TestActivity extends BaseActivity implements View.OnClickListener{
         }
         if (requestCode == 33 && resultCode == RESULT_OK){
             alterDocument(data.getData());
+        }
+        if (requestCode == REQUEST_IMAGE_OPEN_DELETE && resultCode == RESULT_OK){
+            deleteFile(data.getData());
         }
     }
     private Bitmap getBitmapFromUri(Uri uri) throws IOException {
@@ -211,6 +232,14 @@ public class TestActivity extends BaseActivity implements View.OnClickListener{
         // 文件名称
         intent.putExtra(Intent.EXTRA_TITLE, "226655" + ".txt");
         startActivityForResult(intent, 33);
+    }
+
+    public void deleteFile(Uri uri){
+        try {
+            DocumentsContract.deleteDocument(getContentResolver(),uri);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 
     private void alterDocument(Uri uri) {
