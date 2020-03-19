@@ -33,6 +33,7 @@ class StzbServerActivity:BaseActivity() ,OnItemClickListener{
     private val map:MutableMap<Int,String> = mutableMapOf()
     private fun load(){
         viewModel.getServerList()
+        Pair(1,"fd")
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -59,29 +60,29 @@ class StzbServerActivity:BaseActivity() ,OnItemClickListener{
 
     private fun initServerInfo(list:List<ServerBean>){
         for ((index,item) in list.withIndex()){
-            if (item.name.startsWith("S2")){
-                if (!map.values.contains("S2")) {
-                    Log.e("赋值","1")
-                    map[index]="S2"
+            when{
+                item.name.startsWith("S2") -> {
+                    if (!map.values.contains("S2")){
+                        map[index] = "S2"
+                    }
                 }
-            }else if (item.name.startsWith("S3")){
-                if (!map.values.contains("S3")) {
-                    Log.e("赋值","2")
-                    map[index]="S3"
+                item.name.startsWith("S3") -> {
+                    if (!map.values.contains("S3")){
+                        map[index] = "S3"
+                    }
                 }
-            }else if (item.name.startsWith("X")){
-                if (!map.values.contains("X")) {
-                    Log.e("赋值","3")
-                    map[index]="X"
+                item.name.startsWith("X") -> {
+                    if (!map.values.contains("X")){
+                        map[index] = "X"
+                    }
                 }
-            }else{
-                if (!map.values.contains("S1")) {
-                    Log.e("赋值","4")
-                    map[index]="S1"
+                else -> {
+                    if (!map.values.contains("S1")){
+                        map[index] = "S1"
+                    }
                 }
             }
         }
-        Log.e("輸出Map",map.toString())
     }
 
 }
