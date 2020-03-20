@@ -11,16 +11,25 @@ import android.view.ScaleGestureDetector
 import android.view.View
 import com.example.kotlinmvvm.R
 import java.io.InputStream
+import kotlin.math.max
 
 class BitImageView : View {
 
     private var mDecoder:BitmapRegionDecoder? = null
     private var mImageWidth = 0
     private var mImageHeight = 0
-    @Volatile private var mRect = Rect()
+    private var mImageCurrentWidth = 0f   //截取图片的宽度
+    private var mImageCurrentHeight = 0f  //截取图片的长度
+    private var oldImageWidth = 0f
+    private var oldImageHeight = 0f
+    private var mScale = 1f
+    private var mMatrix = Matrix()
+    @Volatile private var mRect = RectF()
     private val options:BitmapFactory.Options = BitmapFactory.Options()
     private var gestureDetector: GestureDetector? = null
     private var scaleGestureDetector:ScaleGestureDetector? = null
+    private var maxScale = 5f
+    private var minScale = 0.2f
     init {
         options.inPreferredConfig = Bitmap.Config.RGB_565
     }
@@ -41,19 +50,24 @@ class BitImageView : View {
 
             override fun onScroll(e1: MotionEvent?, e2: MotionEvent?, distanceX: Float, distanceY: Float): Boolean {
                 Log.e("onScroll位置","${e1!!.x}   ${e1!!.y}     ${e2!!.x}   ${e2!!.y}      $distanceX       $distanceY")
-                mRect.left = (mRect.left + distanceX).toInt()
-                mRect.top = mRect.top + distanceY.toInt()
-                if (width < mImageWidth) {
+                Log.e("onScroll变化","$mImageCurrentWidth     $mImageWidth     $mImageCurrentHeight     $mImageHeight")
+                if (mImageCurrentWidth < mImageWidth) {
+                    mRect.left = mRect.left + distanceX
+                    mRect.right = mRect.right + distanceX
                     checkRectWidth()
                 }
-                if (height < mImageHeight){
+                if (mImageCurrentHeight < mImageHeight){
+                    mRect.top = mRect.top + distanceY
+                    mRect.bottom = mRect.bottom + distanceY
                     checkRectHeight()
+                }
+                if (mImageCurrentWidth < mImageWidth || mImageCurrentHeight < mImageHeight){
+                    invalidate()
                 }
                 return super.onScroll(e1, e2, distanceX, distanceY)
             }
 
             override fun onFling(e1: MotionEvent?, e2: MotionEvent?, velocityX: Float, velocityY: Float): Boolean {
-                Log.e("onFling位置","${e1!!.x}   ${e1!!.y}     ${e2!!.x}   ${e2!!.y}      $velocityX       $velocityY")
                 return super.onFling(e1, e2, velocityX, velocityY)
             }
 
@@ -61,7 +75,31 @@ class BitImageView : View {
 
         scaleGestureDetector = ScaleGestureDetector(context,object :ScaleGestureDetector.SimpleOnScaleGestureListener(){
             override fun onScale(detector: ScaleGestureDetector?): Boolean {
-                Log.e("onScale缩放位置","${detector!!.focusX}  ${detector!!.focusY}       ${detector!!.currentSpan}    ${detector!!.currentSpanX}    ${detector!!.currentSpanY}")
+                var tmpScale = detector!!.scaleFactor
+                val newScale = mScale * tmpScale
+                if (newScale > maxScale){
+                    tmpScale = maxScale/mScale
+                }
+                if (newScale < minScale){
+                    tmpScale = minScale / mScale
+                }
+//                if (mScale < maxScale && mScale > minScale){
+//                    mScale *=tmpScale
+//                    updateScale(tmpScale)
+//                }
+                mScale *=tmpScale
+                updateScale(tmpScale)
+//                if (mScale >=maxScale){
+//                    val newScale = maxScale/(mScale/tmpScale)
+//                    mScale = maxScale
+//                }
+//                if (mScale <= minScale){
+//                    val newScale = minScale/(mScale/tmpScale)
+//                    mScale = minScale
+//                    updateScale(newScale)
+//                    return super.onScale(detector)
+//                }
+//                updateScale(tmpScale)
                 return super.onScale(detector)
             }
 
@@ -71,27 +109,51 @@ class BitImageView : View {
         })
     }
 
+    private fun updateScale(tmpScale : Float){
+        Log.e("缩放的值","$tmpScale")
+        oldImageWidth = mImageCurrentWidth
+        oldImageHeight = mImageCurrentHeight
+
+        mImageCurrentWidth /= tmpScale
+        mImageCurrentHeight /= tmpScale
+
+        mRect.left = mRect.left - (mImageCurrentWidth-oldImageWidth)/2   //当前状态减去要向左边延伸的长度
+        mRect.right = mRect.right + (mImageCurrentWidth-oldImageWidth)/2
+        mRect.top = mRect.top - (mImageCurrentHeight - oldImageHeight)/2
+        mRect.bottom = mRect.bottom + (mImageCurrentHeight - oldImageHeight)/2
+
+        if (mImageCurrentWidth < mImageWidth) {
+            checkRectWidth()
+        }
+        if (mImageCurrentHeight < mImageHeight){
+            checkRectHeight()
+        }
+        Log.e("生成位置","${mRect.left}    ${mRect.right}    ${mRect.top}  ${mRect.bottom}     ${mImageCurrentWidth}    ${mImageCurrentHeight}")
+        invalidate()
+    }
+
     private fun checkRectWidth(){
 
-        if (mRect.top < 0){
-            mRect.top = 0
-            mRect.bottom = mRect.top + height
+        if (mRect.left < 0){
+            mRect.left = 0f
+            mRect.right = mRect.left + mImageCurrentWidth
         }
-        if (mRect.bottom > mImageHeight){
-            mRect.bottom = mImageHeight
-            mRect.top = mRect.bottom - height
+        if (mRect.right > mImageWidth){
+            mRect.right = mImageWidth*1f
+            mRect.left = mRect.right - mImageCurrentWidth
         }
     }
 
     private fun checkRectHeight(){
 
         if (mRect.top < 0){
-            mRect.top = 0
-            mRect.bottom = mRect.top + height
+            mRect.top = 0f
+            mRect.bottom = mRect.top + mImageCurrentHeight
         }
+
         if (mRect.bottom > mImageHeight){
-            mRect.bottom = mImageHeight
-            mRect.top = mRect.bottom - height
+            mRect.bottom = mImageHeight*1f
+            mRect.top = mRect.bottom - mImageCurrentHeight
         }
     }
 
@@ -103,33 +165,21 @@ class BitImageView : View {
         BitmapFactory.decodeStream(inputStream,null,tmpOptions)
         mImageWidth = mDecoder!!.width
         mImageHeight = mDecoder!!.height
-        Log.e("option Size","$mImageWidth   $mImageHeight")
-        Log.e("Decoder Size","${mDecoder!!.width}   ${mDecoder!!.height}")
-        requestLayout()
+        matrix.setScale(mScale,mScale)
         invalidate()
-        if (inputStream!=null){
-            inputStream.close()
-        }
+        inputStream.close()
     }
 
     fun setData(uri: Uri){
         val inputStream = context.contentResolver.openInputStream(uri)
-        if (inputStream!=null){
-            Log.e("图片大小","${inputStream}")
-        }
         mDecoder = BitmapRegionDecoder.newInstance(inputStream,false)
         val tmpOptions = BitmapFactory.Options()
         tmpOptions.inJustDecodeBounds = true
         BitmapFactory.decodeStream(inputStream,null,tmpOptions)
         mImageWidth = mDecoder!!.width
         mImageHeight = mDecoder!!.height
-        Log.e("option Size","$mImageWidth   $mImageHeight")
-        Log.e("Decoder Size","${mDecoder!!.width}   ${mDecoder!!.height}")
-//        requestLayout()
         invalidate()
-        if (inputStream!=null){
-            inputStream.close()
-        }
+        inputStream?.close()
     }
 
     fun setData(resource:Int){
@@ -139,8 +189,15 @@ class BitImageView : View {
 
     override fun onDraw(canvas: Canvas?) {
         if(mDecoder!=null) {
-            val bitmap = mDecoder!!.decodeRegion(mRect, options)
-            canvas!!.drawBitmap(bitmap, 0f, 0f, null)
+            Log.e("切割位置","${mRect.left}    ${mRect.right}    ${mRect.top}  ${mRect.bottom}     ${width}    ${height}")
+            val bitmap = mDecoder!!.decodeRegion(Rect().apply {
+                left = mRect.left.toInt()
+                right = mRect.right.toInt()
+                top = mRect.top.toInt()
+                bottom = mRect.bottom.toInt()
+            }, options)
+            mMatrix.setScale(mScale,mScale)
+            canvas!!.drawBitmap(bitmap, mMatrix, Paint())
         }
     }
 
@@ -148,22 +205,27 @@ class BitImageView : View {
         scaleGestureDetector!!.onTouchEvent(event)
         gestureDetector!!.onTouchEvent(event)
         return true
-//        scaleGestureDetector!!.
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
+        mImageCurrentWidth = measuredWidth.toFloat()
+        mImageCurrentHeight = measuredHeight.toFloat()
 
-        val width = measuredWidth
-        val height = measuredHeight
-        Log.e("测量大小1","$mImageWidth    $mImageHeight    ${mRect.left}  ${mRect.right}      ${mRect.top}  ${mRect.bottom}" )
-
-        mRect.left = mImageWidth / 2 - width /2
-        mRect.right = mRect.left + width
-        mRect.top = mImageHeight / 2 - height / 2
-        mRect.bottom = mRect.top + height
-        Log.e("测量大小2","$mImageWidth    $mImageHeight    ${mRect.left}  ${mRect.right}      ${mRect.top}  ${mRect.bottom}" )
-
+        if (maxScale != -1f && (mImageCurrentWidth != 0f && mImageCurrentHeight != 0f)){
+            maxScale = if (mImageWidth /mImageCurrentWidth > mImageHeight / mImageCurrentHeight) mImageWidth / mImageCurrentWidth else mImageHeight / mImageCurrentHeight
+            maxScale *= 2
+        }
+        if (minScale != -1f && (mImageCurrentWidth != 0f && mImageCurrentHeight != 0f)){
+            minScale = if (mImageWidth /mImageCurrentWidth < mImageHeight / mImageCurrentHeight) mImageWidth / mImageCurrentWidth else mImageHeight / mImageCurrentHeight
+            minScale /= 2
+        }
+        Log.e("缩放的范围","$maxScale     $minScale")
+//
+        mRect.left = mImageWidth*1f / 2 - mImageCurrentWidth*1f /2
+        mRect.right = mRect.left + mImageCurrentWidth
+        mRect.top = mImageHeight*1f / 2 - mImageCurrentHeight*1f / 2
+        mRect.bottom = mRect.top + mImageCurrentHeight
     }
 
 }
