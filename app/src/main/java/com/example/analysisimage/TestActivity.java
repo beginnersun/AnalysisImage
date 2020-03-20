@@ -13,7 +13,7 @@ public class TestActivity extends BaseActivity {
     @Override
     public void initView() {
 
-
+//        ImageView(this)
 
     }
 
