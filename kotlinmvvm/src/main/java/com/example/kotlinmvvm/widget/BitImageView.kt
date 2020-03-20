@@ -22,7 +22,7 @@ class BitImageView : View {
     private var mImageCurrentHeight = 0f  //截取图片的长度
     private var oldImageWidth = 0f
     private var oldImageHeight = 0f
-    private var mScale = 1f
+    private var mScale = 2f
     private var mMatrix = Matrix()
     @Volatile private var mRect = RectF()
     private val options:BitmapFactory.Options = BitmapFactory.Options()
@@ -34,14 +34,13 @@ class BitImageView : View {
         options.inPreferredConfig = Bitmap.Config.RGB_565
     }
 
-    constructor(context: Context?) : super(context){
-    }
+    constructor(context: Context?) : this(context,null,0)
 
     constructor(context: Context?, attrs: AttributeSet?) : this(context, attrs, 0)
 
     constructor(context: Context?, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr){
         init()
-        setData(context!!.assets.open("big_bg.jpg"))
+        setData(context!!.assets.open("girl.jpg"))
 //        setData(R.mipmap.big_bg)
     }
 
@@ -49,16 +48,15 @@ class BitImageView : View {
         gestureDetector = GestureDetector(context,object :GestureDetector.SimpleOnGestureListener(){
 
             override fun onScroll(e1: MotionEvent?, e2: MotionEvent?, distanceX: Float, distanceY: Float): Boolean {
-                Log.e("onScroll位置","${e1!!.x}   ${e1!!.y}     ${e2!!.x}   ${e2!!.y}      $distanceX       $distanceY")
-                Log.e("onScroll变化","$mImageCurrentWidth     $mImageWidth     $mImageCurrentHeight     $mImageHeight")
+                Log.e("onScroll变化","$mImageCurrentWidth     $mImageWidth     $mImageCurrentHeight     $mImageHeight         $distanceX       $distanceY")
                 if (mImageCurrentWidth < mImageWidth) {
-                    mRect.left = mRect.left + distanceX
-                    mRect.right = mRect.right + distanceX
+                    mRect.left = mRect.left + distanceX/mScale
+                    mRect.right = mRect.right + distanceX/mScale
                     checkRectWidth()
                 }
                 if (mImageCurrentHeight < mImageHeight){
-                    mRect.top = mRect.top + distanceY
-                    mRect.bottom = mRect.bottom + distanceY
+                    mRect.top = mRect.top + distanceY/mScale
+                    mRect.bottom = mRect.bottom + distanceY/mScale
                     checkRectHeight()
                 }
                 if (mImageCurrentWidth < mImageWidth || mImageCurrentHeight < mImageHeight){
@@ -77,29 +75,15 @@ class BitImageView : View {
             override fun onScale(detector: ScaleGestureDetector?): Boolean {
                 var tmpScale = detector!!.scaleFactor
                 val newScale = mScale * tmpScale
+                Log.e("onScale缩放","$tmpScale    $mScale     $newScale     $maxScale    $minScale")
                 if (newScale > maxScale){
                     tmpScale = maxScale/mScale
                 }
                 if (newScale < minScale){
                     tmpScale = minScale / mScale
                 }
-//                if (mScale < maxScale && mScale > minScale){
-//                    mScale *=tmpScale
-//                    updateScale(tmpScale)
-//                }
                 mScale *=tmpScale
                 updateScale(tmpScale)
-//                if (mScale >=maxScale){
-//                    val newScale = maxScale/(mScale/tmpScale)
-//                    mScale = maxScale
-//                }
-//                if (mScale <= minScale){
-//                    val newScale = minScale/(mScale/tmpScale)
-//                    mScale = minScale
-//                    updateScale(newScale)
-//                    return super.onScale(detector)
-//                }
-//                updateScale(tmpScale)
                 return super.onScale(detector)
             }
 
@@ -110,13 +94,13 @@ class BitImageView : View {
     }
 
     private fun updateScale(tmpScale : Float){
-        Log.e("缩放的值","$tmpScale")
         oldImageWidth = mImageCurrentWidth
         oldImageHeight = mImageCurrentHeight
 
         mImageCurrentWidth /= tmpScale
         mImageCurrentHeight /= tmpScale
 
+        Log.e("缩放的值","$tmpScale    $mImageCurrentWidth    $mImageCurrentHeight")
         mRect.left = mRect.left - (mImageCurrentWidth-oldImageWidth)/2   //当前状态减去要向左边延伸的长度
         mRect.right = mRect.right + (mImageCurrentWidth-oldImageWidth)/2
         mRect.top = mRect.top - (mImageCurrentHeight - oldImageHeight)/2
@@ -128,7 +112,7 @@ class BitImageView : View {
         if (mImageCurrentHeight < mImageHeight){
             checkRectHeight()
         }
-        Log.e("生成位置","${mRect.left}    ${mRect.right}    ${mRect.top}  ${mRect.bottom}     ${mImageCurrentWidth}    ${mImageCurrentHeight}")
+        Log.e("生成位置","${mRect.left}    ${mRect.right}    ${mRect.top}  ${mRect.bottom}  ")
         invalidate()
     }
 
@@ -165,6 +149,7 @@ class BitImageView : View {
         BitmapFactory.decodeStream(inputStream,null,tmpOptions)
         mImageWidth = mDecoder!!.width
         mImageHeight = mDecoder!!.height
+        Log.e("生成图片大小","$mImageWidth    $mImageHeight")
         matrix.setScale(mScale,mScale)
         invalidate()
         inputStream.close()
@@ -217,11 +202,11 @@ class BitImageView : View {
             maxScale *= 2
         }
         if (minScale != -1f && (mImageCurrentWidth != 0f && mImageCurrentHeight != 0f)){
-            minScale = if (mImageWidth /mImageCurrentWidth < mImageHeight / mImageCurrentHeight) mImageWidth / mImageCurrentWidth else mImageHeight / mImageCurrentHeight
+            minScale = if (mImageCurrentWidth /mImageWidth < mImageCurrentHeight / mImageHeight) mImageCurrentWidth /mImageWidth else mImageCurrentHeight / mImageHeight
             minScale /= 2
         }
-        Log.e("缩放的范围","$maxScale     $minScale")
-//
+        Log.e("区域大小与缩放范围","$mImageCurrentWidth    $mImageCurrentHeight     $minScale    $maxScale")
+
         mRect.left = mImageWidth*1f / 2 - mImageCurrentWidth*1f /2
         mRect.right = mRect.left + mImageCurrentWidth
         mRect.top = mImageHeight*1f / 2 - mImageCurrentHeight*1f / 2
