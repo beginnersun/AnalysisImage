@@ -75,12 +75,20 @@ class BitImageView : View {
 
         scaleGestureDetector = ScaleGestureDetector(context,object :ScaleGestureDetector.SimpleOnScaleGestureListener(){
             override fun onScale(detector: ScaleGestureDetector?): Boolean {
-                val tmpScale = detector!!.scaleFactor
+                var tmpScale = detector!!.scaleFactor
+                val newScale = mScale * tmpScale
+                if (newScale > maxScale){
+                    tmpScale = maxScale/mScale
+                }
+                if (newScale < minScale){
+                    tmpScale = minScale / mScale
+                }
 //                if (mScale < maxScale && mScale > minScale){
 //                    mScale *=tmpScale
 //                    updateScale(tmpScale)
 //                }
                 mScale *=tmpScale
+                updateScale(tmpScale)
 //                if (mScale >=maxScale){
 //                    val newScale = maxScale/(mScale/tmpScale)
 //                    mScale = maxScale
