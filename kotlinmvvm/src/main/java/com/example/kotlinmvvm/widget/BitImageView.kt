@@ -22,7 +22,7 @@ class BitImageView : View {
     private var mImageCurrentHeight = 0f  //截取图片的长度
     private var oldImageWidth = 0f
     private var oldImageHeight = 0f
-    private var mScale = 2f
+    private var mScale = 1f
     private var mMatrix = Matrix()
     @Volatile private var mRect = RectF()
     private val options:BitmapFactory.Options = BitmapFactory.Options()
@@ -33,6 +33,8 @@ class BitImageView : View {
     init {
         options.inPreferredConfig = Bitmap.Config.RGB_565
     }
+
+    private var startScroll = 0L
 
     constructor(context: Context?) : this(context,null,0)
 
@@ -48,7 +50,9 @@ class BitImageView : View {
         gestureDetector = GestureDetector(context,object :GestureDetector.SimpleOnGestureListener(){
 
             override fun onScroll(e1: MotionEvent?, e2: MotionEvent?, distanceX: Float, distanceY: Float): Boolean {
-                Log.e("onScroll变化","$mImageCurrentWidth     $mImageWidth     $mImageCurrentHeight     $mImageHeight         $distanceX       $distanceY")
+                startScroll = System.currentTimeMillis()
+                Log.e("开始滑动时间","$startScroll")
+//                Log.e("onScroll变化","$mImageCurrentWidth     $mImageWidth     $mImageCurrentHeight     $mImageHeight         $distanceX       $distanceY")
                 if (mImageCurrentWidth < mImageWidth) {
                     mRect.left = mRect.left + distanceX/mScale
                     mRect.right = mRect.right + distanceX/mScale
@@ -174,15 +178,25 @@ class BitImageView : View {
 
     override fun onDraw(canvas: Canvas?) {
         if(mDecoder!=null) {
-            Log.e("切割位置","${mRect.left}    ${mRect.right}    ${mRect.top}  ${mRect.bottom}     ${width}    ${height}")
-            val bitmap = mDecoder!!.decodeRegion(Rect().apply {
+            val startTime = System.currentTimeMillis()
+            Log.e("开始时间startTime","$startTime")
+//            Log.e("切割位置","${mRect.left}    ${mRect.right}    ${mRect.top}  ${mRect.bottom}     ${width}    ${height}")
+            val rect =  Rect().apply {
                 left = mRect.left.toInt()
                 right = mRect.right.toInt()
                 top = mRect.top.toInt()
                 bottom = mRect.bottom.toInt()
-            }, options)
+            }
+            val bitmap = mDecoder!!.decodeRegion(rect, options)
             mMatrix.setScale(mScale,mScale)
+            val middle = System.currentTimeMillis()
+            Log.e("绘制中间时间startTime","$middle      生成Bitmap 时间差值为${middle-startTime} ")
             canvas!!.drawBitmap(bitmap, mMatrix, Paint())
+            val endTime = System.currentTimeMillis()
+            if(bitmap!=null && !bitmap.isRecycled) {
+                bitmap.recycle()
+            }
+            Log.e("绘制结束时间startTime","$endTime       时间差值为${endTime-startTime}    触发后的时间差${endTime - startScroll}")
         }
     }
 
