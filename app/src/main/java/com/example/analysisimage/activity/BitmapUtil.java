@@ -9,6 +9,8 @@ import android.graphics.YuvImage;
 import android.media.Image;
 import androidx.annotation.RequiresApi;
 
+import com.example.analysisimage.TestActivity;
+
 import java.io.ByteArrayOutputStream;
 import java.nio.ByteBuffer;
 
@@ -20,6 +22,7 @@ import java.nio.ByteBuffer;
 public class BitmapUtil {
 
     public static Bitmap rotateBitmap(Bitmap origin, float rotate) {
+        TestActivity.fdfd(3,6);
         if (origin == null) {
             return null;
         }

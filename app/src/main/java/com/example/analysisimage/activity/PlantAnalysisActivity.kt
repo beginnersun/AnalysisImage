@@ -460,6 +460,7 @@ class PlantAnalysisActivity : AppCompatActivity() {
         releaseCamera()
         releaseTask()
         singleThreadExecutor.shutdownNow()
+        
     }
 
     val handler = object : Handler() {
