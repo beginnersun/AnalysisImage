@@ -16,6 +16,7 @@ public class TestActivity extends BaseActivity {
     @Override
     public void initView() {
 
+        int a = getResources().getDisplayMetrics().widthPixels << 4;
 //        ImageView(this)
 
     }
@@ -23,6 +24,7 @@ public class TestActivity extends BaseActivity {
     public static void fdfd(int a /* canshu a */,int b /* 参数b */){
         System.out.println(a + b);
         TextureMeteringPointFactoryKt.testAAVV();
+
     }
 
     @Override

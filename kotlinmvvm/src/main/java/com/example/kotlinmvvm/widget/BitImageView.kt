@@ -32,10 +32,11 @@ class BitImageView : View {
     private var maxScale = 5f
     private var minScale = 0.2f
 
-    private val blockSize = 200  //每 200 * 200 为一个块
+    private val blockSize = 600  //每 200 * 200 为一个块
     private val drawRect = Rect() //当前View的绘制区域  （计算出当前区域能有几块blockSize）
 
     private var imageCache: LruCache<Point, Bitmap>? = null
+    private val drawables = mutableListOf<ImageDrawable>()
 
     init {
         options.inPreferredConfig = Bitmap.Config.RGB_565
@@ -49,7 +50,7 @@ class BitImageView : View {
 
     constructor(context: Context?, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
         init()
-        setData(context!!.assets.open("girl.jpg"))
+        setData(context!!.assets.open("beautiful_girl.jpg"))
     }
 
 
@@ -102,19 +103,29 @@ class BitImageView : View {
                     return true
                 }
             })
-
-        imageCache = object : LruCache<Point, Bitmap>(5) {
+//
+        val maxSize = (context.resources.displayMetrics.widthPixels *
+                context.resources.displayMetrics.heightPixels) shl 4
+//            Runtime.getRuntime().maxMemory() / 1024  / 2
+        Log.e("大小",maxSize.toString())
+        imageCache = object : LruCache<Point, Bitmap>(maxSize) {
             override fun sizeOf(key: Point?, value: Bitmap?): Int =
                 BitmapUtil.getBitmapSize(value!!)
 
             override fun create(key: Point?): Bitmap {
                 val rect = createBlockRect(key!!.x,key!!.y)
-                return super.create(key)
+                Log.e("大小对比","$rect       ${mDecoder!!.width}    ${mDecoder!!.height}")
+                return mDecoder!!.decodeRegion(rect,options)
             }
 
             private fun createBlockRect(x: Int, y: Int) =
-                Rect(x * blockSize, y * blockSize, (x + 1) * blockSize, (y + 1) * blockSize)
+                Rect(x * blockSize, y * blockSize,
+                    if((x + 1) * blockSize > mDecoder!!.width) mDecoder!!.width else (x + 1) * blockSize,
+                    if((y + 1) * blockSize > mDecoder!!.height) mDecoder!!.height else (y + 1) * blockSize )
 
+//            override fun entryRemoved(evicted: Boolean, key: Point?, oldValue: Bitmap?, newValue: Bitmap?) {
+//                oldValue?.recycle()
+//            }
         }
     }
 
@@ -191,25 +202,23 @@ class BitImageView : View {
     }
 
     override fun onDraw(canvas: Canvas?) {
-        getDrawingRect(drawRect)
+
         if (mDecoder != null) {
-            val startTime = System.currentTimeMillis()
-//            Log.e("切割位置","${mRect.left}    ${mRect.right}    ${mRect.top}  ${mRect.bottom}     ${width}    ${height}")
             val rect = Rect().apply {
                 left = mRect.left.toInt()
                 right = mRect.right.toInt()
                 top = mRect.top.toInt()
                 bottom = mRect.bottom.toInt()
             }
-            mRect.isEmpty
-            val bitmap = mDecoder!!.decodeRegion(rect, options)
-            mMatrix.setScale(mScale, mScale)
+            val startTime = System.currentTimeMillis()
+            preDrawBitmap(rect)
             val middle = System.currentTimeMillis()
-            canvas!!.drawBitmap(bitmap, mMatrix, Paint())
-            val endTime = System.currentTimeMillis()
-            if (bitmap != null && !bitmap.isRecycled) {
-                bitmap.recycle()
+            Log.e("时间差1","${middle - startTime}")
+            for (item in drawables){
+                canvas!!.drawBitmap(item.bitmap,item.src,item.dst,null)
             }
+            val endTime = System.currentTimeMillis()
+            Log.e("时间差2","${endTime - middle}      总的差值  ${endTime - startTime}")
         }
     }
 
@@ -242,18 +251,62 @@ class BitImageView : View {
         mRect.bottom = mRect.top + mImageCurrentHeight
     }
 
-    private fun preDrawBitmap() {
-        val rect = blocks()
-        for (i in rect.left..rect.right) {
-            for (j in rect.top..rect.bottom) {
+    private fun preDrawBitmap(rect: Rect) {
+        drawables.clear()
+        Log.e("初始切割","$mImageCurrentWidth    $mImageCurrentHeight    $rect")
+        val blocks = blocks(rect)
+        val offsetX = rect.left % blockSize
+        val offsetY = rect.top % blockSize
+        val offsetRightX = rect.right % blockSize
+        val offsetBottomY = rect.bottom % blockSize
+        var count = 1
+        for (i in blocks.top .. blocks.bottom) {
+            for (j in blocks.left .. blocks.right) {
+                val start = System.currentTimeMillis()
+                val bitmap = imageCache!!.get(Point(j,i))
+                val end = System.currentTimeMillis()
+                if (bitmap!= null) {
+//                    Log.e("读取切割原图$count","${bitmap.width}      ${bitmap.height}     $offsetX     $offsetY")
+                    val src = createBitmapRect(bitmap)
+                    if (j == blocks.left) {
+                        src.left = offsetX
+                    }
+                    if (j == blocks.right) {
+                        src.right = offsetRightX
+                    }
+                    if (i == blocks.top) {
+                        src.top = offsetY
+                    }
+                    if (i == blocks.bottom) {
+                        src.bottom = offsetBottomY
+                    }
+//                    Log.e("读取切割区域$count","$src")
+                    var right =
+                        (j - blocks.left) * blockSize + blockSize - offsetX   //或者说 (i-blocks.left+1)*blockSize - offsetX
+                    right = if (right > mImageCurrentWidth) mImageCurrentWidth.toInt() else right
 
+                    var bottom = (i - blocks.top) * blockSize + blockSize - offsetY
+                    bottom = if (bottom > mImageCurrentHeight ) mImageCurrentHeight.toInt() else bottom
+
+                    var left = right - (src.right - src.left)
+                    left = if (left < 0) 0 else left
+
+                    var top = bottom - (src.bottom - src.top)
+                    top = if (top < 0) 0 else top
+
+                    val dst = Rect(left, top, right, bottom)
+//                    Log.e("绘制切割区域$count","$dst")
+                    val drawable = ImageDrawable(bitmap, src, dst)
+                    drawables.add(drawable)
+                    count++
+                }
             }
         }
     }
 
-    private fun blocks() = Rect(
-        floor(drawRect.left / blockSize), floor(drawRect.top / blockSize),
-        ceil(drawRect.right / blockSize), ceil(drawRect.bottom / blockSize)
+    private fun blocks(rect:Rect) = Rect(
+        floor(rect.left / blockSize), floor(rect.top / blockSize),
+        ceil(rect.right / blockSize), ceil(rect.bottom / blockSize)
     )
 
     private fun floor(value: Int) =
@@ -262,4 +315,7 @@ class BitImageView : View {
     private fun ceil(value: Int) =
         Math.ceil(value.toDouble()).toInt()
 
+    private fun createBitmapRect(bitmap:Bitmap) = Rect(0,0,bitmap.width,bitmap.height)
+
+    data class ImageDrawable(var bitmap:Bitmap,var src:Rect,var dst:Rect)
 }
