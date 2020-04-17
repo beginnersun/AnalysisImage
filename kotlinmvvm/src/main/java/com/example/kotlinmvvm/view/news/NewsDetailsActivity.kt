@@ -36,7 +36,7 @@ class NewsDetailsActivity : AppCompatActivity() ,VideoPlayer.VideoListenerCallBa
             requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
         }else{
             binding!!.videoPlayer.layoutParams.height = oldHeight
-            requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+            requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         }
     }
 
@@ -104,8 +104,13 @@ class NewsDetailsActivity : AppCompatActivity() ,VideoPlayer.VideoListenerCallBa
 
 
     override fun onStop() {
-        binding!!.videoPlayer.stopPlayback()
+        binding!!.videoPlayer.pause()
         super.onStop()
+    }
+
+    override fun onDestroy() {
+        binding!!.videoPlayer.stopPlayback()
+        super.onDestroy()
     }
 
     suspend fun delayText(): Spanned =

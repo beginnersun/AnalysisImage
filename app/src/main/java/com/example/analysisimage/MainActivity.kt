@@ -1,14 +1,21 @@
 package com.example.analysisimage
 
+import android.content.Context
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.DisplayMetrics
 import android.util.Log
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProviders
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.alibaba.android.arouter.launcher.ARouter
 import com.example.base_module.Constants
 import com.example.base_module.util.SharedPreferenceUtil
+import com.example.base_module.util.main
+import com.example.kotlinmvvm.vm.MainViewModel
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.coroutines.*
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.Response
@@ -29,16 +36,32 @@ class MainActivity : AppCompatActivity() {
          * 声明一个匿名类  object:xxxxx{    override fun .....(){ 覆写的方法}    }
          */
         first.setOnClickListener { view ->
-            ARouter.getInstance().build("/kotlinmvvm/server").navigation()
+            ARouter.getInstance().build("/kotlinmvvm/news").navigation()
         }
 
-        Thread {
-            kotlin.run {
-                var result = getImageRecognitionToken(apiKey, secretKey)
-                Log.e("TokenResult", result)
-                analysisToken(result)
-            }
-        }.start()
+        baseContext!!.getSystemService(Context.ACTIVITY_SERVICE)
+
+
+        GlobalScope.launch(Dispatchers.Main) {
+            println("Hello 线程${Thread.currentThread().name}")
+            val result = test()
+            Log.e("TokenResult", result)
+            analysisToken(result)
+            println("End 线程${Thread.currentThread().name}")
+        }
+
+
+
+
+//        Thread {
+//            kotlin.run {
+//                var result = getImageRecognitionToken(apiKey, secretKey)
+//                Log.e("TokenResult", result)
+//                analysisToken(result)
+//            }
+//        }.start()
+//
+//        getSystemService(Context.ACTIVITY_SERVICE)
 
 
         var outMetrics = DisplayMetrics()
@@ -48,6 +71,15 @@ class MainActivity : AppCompatActivity() {
         Constants.SCREEN_WIDTH = widthPixels
         Constants.SCREEN_HEIGHT = heightPixels
     }
+
+    suspend fun test() =
+        withContext(Dispatchers.IO){
+            println("World 线程1${Thread.currentThread().name}")
+            var result = getImageRecognitionToken(apiKey, secretKey)
+            println("World 线程2${Thread.currentThread().name}")
+            result
+        }
+
 
     private fun getImageRecognitionToken(apiKey: String, secretKey: String): String {
         var url = "https://aip.baidubce.com/oauth/2.0/token?" + "grant_type=client_credentials" +

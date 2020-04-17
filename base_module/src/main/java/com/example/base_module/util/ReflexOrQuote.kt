@@ -21,8 +21,8 @@ fun testReflex(){
     println(::b.name)
 }
 
-fun html(init: String.() -> Unit): String {
-    val html = String()
-    html.init()
-    return html
-}
+//fun html(init: String.() -> Unit): String {
+//    val html = String()
+//    html.init()
+//    return html
+//}

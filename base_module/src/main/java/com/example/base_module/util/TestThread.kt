@@ -37,6 +37,9 @@ fun testThread() {
     val job = GlobalScope.launch {
         println(coroutineContext[Job])
         delay(10000)
+        launch {
+
+        }
     }
     PersonBean("", 1)
     val c = runBlocking {
@@ -59,6 +62,36 @@ fun testThread() {
 //    }
 }
 
+class HTML {
+    fun body() {
+        println("55")
+    }
+}
+
+fun html(cc: HTML.(Int) -> Unit): HTML {
+    val html = HTML()  // 创建接收者对象
+    html.cc(5)        // 将该接收者对象传给该 lambda
+    cc.invoke(html,5)
+    return html
+}
+
+val ccH:HTML.(Int) -> Unit = {
+    a -> println(a+5)
+    body()
+}
+
+fun testJieShouZhe(){
+    html {
+        body()
+    }
+    GlobalScope.launch {
+    coroutineScope {
+        delay(1000L)
+
+    }
+    }
+}
+
 fun main() = runBlocking { // this: CoroutineScope
 
     val jobInfo = launch(Dispatchers.Default){
@@ -68,14 +101,29 @@ fun main() = runBlocking { // this: CoroutineScope
     GlobalScope.launch {
         val token = async { "fdaadsf" }.await()
         val post = async { "create" }.await()
-
     }
 
-    launch { // 在 runBlocking 作用域中启动一个新协程
+    var job = launch { // 在 runBlocking 作用域中启动一个新协程
         delay(1000L)
         println("World!")
+        while (isActive){
+
+        }
     }
+
+    job.cancel()
+    job.join()
+    job.cancelAndJoin()
+
+
     println("Hello,")
 
     GlobalScope.async {  }
+//    testFun{
+//        this.and(5)
+//    }
+
 }
+
+
+

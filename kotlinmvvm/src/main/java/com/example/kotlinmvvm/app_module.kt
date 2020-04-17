@@ -23,28 +23,28 @@ import retrofit2.converter.scalars.ScalarsConverterFactory
  * 初始化需要的ViewModel
  */
 val mainViewModel = module {
-    single(named("main")) {
+    viewModel(named("main")) {
         MainViewModel(UserRepository(get()))
     }
-    single(named("news")) {
+    viewModel(named("news")) {
         NewsViewModel(NewsRepository(get()))
     }
-    single(named("stzb")) {
+    viewModel(named("stzb")) {
         StzbViewModel(StzbResponsitory(get(), get()))
     }
-    factory{
+    viewModel{
         StzbDetailsViewModel(StzbResponsitory(get(), get()))
     }
-    single {
+    viewModel {
         StzbNewAreaViewModel(StzbResponsitory(get(),get()))
     }
-    single {
+    viewModel {
         StzbGalleryViewModel(StzbResponsitory(get(),get()))
     }
-    single{
+    viewModel{
         StzbServerInfoViewModel(StzbServerInfoResponsitory(get()))
     }
-    factory {
+    viewModel {
         StzbServerDetailsViewModel(StzbServerInfoResponsitory(get()))
     }
 }

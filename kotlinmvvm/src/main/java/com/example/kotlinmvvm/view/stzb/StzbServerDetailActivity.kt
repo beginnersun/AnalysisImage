@@ -298,9 +298,19 @@ class StzbServerDetailActivity : BaseActivity(), View.OnTouchListener {
 
     override fun onStop() {
         super.onStop()
+        Log.e("ArrowDown","onStop")
         animatorSet.reverse()
         animatorSet.cancel()
-        binding?.arrowDown!!.cancel()
+        binding?.arrowDown!!.pause()
 //        binding?.arrowDown!!.()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        Log.e("ArrowDown","onDestroy")
+        animatorSet.cancel()
+        animatorSet.reverse()
+        animatorSet.removeAllListeners()
+        binding?.arrowDown!!.cancel()
     }
 }

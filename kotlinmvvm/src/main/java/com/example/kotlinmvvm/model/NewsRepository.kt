@@ -34,6 +34,5 @@ class NewsRepository(private val newsService: NewsService) {
                 }
                 Single.just(list)
             }.asyncTask()
-
     }
 }

@@ -54,6 +54,8 @@ class ArrowView : View {
         defStyleAttr
     ) {
         init()
+
+
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
@@ -78,6 +80,7 @@ class ArrowView : View {
         dotPaint.isAntiAlias = true
         dotPaint.color = Color.WHITE
         dotPaint.style = Paint.Style.FILL_AND_STROKE
+//        context!!.getDir()
     }
 
     private fun initSizeInfo(){
@@ -114,6 +117,10 @@ class ArrowView : View {
     }
 
     fun start(){
+        if (animatorSet.isPaused){
+            animatorSet.start()
+            return
+        }
         oldTransotionY = translationY
         val animatorStart = ObjectAnimator.ofFloat(this,"translationY",translationY, 0f)
         val animatorEnd = ObjectAnimator.ofFloat(this,"translationY",0f, oldTransotionY)
@@ -140,6 +147,12 @@ class ArrowView : View {
 
     fun cancel(){
         animatorSet.cancel()
+        animatorSet.reverse()
+        animatorSet.removeAllListeners()
+    }
+
+    fun pause(){
+        animatorSet.pause()
     }
 
     private fun drawArrow(canvas: Canvas){
@@ -152,4 +165,6 @@ class ArrowView : View {
         canvas.drawCircle(centerX - arrowRadius,arrowTop,radius/2.5f,dotPaint)
         canvas.drawCircle(centerX + arrowRadius,arrowTop,radius/2.5f,dotPaint)
     }
+
+
 }

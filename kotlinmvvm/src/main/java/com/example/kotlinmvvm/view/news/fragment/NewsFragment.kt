@@ -19,6 +19,8 @@ import com.example.kotlinmvvm.model.NewsService
 import com.example.kotlinmvvm.view.news.adapter.NewsAdapter
 import com.example.kotlinmvvm.vm.NewsViewModel
 import com.jcodecraeer.xrecyclerview.XRecyclerView
+import com.trello.rxlifecycle2.RxLifecycle
+import io.reactivex.Observable
 import org.koin.androidx.viewmodel.ext.android.getViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.qualifier.named
@@ -69,6 +71,9 @@ class NewsFragment: BaseFragment(),XRecyclerView.LoadingListener {
             setPullRefreshEnabled(true)
             adapter = newsAdapter
         }
+
+//        Observable.just("").compose(RxLifecycle.bind())
+
         return view
     }
 

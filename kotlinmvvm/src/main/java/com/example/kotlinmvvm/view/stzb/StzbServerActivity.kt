@@ -85,4 +85,14 @@ class StzbServerActivity:BaseActivity() ,OnItemClickListener{
         }
     }
 
+    override fun onStop() {
+        Log.e("StzbServerInfoActivity","onStop")
+        super.onStop()
+    }
+
+    override fun onDestroy() {
+        Log.e("StzbServerInfoActivity","onDestroy")
+        super.onDestroy()
+    }
+
 }

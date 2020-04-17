@@ -3,6 +3,9 @@ package com.example.kotlinmvvm.widget
 import android.content.Context
 import android.graphics.*
 import android.net.Uri
+import android.os.Handler
+import android.os.HandlerThread
+import android.os.Message
 import android.util.AttributeSet
 import android.util.Log
 import android.util.LruCache
@@ -32,14 +35,19 @@ class BitImageView : View {
     private var maxScale = 5f
     private var minScale = 0.2f
 
-    private val blockSize = 600  //每 200 * 200 为一个块
+    private val blockSize = 300  //每 200 * 200 为一个块
     private val drawRect = Rect() //当前View的绘制区域  （计算出当前区域能有几块blockSize）
 
     private var imageCache: LruCache<Point, Bitmap>? = null
     private val drawables = mutableListOf<ImageDrawable>()
+    private var oldBlocks = Rect()
+
+    private val handlerThread:HandlerThread = HandlerThread("handlerThread")
+    private var mHandler:Handler? = null
 
     init {
         options.inPreferredConfig = Bitmap.Config.RGB_565
+
     }
 
     private var startScroll = 0L
@@ -58,7 +66,9 @@ class BitImageView : View {
         gestureDetector = GestureDetector(context, object : GestureDetector.SimpleOnGestureListener() {
 
             override fun onScroll(e1: MotionEvent?, e2: MotionEvent?, distanceX: Float, distanceY: Float): Boolean {
-                startScroll = System.currentTimeMillis()
+//                startScroll = System.currentTimeMillis()
+//                scrollBy(distanceX.toInt(), distanceY.toInt())
+//                invalidate()
 //                Log.e("onScroll变化","$mImageCurrentWidth     $mImageWidth     $mImageCurrentHeight     $mImageHeight         $distanceX       $distanceY")
                 if (mImageCurrentWidth < mImageWidth) {
                     mRect.left = mRect.left + distanceX / mScale
@@ -71,6 +81,7 @@ class BitImageView : View {
                     checkRectHeight()
                 }
                 if (mImageCurrentWidth < mImageWidth || mImageCurrentHeight < mImageHeight) {
+//                    mHandler!!.sendEmptyMessage(1)
                     invalidate()
                 }
                 return super.onScroll(e1, e2, distanceX, distanceY)
@@ -103,6 +114,24 @@ class BitImageView : View {
                     return true
                 }
             })
+
+//        handlerThread.start()
+//        mHandler = object: Handler(handlerThread.looper){
+//            override fun handleMessage(msg: Message) {
+//                super.handleMessage(msg)
+//                if (msg.what == 1){
+//                    val rect = Rect().apply {
+//                        left = mRect.left.toInt()
+//                        right = mRect.right.toInt()
+//                        top = mRect.top.toInt()
+//                        bottom = mRect.bottom.toInt()
+//                    }
+//                    preDrawBitmap(rect)
+//                    postInvalidate()
+//                }
+//            }
+//        }
+
 //
         val maxSize = (context.resources.displayMetrics.widthPixels *
                 context.resources.displayMetrics.heightPixels) shl 4
@@ -202,7 +231,8 @@ class BitImageView : View {
     }
 
     override fun onDraw(canvas: Canvas?) {
-
+//        getDrawingRect(drawRect)
+//        Log.e("translate后的变化","$drawRect")
         if (mDecoder != null) {
             val rect = Rect().apply {
                 left = mRect.left.toInt()
@@ -210,15 +240,15 @@ class BitImageView : View {
                 top = mRect.top.toInt()
                 bottom = mRect.bottom.toInt()
             }
-            val startTime = System.currentTimeMillis()
+//            val startTime = System.currentTimeMillis()
             preDrawBitmap(rect)
-            val middle = System.currentTimeMillis()
-            Log.e("时间差1","${middle - startTime}")
+//            val middle = System.currentTimeMillis()
+//            Log.e("时间差1","${middle - startTime}")
             for (item in drawables){
                 canvas!!.drawBitmap(item.bitmap,item.src,item.dst,null)
             }
-            val endTime = System.currentTimeMillis()
-            Log.e("时间差2","${endTime - middle}      总的差值  ${endTime - startTime}")
+//            val endTime = System.currentTimeMillis()
+//            Log.e("时间差2","${endTime - middle}      总的差值  ${endTime - startTime}")
         }
     }
 
@@ -249,10 +279,10 @@ class BitImageView : View {
         mRect.right = mRect.left + mImageCurrentWidth
         mRect.top = mImageHeight * 1f / 2 - mImageCurrentHeight * 1f / 2
         mRect.bottom = mRect.top + mImageCurrentHeight
+        mHandler!!.sendEmptyMessage(1)
     }
 
     private fun preDrawBitmap(rect: Rect) {
-        drawables.clear()
         Log.e("初始切割","$mImageCurrentWidth    $mImageCurrentHeight    $rect")
         val blocks = blocks(rect)
         val offsetX = rect.left % blockSize

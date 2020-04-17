@@ -79,7 +79,7 @@ class VideoPlayer : FrameLayout, TextureView.SurfaceTextureListener ,SystemVolum
     private var volumeSeek = false
     private var fullScreen = false
 
-    fun setUrl(url: String) {
+    fun setUrl(url: String) { //设置Url 默认直接开始播放
         mUrl = url
         release()
         prepareMedia()
@@ -123,6 +123,9 @@ class VideoPlayer : FrameLayout, TextureView.SurfaceTextureListener ,SystemVolum
 
         })
 
+        /**
+         * 加载手势监听 与按钮监听
+         */
         initGestureDetector()
         textureView!!.setOnTouchListener { _, event ->
             gestureDetector?.onTouchEvent(event)
@@ -131,11 +134,11 @@ class VideoPlayer : FrameLayout, TextureView.SurfaceTextureListener ,SystemVolum
 
         ivPlay!!.setOnClickListener{
             if (mCurrentState == VIDEO_STATE_PAUSE){
-                ivPlay!!.setImageResource(R.mipmap.play)
+                ivPlay!!.setImageResource(R.mipmap.pause)
                 start()
                 timer?.schedule(task,0,1000)
             }else if (mCurrentState == VIDEO_STATE_START){
-                ivPlay!!.setImageResource(R.mipmap.pause)
+                ivPlay!!.setImageResource(R.mipmap.play)
                 mediaPlayer?.pause()
                 timer.cancel()
             }
@@ -151,12 +154,15 @@ class VideoPlayer : FrameLayout, TextureView.SurfaceTextureListener ,SystemVolum
                 callBack!!.fullScreen(fullScreen)
             }
             if (fullScreen){
-                ivFullScreen!!.setImageResource(R.mipmap.fullscreen)
-            }else{
                 ivFullScreen!!.setImageResource(R.mipmap.fullscreen_exit)
+            }else{
+                ivFullScreen!!.setImageResource(R.mipmap.fullscreen)
             }
         }
 
+        /**
+         * 3秒后 菜单栏
+         */
         group!!.postDelayed({
             group?.visibility = GONE
         },3000)
@@ -332,6 +338,7 @@ class VideoPlayer : FrameLayout, TextureView.SurfaceTextureListener ,SystemVolum
 
     /**
      * 初始化视图渲染
+     * /视图准备好后 会调用 #{onSurfaceTextureAvailable} 方法 调整播放状态为准备
      */
     private fun initTexTureView() {
         if (textureView != null) {
@@ -449,7 +456,7 @@ class VideoPlayer : FrameLayout, TextureView.SurfaceTextureListener ,SystemVolum
      * 打开并准备播放
      */
     private fun openMediaPlayer() {
-        if (TextUtils.isEmpty(mUrl) || surfaceTexture == null){
+        if (TextUtils.isEmpty(mUrl) || surfaceTexture == null){  //因为 视图(TextureView 准备好时机与调用setUrl初始化链接先后顺序未知所以当两者都不为空时才初始化并播放
             return
         }
         keepScreenOn = true   //屏幕常亮
@@ -463,6 +470,14 @@ class VideoPlayer : FrameLayout, TextureView.SurfaceTextureListener ,SystemVolum
 
     }
 
+    fun pause(){
+        if (mediaPlayer != null) {
+            mediaPlayer!!.pause()
+            mCurrentState = VIDEO_STATE_PAUSE
+        }
+        ivPlay!!.setImageResource(R.mipmap.play)
+    }
+
     /**
      * 停止播放
      */
@@ -474,6 +489,7 @@ class VideoPlayer : FrameLayout, TextureView.SurfaceTextureListener ,SystemVolum
             mCurrentState = VIDEO_STATE_STOP
             audioManager!!.abandonAudioFocus(null)
         }
+        callBack = null
         timer.cancel()
         SystemVolumeObserver.instance.unregisterVolume()
         IjkMediaPlayer.native_profileEnd()

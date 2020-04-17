@@ -13,7 +13,6 @@ import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.Scroller;
 
-
 public class DragViewGroup extends LinearLayout {
     private boolean openDrag = true;
 

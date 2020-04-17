@@ -70,7 +70,7 @@ class ContactDecoration constructor() : ItemDecoration() {
                 val top = bottom - titleHeight
 //                val title:String = map!!
                 val title = map!![position]
-                Log.e("准备执行绘制", "$title    $left    $top    $right     $bottom    $position")
+//                Log.e("准备执行绘制", "$title    $left    $top    $right     $bottom    $position")
                 drawTitle(c, title!!, left, top, right, bottom)
             }
         }
@@ -97,7 +97,7 @@ class ContactDecoration constructor() : ItemDecoration() {
         if (TextUtils.equals(tag, getTag(first + 1))) {  //当前页面第一个item与下一个item的tag一样说明还没有碰撞
 
         }else{  //如果碰撞 产生位移动画
-            Log.e("碰撞动画","${child.height}   ${child.top}    ${titleHeight}   $first")
+//            Log.e("碰撞动画","${child.height}   ${child.top}    ${titleHeight}   $first")
             if (child.height + child.top < titleHeight){   //child.top  +  child.height  (就是当前屏幕上他还剩余的大小  当child有一部分被遮挡时他的top就是遮挡高度的负值 而height不会变所以想加就是剩余大小)
                 // 当剩余大小与titleHeight相等时代表即将相撞
                 c.save()  //保存当前画布的信息然后重新生成一个位图

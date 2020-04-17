@@ -38,6 +38,13 @@ abstract class BaseActivity:AppCompatActivity() {
             }
 
         }
+
+        if (isChangingConfigurations){
+
+        }else{
+
+        }
+
     }
 
     abstract fun setViewModel():BaseViewModel

@@ -18,14 +18,16 @@ abstract class BaseViewModel:ViewModel() {
     }
 
     protected fun launch(block:suspend CoroutineScope.() -> Unit,onError:(message:String) ->Unit = {},OnComplete : () -> Unit = {}){
-        viewModelScope.launch(CoroutineExceptionHandler{ _,e ->
-            e.printStackTrace()
-            onError(e.message!!)
-            listener?.error(e.message!!)
-        })
+        viewModelScope.launch(
+//            CoroutineExceptionHandler{ _,e ->
+//            e.printStackTrace()
+//            onError(e.message!!)
+//            listener?.error(e.message!!)
+//        }
+        )
         {
             listener?.startLoad()
-            block.invoke(this)
+            this.block()
             listener?.endLoad()
             cancel()
         }

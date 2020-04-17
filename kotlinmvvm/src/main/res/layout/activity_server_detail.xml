@@ -22,7 +22,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintBottom_toTopOf="@+id/union_info"
-                android:visibility="gone">
+                android:visibility="visible">
 
             <ImageView
                     app:layout_constraintStart_toStartOf="parent"
@@ -354,7 +354,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/union_rank"
-                android:visibility="gone"
+                android:visibility="visible"
                 android:background="#010103"
                 app:layout_constraintHorizontal_bias="1.0">
 

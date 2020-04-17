@@ -48,7 +48,7 @@ class NewsAdapter(private val context: Context) : RecyclerView.Adapter<NewsAdapt
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder =
         ViewHolder.create(parent, LayoutInflater.from(context)).apply {
-            Log.e("创建${count++}次",this.toString())
+//            Log.e("创建${count++}次",this.toString())
         }
 
     override fun getItemCount(): Int =

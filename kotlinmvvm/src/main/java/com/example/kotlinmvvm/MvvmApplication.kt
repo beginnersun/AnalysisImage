@@ -16,6 +16,8 @@ class MvvmApplication: BaseApplication() {
         it.androidLogger()
         it.androidContext(this@MvvmApplication)
         it.modules(listOf(remoteModule, mainViewModel))
+
+
     }
 //
 //    val koin:KoinApplication.() -> Unit = {
@@ -27,6 +29,7 @@ class MvvmApplication: BaseApplication() {
 
     override fun onCreate() {
         super.onCreate()
+
         startKoin {cc}
     }
 }

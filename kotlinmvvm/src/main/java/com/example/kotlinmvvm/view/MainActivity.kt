@@ -14,9 +14,12 @@ import com.example.kotlinmvvm.view.news.NewsActivity
 import com.example.kotlinmvvm.vm.MainViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.qualifier.named
+import kotlinx.coroutines.*
 
 @Route(path = "/kotlinmvvm/main")
 class MainActivity :BaseActivity() {
+
+
 
     private var binding:ActivityMainKotlinBinding? = null
 
@@ -24,7 +27,6 @@ class MainActivity :BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
 
         binding = DataBindingUtil.setContentView(this,R.layout.activity_main_kotlin)
 
@@ -36,6 +38,10 @@ class MainActivity :BaseActivity() {
         RxView.bindClick(binding!!.tvInfo).subscribe{
             myviewModel.test()
         }
+
+//        launch{
+//
+//        }
 
 //        binding?.tvContent!!.setOnClickListener {
 //                startActivity(Intent(this@MainActivity, NewsActivity::class.java))

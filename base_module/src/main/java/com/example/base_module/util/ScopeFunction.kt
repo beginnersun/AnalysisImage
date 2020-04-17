@@ -1,6 +1,8 @@
 package com.example.base_module.util
 
 import com.example.base_module.bean.PersonBean
+import kotlinx.coroutines.*
+import kotlinx.coroutines.Dispatchers.Unconfined
 
 
 /**
@@ -111,7 +113,29 @@ fun testmain() {
 }
 
 
-
+fun main(args: Array<String>) {
+    runBlocking {
+        val jobs = arrayListOf<Job>()
+        jobs.add(launch(Unconfined) {
+            println("'Unconfined': I'm working in thread ${Thread.currentThread()}")
+            delay(500)
+            println("'Unconfined': after I'm working in thread ${Thread.currentThread()}")
+        })
+        jobs.add(launch(coroutineContext) {
+            println("'coroutineContext': I'm working in thread ${Thread.currentThread()}")
+            delay(500)
+            println("'coroutineContext': after I'm working in thread ${Thread.currentThread()}")
+        })
+        jobs.add(launch(newSingleThreadContext("MyOwnThread")) {
+            println("'newSingleThreadContext': I'm working in thread ${Thread.currentThread()}")
+            delay(500)
+            println("'newSingleThreadContext': after I'm working in thread ${Thread.currentThread()}")
+        })
+        jobs.forEach {
+            it.join()
+        }
+    }
+}
 
 //
 //import kotlin.reflect.KProperty

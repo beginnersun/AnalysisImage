@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.kotlinmvvm.base.BaseViewModel
 import com.example.kotlinmvvm.bean.NewsBean
 import com.example.kotlinmvvm.model.NewsRepository
+import com.trello.rxlifecycle2.RxLifecycle
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.launch
 import kotlin.coroutines.CoroutineContext
