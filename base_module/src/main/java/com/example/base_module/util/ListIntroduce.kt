@@ -99,6 +99,9 @@ fun testListCollection() {
         age+bean2.age
     }
 
+    //分支合并
+    println("测试分支合并")
+
 }
 
 fun String.first() = this[0]
