@@ -54,7 +54,12 @@ class ArrowView : View {
         defStyleAttr
     ) {
         init()
-
+//        var c = with("AbC"){
+//            when(1){
+//                is Int -> toUpperCase().length
+//                else -> toLowerCase()
+//            }
+//        }
 
     }
 

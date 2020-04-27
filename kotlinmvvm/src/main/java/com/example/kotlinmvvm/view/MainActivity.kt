@@ -39,6 +39,12 @@ class MainActivity :BaseActivity() {
             myviewModel.test()
         }
 
+
+
+        Thread{
+            this.binding.toString()
+            print("")
+        }.start()
 //        launch{
 //
 //        }

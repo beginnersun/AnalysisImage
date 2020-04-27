@@ -1,17 +1,58 @@
 package com.example.base_module.util;
 
+import com.example.base_module.bean.PersonBean;
+import com.example.base_module.bean.UserBean;
+
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * http 工具类
  */
 public class HttpUtil {
+
+
+    public static void test(){
+        ArrayList<PersonBean> userBeans = new ArrayList<>();
+        ArrayList<PersonBean> normalList = new ArrayList<>();
+        userBeans.stream().mapToInt(it -> it.getAge()).limit(5);
+        ArrayList<ArrayList<PersonBean>> lists = new ArrayList<>();
+        lists.stream().flatMap(it -> it.stream().filter(bean -> bean.getAge() > 16).collect(Collectors.toList()).stream())
+                .collect(Collectors.toList());
+
+        lists.stream().flatMap(it -> it.stream().filter(bean -> bean.getAge()>16)).collect(Collectors.toList());
+        lists.stream().findFirst().ifPresent(it -> it.get(0));
+//        lists.stream().findFirst().get()
+//        userBeans.stream().
+        userBeans.stream().sorted(Comparator.comparing((Function<PersonBean, String>) personBean -> null));
+        userBeans.sort(Comparator.comparingInt(HttpUtil::applyTest).reversed());
+        userBeans.stream().reduce(new PersonBean("李四",62),(o1,o2) -> {
+           return new PersonBean("王五",55);
+        });
+        userBeans.stream().collect(Collectors.maxBy(Comparator.comparingInt(PersonBean::getAge))).get().getAge();
+        userBeans.stream().collect(Collectors.groupingBy(it -> it.getAge()));
+        Map<Integer,Set<PersonBean>> map = new HashMap<>();
+        userBeans.stream().collect(Collectors.groupingBy(it -> it.getName(),HashMap<String,Set<PersonBean>>::new,Collectors.toSet()));
+        userBeans.stream().collect(Collectors.groupingBy(it -> it.getName(),() -> new HashMap<String,Set<PersonBean>>(),Collectors.toSet()));
+
+
+    }
+
+    public static int compare(PersonBean o1,PersonBean o2){
+        return 1;
+    }
+
+    public static int applyTest(PersonBean bean){
+        return 1;
+    }
+
 
     public static String post(String requestUrl, String accessToken, String params)
             throws Exception {

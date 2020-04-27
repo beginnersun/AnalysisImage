@@ -26,9 +26,11 @@ class NewsViewModel(private val newsRepository: NewsRepository) : BaseViewModel(
             newsDatas[type] = MutableLiveData()
             return newsDatas[type]!!
         }
+//        TestAidl.
     }
 
     fun getNewsList(type: String, start: Int, step: Int) {
+
         newsRepository.getNewsList(type, start, step)
             .doOnSubscribe {
                 listener?.startLoad()
