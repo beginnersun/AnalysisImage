@@ -17,7 +17,8 @@ class NewsResponsitory {
     fun getNewsList(){
         val newsPositionalDataSource: LiveData<PagedList<NewsBean>> = LivePagedListBuilder(NetWorkPositionalDataSourceFactory<NewsBean>(),50).build()
 
-        (newsPositionalDataSource as BaseNetWorkPositionalDataSource<NewsBean>).retry
+        (newsPositionalDataSource as BaseNetWorkPositionalDataSource<NewsBean>).refresh()
+
     }
 
 }

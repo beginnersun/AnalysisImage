@@ -16,4 +16,9 @@ open abstract class BaseNetWorkPositionalDataSource<Value>:PositionalDataSource<
      */
     var retry:(()->Any?)? = null
 
+    /**
+     * 让数据源失效 达到刷新数据的目的
+     */
+    val refresh = ::invalidate
+
 }

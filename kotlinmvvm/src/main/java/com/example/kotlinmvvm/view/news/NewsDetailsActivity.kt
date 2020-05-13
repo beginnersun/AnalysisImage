@@ -15,7 +15,10 @@ import android.text.Spanned
 import android.util.Log
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.databinding.DataBindingUtil
+import androidx.recyclerview.widget.ListAdapter
+import androidx.recyclerview.widget.RecyclerView
 import com.example.base_module.widget.VideoPlayer
+import com.example.kotlinmvvm.bean.NewsBean
 import com.example.kotlinmvvm.databinding.ActivityNewsDetailBinding
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
