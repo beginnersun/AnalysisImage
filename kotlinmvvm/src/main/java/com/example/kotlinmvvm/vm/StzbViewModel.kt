@@ -18,7 +18,10 @@ class StzbViewModel constructor(private val responsitory: StzbResponsitory) : Ba
         MutableLiveData<List<NoticeBean>>()
     }
 
+
+
     fun getStzbVideo(page: Int, size: Int) {
+
         viewModelScope.launch(CoroutineExceptionHandler { _, e ->
             Log.e("网络请求出错$page $size", "请求")
             e.printStackTrace()
@@ -32,6 +35,8 @@ class StzbViewModel constructor(private val responsitory: StzbResponsitory) : Ba
             videoData.value = beans
 //            listener?.endLoad()
         }
+
+
 
         Thread.currentThread().name
 
@@ -47,6 +52,10 @@ class StzbViewModel constructor(private val responsitory: StzbResponsitory) : Ba
 
     }
 
+    /**
+     * @param page  页码
+     * @return 返回第page页的数据
+     */
     fun getStzbNotice(page: Int) {
         viewModelScope.launch(CoroutineExceptionHandler { _, e ->
             e.printStackTrace()
@@ -58,5 +67,7 @@ class StzbViewModel constructor(private val responsitory: StzbResponsitory) : Ba
             videoNotice.value = notices
         }
     }
+
+    fun testSum() = 5
 
 }

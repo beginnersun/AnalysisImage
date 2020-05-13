@@ -13,7 +13,7 @@ interface NewsDao {
     fun getAll(): Flowable<List<NewsBean>>
 
     @Query("select * from news where type = (:type) Limit (:step) Offset (:start) ")
-    fun getNewsList(type:String,start:Int,step:Int):List<NewsBean>
+    fun getNewsList(type:String,start:Int,step:Int)
 
     @Insert
     fun insertAll(newsBeans: List<NewsBean>)

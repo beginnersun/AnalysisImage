@@ -1,6 +1,8 @@
 package com.example.kotlinmvvm.util
 
 import android.text.TextUtils
+import android.widget.EditText
+import android.widget.TextView
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -18,5 +20,15 @@ fun <T> Single<T>.asyncTask(delay: Long = 0): Single<T> =
 fun  JSONObject.optStringNotNull(key:String):String{
     var value = this.optString(key)
     return if (TextUtils.isEmpty(value) || TextUtils.equals(value,"null")) "" else{ value }
+}
+fun TextView.isEmpty():Boolean{
+    return TextUtils.isEmpty(this.text) || TextUtils.equals(this.text.trim(),"")
+}
+fun TextView.setNoTrimText(text:String){
+    if (TextUtils.isEmpty(this.text) || TextUtils.equals(this.text.trim(),"null")){
+        this.text = ""
+    }else{
+        this.text = text
+    }
 }
 

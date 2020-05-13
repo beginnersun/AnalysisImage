@@ -8,6 +8,7 @@ apply plugin: 'kotlin-android'
 
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
+apply from: "../versions.gradle"
 android {
     compileSdkVersion 29
     buildToolsVersion "29.0.2"
@@ -66,6 +67,8 @@ android {
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     testImplementation 'junit:junit:4.12'
+    testImplementation "org.koin:koin-test:$koin_version"
+    testImplementation "org.mockito:mockito-inline:$mockito_version"
     androidTestImplementation 'androidx.test:runner:1.1.0-alpha4'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.0-alpha4'
     //    implementation 'com.github.bumptech.glide:glide:4.8.0'
@@ -83,6 +86,17 @@ dependencies {
     implementation('com.trello.rxlifecycle2:rxlifecycle-components:2.2.1') {
         exclude group: 'com.android.support'
     }
+    def paging_version = "2.1.1"
+
+    implementation "androidx.paging:paging-runtime:$paging_version" // For Kotlin use paging-runtime-ktx
+
+    // alternatively - without Android dependencies for testing
+    testImplementation "androidx.paging:paging-common:$paging_version" // For Kotlin use paging-common-ktx
+
+    // optional - RxJava support
+    implementation "androidx.paging:paging-rxjava2:$paging_version" // For Kotlin use paging-rxjava2-ktx
+
+    implementation "androidx.lifecycle:lifecycle-livedata-ktx:2.2.0"  //liveData 针对Kotlin的扩展
     /**
      * RxBinding
      */

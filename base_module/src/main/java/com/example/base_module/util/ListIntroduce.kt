@@ -93,14 +93,16 @@ fun testListCollection() {
     persons.reverse()
     persons.groupBy { it.age }[5];
 
+
     val sss = (persons.groupBy(keySelector = {it.age},valueTransform = {it.name})[25] ?: error(""))
-    persons.groupingBy { it.age }.reduce{key,bean1,bean2 -> bean1}
+    persons.groupingBy { it.age }.reduce{ age, bean1, bean2 -> bean1}
     persons.groupingBy { it.age }.fold(5){ age,bean2 ->
         age+bean2.age
     }
 
     //分支合并
     println("测试分支合并")
+
 
 }
 

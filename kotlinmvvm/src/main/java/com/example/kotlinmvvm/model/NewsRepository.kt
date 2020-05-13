@@ -1,6 +1,13 @@
 package com.example.kotlinmvvm.model
 
 import android.util.Log
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.liveData
+import androidx.lifecycle.map
+import androidx.paging.PagedList
+import androidx.room.Dao
+import androidx.room.Query
 import com.example.base_module.util.NetWorkState
 import com.example.kotlinmvvm.bean.NewsBean
 import com.example.kotlinmvvm.dao.NewsDao
@@ -9,7 +16,18 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import io.reactivex.*
 import org.json.JSONObject
+class Bean{
 
+    var name:String
+
+    constructor(){
+        this.name = "5"
+    }
+
+    constructor(name:String){
+        this.name = name
+    }
+}
 class NewsRepository(private val newsService: NewsService) {
 
     fun getNewsList(type: String, start: Int, step: Int = 10): Single<List<NewsBean>> {
@@ -34,5 +52,23 @@ class NewsRepository(private val newsService: NewsService) {
                 }
                 Single.just(list)
             }.asyncTask()
+    }
+
+    fun getNewsList1(type: String, start: Int, step: Int = 10) = liveData<String> {
+
+        val disposable = emitSource(
+            MutableLiveData(Bean()).map {
+                it.name
+            }
+        )
+
+//        Contig
+
+
+        val bean = Bean("nnn")
+
+        disposable.dispose()
+
+
     }
 }

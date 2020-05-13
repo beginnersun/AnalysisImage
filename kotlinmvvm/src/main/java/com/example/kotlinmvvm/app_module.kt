@@ -1,6 +1,7 @@
 package com.example.kotlinmvvm
 
 import androidx.room.Room
+import com.example.base_module.bean.PersonBean
 import com.example.base_module.util.LenientGsonConverterFactory
 import com.example.kotlinmvvm.dao.NewsDao
 import com.example.kotlinmvvm.dao.NewsDatabase
@@ -125,5 +126,11 @@ val remoteModule = module {
 }
 
 val localModule = module {
-    //    single { Room.databaseBuilder(androidApplication().applicationContext,NewsDatabase::class.java,"news.db").build().newsDao()}
+    single<PersonBean>(named("bean")){
+        PersonBean("Li",15)
+    }
+    factory {
+        StzbResponsitory(get(),get())
+    }
+        single { Room.databaseBuilder(androidApplication().applicationContext,NewsDatabase::class.java,"news.db").build().newsDao()}
 }

@@ -3,6 +3,9 @@ package com.example.kotlinmvvm.base
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.OnLifecycleEvent
+import androidx.lifecycle.ReportFragment
 import com.example.base_module.widget.LoadingView
 import com.example.kotlinmvvm.vm.vminterface.VmStateListener
 import kotlinx.coroutines.Dispatchers
@@ -19,6 +22,7 @@ abstract class BaseActivity:AppCompatActivity() {
         super.onCreate(savedInstanceState)
         baseViewModel = setViewModel()
         loadingView = LoadingView(this)
+
         baseViewModel?.listener = object:VmStateListener{
             override fun error(message: String) {
                 cancelLoading()
@@ -57,6 +61,7 @@ abstract class BaseActivity:AppCompatActivity() {
 
     }
 
+    @OnLifecycleEvent(value = Lifecycle.Event.ON_DESTROY)
     override fun onDestroy() {
         loadingView = null
         super.onDestroy()

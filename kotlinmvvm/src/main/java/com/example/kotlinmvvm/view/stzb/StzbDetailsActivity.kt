@@ -23,6 +23,7 @@ import com.example.kotlinmvvm.vm.StzbDetailsViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import android.os.Build
 import android.webkit.WebChromeClient
+import org.koin.core.qualifier.named
 
 
 class StzbDetailsActivity : BaseActivity(), VideoPlayer.VideoListenerCallBack {

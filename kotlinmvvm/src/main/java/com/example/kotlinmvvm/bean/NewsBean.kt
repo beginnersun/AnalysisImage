@@ -8,7 +8,7 @@ import org.json.JSONObject
 @Fts4
 @Entity(tableName = "news")
 @TypeConverters(AnyConverters::class)
-class NewsBean(
+class NewsBean constructor(
     @PrimaryKey(autoGenerate = true) @ColumnInfo(name = "rowid") val id: Int,  //为了支持全文搜索 必须有rowid且是Int类型 作为主键  autoGenerate 让id自增
     @ColumnInfo(name = "docid") val docid: String,
     @ColumnInfo(name = "commentCount") val commentCount: Int,

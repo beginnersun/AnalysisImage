@@ -12,6 +12,7 @@ import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * http 工具类
@@ -36,6 +37,7 @@ public class HttpUtil {
         userBeans.stream().reduce(new PersonBean("李四",62),(o1,o2) -> {
            return new PersonBean("王五",55);
         });
+
         userBeans.stream().collect(Collectors.maxBy(Comparator.comparingInt(PersonBean::getAge))).get().getAge();
         userBeans.stream().collect(Collectors.groupingBy(it -> it.getAge()));
         Map<Integer,Set<PersonBean>> map = new HashMap<>();
@@ -43,11 +45,18 @@ public class HttpUtil {
         userBeans.stream().collect(Collectors.groupingBy(it -> it.getName(),() -> new HashMap<String,Set<PersonBean>>(),Collectors.toSet()));
 
 
+//        userBeans.stream().reduce()
+//        userBeans.stream().collect()
+//        userBeans.stream().reduce()
+
     }
+
 
     public static int compare(PersonBean o1,PersonBean o2){
         return 1;
     }
+
+    public static PersonBean sumAge(PersonBean person1,PersonBean person2){return person1;}
 
     public static int applyTest(PersonBean bean){
         return 1;
