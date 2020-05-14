@@ -1,9 +1,14 @@
 package com.example.analysisimage;
 
+import com.example.base_module.util.Bean;
+
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class MyClassLoader extends ClassLoader {
     private String libPath;

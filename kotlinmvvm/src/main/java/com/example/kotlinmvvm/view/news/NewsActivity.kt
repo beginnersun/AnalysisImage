@@ -66,22 +66,12 @@ class NewsActivity : BaseActivity(),XRecyclerView.LoadingListener{
             setupWithViewPager(binding?.viewPager)
         }
 
-        binding?.viewPager!!.apply {
+        binding?.viewPager!!.run {
             adapter = FragmentManagerdapter(fragmentList,new_tab.keys.toList(),supportFragmentManager)
         }
-//
-        startActivity(Intent(this,NewsDetailsActivity::class.java))
 
-//        binding?.recyclerNews!!.apply {
-//            layoutManager = LinearLayoutManager(this@NewsActivity)
-//            setLoadingMoreEnabled(true)
-//            setPullRefreshEnabled(true)
-//            setLoadingListener(this@NewsActivity)
-//        }
 //
-//        viewModel.newsData.observe(this, Observer<List<NewsBean>> {
-//            px += it.size
-//        })
+//        startActivity(Intent(this,NewsDetailsActivity::class.java))
     }
 
     override fun setViewModel(): BaseViewModel {

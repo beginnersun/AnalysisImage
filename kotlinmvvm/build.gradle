@@ -33,6 +33,8 @@ android {
         }
     }
 
+    kotlinOptions { jvmTarget = 1.8}
+
     sourceSets{
         main{
             if(isNeddMVVMModule.toBoolean()){

@@ -8,6 +8,7 @@
         <import type="com.example.kotlinmvvm.bean.Imgextra"/>
         <variable name="item" type="com.example.kotlinmvvm.bean.NewsBean"/>
         <variable name="images" type="ArrayList&lt;Imgextra>"/>
+        <variable name="itemClick" type="com.example.kotlinmvvm.view.news.adapter.NewsViewHolder.OnNewsBtnClick"/>
     </data>
 
 
@@ -206,6 +207,7 @@
                         android:layout_marginLeft="7dp"
                         style="@style/tv_tag"
                         android:text='@{item.commentCount + @string/recommend}'
+                        android:onClick="@{() -> itemClick.like(item)}"
                 />
 
 
