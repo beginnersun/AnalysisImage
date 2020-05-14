@@ -76,3 +76,6 @@ dependencies {
     implementation project(':base_module')
     implementation project(':kotlinmvvm')
 }
+kapt {
+    generateStubs = true
+}

@@ -61,9 +61,11 @@ dependencies {
     api 'com.github.bumptech.glide:glide:4.8.0'
     kapt 'com.github.bumptech.glide:compiler:4.8.0'
     api 'id.zelory:compressor:2.1.0'
+
     //rx android
     api 'io.reactivex.rxjava2:rxandroid:2.0.1'
     api 'io.reactivex.rxjava2:rxjava:2.1.3'
+
     //retrofit
     api 'com.squareup.retrofit2:retrofit:2.7.0'
     api 'com.squareup.retrofit2:converter-gson:2.7.0'
@@ -81,40 +83,54 @@ dependencies {
     def room_version = "2.2.0-rc01"
     api "androidx.room:room-runtime:$room_version"
     kapt "androidx.room:room-compiler:$room_version"
+
     // For Kotlin use kapt instead of annotationProcessor
     api "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     api 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.2'
     api 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.1.0'
+
     // optional - Kotlin Extensions and Coroutines support for Room
     api "androidx.room:room-ktx:$room_version"
+
     // optional - RxJava support for Room
     api "androidx.room:room-rxjava2:$room_version"
+
     /**
-     * Ijkplayer  哔哩哔哩开源的播放器  继承FFmpeg的
+     *  Ijkplayer  哔哩哔哩开源的播放器  继承FFmpeg的
      */
     api 'tv.danmaku.ijk.media:ijkplayer-java:0.8.8'
     api 'tv.danmaku.ijk.media:ijkplayer-armv7a:0.8.8'
+
     // ExoPlayer as IMediaPlayer: optional, experimental
     api 'tv.danmaku.ijk.media:ijkplayer-exo:0.8.8'
+
     //    implementation 'com.yanzhenjie.andserver:api:2.0.5'
+
     //    annotationProcessor 'com.yanzhenjie.andserver:processor:2.0.5'
     api 'com.alibaba:fastjson:1.1.71.android'
-//
-//    def koin_version = "2.1.5"
 
+    //
+
+    //    def koin_version = "2.1.5"
     api "org.koin:koin-androidx-viewmodel:$koin_version"
+
     // Koin for Kotlin
     api "org.koin:koin-core:$koin_version"
+
     // Koin Extended & experimental features
     api "org.koin:koin-core-ext:$koin_version"
-    // Koin for Unit tests
 
+    // Koin for Unit tests
     implementation 'com.arialyy.aria:core:3.8.5'
     kapt 'com.arialyy.aria:compiler:3.8.5'
-//    implementation 'com.arialyy.aria:ftpComponent:3.8.5' # 如果需要使用ftp，请增加该组件
-//    implementation 'com.arialyy.aria:sftpComponent:3.8.5' # 如果需要使用sftp，请增加该组件
+
+    //    implementation 'com.arialyy.aria:ftpComponent:3.8.5' # 如果需要使用ftp，请增加该组件
+
+    //    implementation 'com.arialyy.aria:sftpComponent:3.8.5' # 如果需要使用sftp，请增加该组件
     implementation 'com.arialyy.aria:m3u8Component:3.8.5'
-//    # 如果需要使用m3u8下载功能，请增加该组件
+
+    //    # 如果需要使用m3u8下载功能，请增加该组件
+    api files('libs/tbs_sdk_thirdapp_v4.3.0.3_43903_sharewithdownloadwithfile_withoutGame_obfs_20200402_121309.jar')
 }
 kapt {
     generateStubs = true

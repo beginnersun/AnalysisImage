@@ -200,6 +200,9 @@ class C {
 //
 val items = listOf(1, 2, 3, 4, 5)
 val ccs = listOf("1","2","3")
+fun testListMethodsds(){
+    items.reduce(cc)
+}
 /**
  * 高阶函数   高阶函数的参数的每一个函数都是对象 外加一个闭包   这些函数体内的变量等等访问与内存的分配都会引入运行时开销
  */

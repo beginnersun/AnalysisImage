@@ -10,6 +10,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.alibaba.android.arouter.launcher.ARouter
+import com.bumptech.glide.Glide
 import com.example.base_module.Constants
 import com.example.base_module.util.SharedPreferenceUtil
 import com.example.base_module.util.main
@@ -28,6 +29,9 @@ class MainActivity : AppCompatActivity() {
     private val secretKey: String = "ph4d4TOqnArWF5i8Z6GmBIYk6fowTwxI"
     private val client: OkHttpClient = OkHttpClient();
     override fun onCreate(savedInstanceState: Bundle?) {
+
+        Glide.with(this).load("")
+
         super.onCreate(savedInstanceState)
         setTheme(R.style.AppTheme)
         SharedPreferenceUtil.init(applicationContext)

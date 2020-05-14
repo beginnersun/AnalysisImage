@@ -8,6 +8,9 @@ import android.view.LayoutInflater
 import android.view.WindowManager
 import android.widget.ProgressBar
 import android.widget.TextView
+import com.bumptech.glide.Glide
+import com.bumptech.glide.annotation.GlideModule
+import com.bumptech.glide.module.AppGlideModule
 import com.example.base_module.R
 import kotlinx.android.synthetic.main.loading_view.*
 
@@ -19,9 +22,11 @@ class LoadingView(context: Context) :Dialog(context, R.style.Show_LoadingView) {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         init()
+
     }
 
     private fun init(){
+//        Glide.with(context).load("").
         setCancelable(true)
         setCanceledOnTouchOutside(false)
         val view = LayoutInflater.from(context).inflate(R.layout.loading_view,null)

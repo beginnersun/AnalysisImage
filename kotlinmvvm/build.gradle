@@ -38,9 +38,9 @@ android {
     sourceSets{
         main{
             if(isNeddMVVMModule.toBoolean()){
-                manifest.srcFile 'src/main/module/AndroidManifest.xml'
-            }else{
                 manifest.srcFile 'src/main/AndroidManifest.xml'
+            }else{
+                manifest.srcFile 'src/main/module/AndroidManifest.xml'
             }
         }
     }
@@ -63,6 +63,9 @@ android {
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
+    }
+    kotlinOptions {
+        jvmTarget = "1.8"
     }
 }
 

@@ -77,6 +77,7 @@ class ArrowView : View {
     }
 
     private fun init() {
+
         arrowPaint.isAntiAlias = true
         arrowPaint.color = Color.WHITE
         arrowPaint.strokeWidth = radius

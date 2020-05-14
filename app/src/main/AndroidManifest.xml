@@ -45,7 +45,33 @@
         <activity android:name=".LoadMultiDexActivity"
                   android:process=":multidex"
                   android:launchMode="singleTask"
-                  android:excludeFromRecents="true"/>
+                  android:excludeFromRecents="true" />
+
+        <activity android:name=".H5VideoPlayerActivity"
+            android:windowSoftInputMode="stateHidden|adjustResize"
+            android:configChanges="orientation|screenSize|keyboardHidden"/>
+
+        <activity
+
+            android:name="com.tencent.smtt.sdk.VideoActivity"
+
+            android:configChanges="orientation|screenSize|keyboardHidden"
+
+            android:exported="false"
+
+            android:launchMode="singleTask"
+
+            android:alwaysRetainTaskState="true">
+
+            <intent-filter>
+
+                <action android:name="com.tencent.smtt.tbs.video.PLAY" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+
+            </intent-filter>
+
+        </activity>
     </application>
 
 </manifest>
