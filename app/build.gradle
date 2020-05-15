@@ -25,6 +25,7 @@ android {
                 arguments = [AROUTER_MODULE_NAME: project.getName()]
             }
         }
+
     }
 //
 //    kapt {
@@ -37,7 +38,7 @@ android {
 
     buildTypes {
         release {
-            minifyEnabled true
+            minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
@@ -75,6 +76,7 @@ dependencies {
     implementation "androidx.camera:camera-camera2:${camerax_version}"
     implementation project(':base_module')
     implementation project(':kotlinmvvm')
+    implementation 'com.tencent.tbs.tbssdk:sdk:43903'
 }
 kapt {
     generateStubs = true

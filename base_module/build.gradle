@@ -96,7 +96,7 @@ dependencies {
     api "androidx.room:room-rxjava2:$room_version"
 
     /**
-     *  Ijkplayer  哔哩哔哩开源的播放器  继承FFmpeg的
+     *   Ijkplayer  哔哩哔哩开源的播放器  继承FFmpeg的
      */
     api 'tv.danmaku.ijk.media:ijkplayer-java:0.8.8'
     api 'tv.danmaku.ijk.media:ijkplayer-armv7a:0.8.8'
@@ -130,7 +130,6 @@ dependencies {
     implementation 'com.arialyy.aria:m3u8Component:3.8.5'
 
     //    # 如果需要使用m3u8下载功能，请增加该组件
-    api files('libs/tbs_sdk_thirdapp_v4.3.0.3_43903_sharewithdownloadwithfile_withoutGame_obfs_20200402_121309.jar')
 }
 kapt {
     generateStubs = true

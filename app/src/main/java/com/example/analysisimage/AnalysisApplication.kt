@@ -15,12 +15,14 @@ import org.koin.android.logger.AndroidLogger
 import org.koin.core.KoinApplication
 import org.koin.core.context.startKoin
 import android.os.Process
+import com.tencent.smtt.sdk.QbSdk
+import org.koin.core.context.GlobalContext
 import java.io.File
 import java.util.regex.Pattern
 
 class AnalysisApplication : BaseApplication() {
 
-    val cc: (KoinApplication) -> Unit = { it ->
+    private val cc: (KoinApplication) -> Unit = { it ->
         Log.e("测试1","初始化Module")
         it.androidLogger()
         it.androidContext(this@AnalysisApplication)
@@ -41,10 +43,28 @@ class AnalysisApplication : BaseApplication() {
     override fun onCreate() {
         Log.e("测试","开始")
         super.onCreate()
+        initWebX5()
         Log.e("当前进程名onCreate","${getProcessName(this)}")
         Log.e("当前线程名","${Thread.currentThread().name}")
         Log.e("测试","加载Module")
-        startKoin(cc)
+        startKoin(GlobalContext(),cc)
+    }
+
+    private fun initWebX5(){
+        QbSdk.setDownloadWithoutWifi(true)
+//        val map = HashMap<String, Any>()
+//        map[TbsCoreSettings.TBS_SETTINGS_USE_SPEEDY_CLASSLOADER] = true
+//        QbSdk.initTbsSettings(map)
+
+        QbSdk.initX5Environment(applicationContext,object: QbSdk.PreInitCallback{
+            override fun onCoreInitFinished() {
+                Log.e("标签cc","初始化完毕准备加载X5")
+            }
+            override fun onViewInitFinished(p0: Boolean) {
+                Log.e("标签ss","加载内核是否成功:$p0")
+
+            }
+        })
     }
 
     private fun isMainProcess(context:Context):Boolean{
@@ -55,7 +75,6 @@ class AnalysisApplication : BaseApplication() {
         newTempFile(context)
 
         context.startActivity(Intent(context,LoadMultiDexActivity::class.java).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
-
 
     }
 

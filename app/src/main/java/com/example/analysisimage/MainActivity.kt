@@ -40,7 +40,8 @@ class MainActivity : AppCompatActivity() {
          * 声明一个匿名类  object:xxxxx{    override fun .....(){ 覆写的方法}    }
          */
         first.setOnClickListener { view ->
-            ARouter.getInstance().build("/kotlinmvvm/news").navigation()
+//            ARouter.getInstance().build("/kotlinmvvm/news").navigation()
+            startActivity(Intent(this@MainActivity,H5VideoPlayerActivity::class.java))
         }
 
         baseContext!!.getSystemService(Context.ACTIVITY_SERVICE)

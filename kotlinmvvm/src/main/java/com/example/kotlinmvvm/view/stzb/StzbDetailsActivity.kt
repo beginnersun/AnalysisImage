@@ -5,10 +5,6 @@ import android.os.Bundle
 import com.example.kotlinmvvm.R
 import android.os.Message
 import android.util.Log
-import android.webkit.WebSettings
-import android.webkit.WebSettings.MIXED_CONTENT_ALWAYS_ALLOW
-import android.webkit.WebView
-import android.webkit.WebViewClient
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
@@ -22,8 +18,11 @@ import com.example.kotlinmvvm.view.stzb.adapter.CommentAdapter
 import com.example.kotlinmvvm.vm.StzbDetailsViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import android.os.Build
+import android.webkit.WebSettings
+import android.webkit.WebView
 import android.webkit.WebChromeClient
-import org.koin.core.qualifier.named
+import android.webkit.WebViewClient
+import android.webkit.WebSettings.MIXED_CONTENT_ALWAYS_ALLOW
 
 
 class StzbDetailsActivity : BaseActivity(), VideoPlayer.VideoListenerCallBack {
@@ -109,7 +108,6 @@ class StzbDetailsActivity : BaseActivity(), VideoPlayer.VideoListenerCallBack {
             domStorageEnabled = true
             cacheMode = WebSettings.LOAD_NO_CACHE
             textZoom = 200
-            pluginState = WebSettings.PluginState.ON
             mixedContentMode = MIXED_CONTENT_ALWAYS_ALLOW
         }
         try {
@@ -125,12 +123,12 @@ class StzbDetailsActivity : BaseActivity(), VideoPlayer.VideoListenerCallBack {
         }
 
 
-        binding?.webView!!.webChromeClient = object :WebChromeClient(){
+        binding?.webView!!.webChromeClient = object : WebChromeClient(){
             override fun getDefaultVideoPoster(): Bitmap? {
                 return Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888)
             }
         }
-        binding?.webView!!.webViewClient = object :WebViewClient(){
+        binding?.webView!!.webViewClient = object : WebViewClient(){
             override fun onPageFinished(view: WebView?, url: String?) {
                 endLoading()
                 super.onPageFinished(view, url)
