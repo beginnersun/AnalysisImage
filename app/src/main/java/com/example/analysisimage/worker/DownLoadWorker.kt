@@ -10,6 +10,7 @@ class DownLoadWorker(appContext: Context,workerParams: WorkerParameters): Worker
     override fun doWork(): Result {
         inputData.getString("url")
         val resultData = workDataOf("result" to "结果")
+        setProgressAsync(workDataOf("progress" to 100))
         return Result.success(resultData)
     }
 

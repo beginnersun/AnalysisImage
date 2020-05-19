@@ -76,6 +76,7 @@ dependencies {
     implementation "androidx.camera:camera-camera2:${camerax_version}"
     implementation project(':base_module')
     implementation project(':kotlinmvvm')
+
     implementation 'com.tencent.tbs.tbssdk:sdk:43903'
 
     def work_version = "2.3.1"
@@ -88,7 +89,7 @@ dependencies {
     // optional - GCMNetworkManager support
     implementation "androidx.work:work-gcm:$work_version"
 
-    // optional - Test helpers
+    // optional - Test helper
     androidTestImplementation "androidx.work:work-testing:$work_version"
 }
 kapt {

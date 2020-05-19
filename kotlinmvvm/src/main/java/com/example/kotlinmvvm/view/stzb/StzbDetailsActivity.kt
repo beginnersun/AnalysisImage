@@ -18,11 +18,11 @@ import com.example.kotlinmvvm.view.stzb.adapter.CommentAdapter
 import com.example.kotlinmvvm.vm.StzbDetailsViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import android.os.Build
-import android.webkit.WebSettings
-import android.webkit.WebView
-import android.webkit.WebChromeClient
-import android.webkit.WebViewClient
-import android.webkit.WebSettings.MIXED_CONTENT_ALWAYS_ALLOW
+//import android.webkit.WebSettings
+//import android.webkit.WebView
+//import android.webkit.WebChromeClient
+//import android.webkit.WebViewClient
+//import android.webkit.WebSettings.MIXED_CONTENT_ALWAYS_ALLOW
 
 
 class StzbDetailsActivity : BaseActivity(), VideoPlayer.VideoListenerCallBack {
@@ -71,14 +71,14 @@ class StzbDetailsActivity : BaseActivity(), VideoPlayer.VideoListenerCallBack {
 //
         binding?.data = noticeDetails
 
-//        binding?.webView!!.loadUrl("https://v.163.com/paike/V8H1BIE6U/VAG52A1KT.html")
-        binding?.webView!!.loadDataWithBaseURL(
-            null,
-            "<style>img{ max-width:100%;height:auto}</style> \r\n ${noticeDetails!!.message}",
-            "application/x-shockwave-flash",
-            "UTF-8",
-            null
-        )
+////        binding?.webView!!.loadUrl("https://v.163.com/paike/V8H1BIE6U/VAG52A1KT.html")
+//        binding?.webView!!.loadDataWithBaseURL(
+//            null,
+//            "<style>img{ max-width:100%;height:auto}</style> \r\n ${noticeDetails!!.message}",
+//            "application/x-shockwave-flash",
+//            "UTF-8",
+//            null
+//        )
         Log.e("播放模式","application/x-shockwave-flash")
         Log.e("data数据", binding?.data.toString())
         commentAdapter.notifyDataSetChanged()
@@ -98,44 +98,44 @@ class StzbDetailsActivity : BaseActivity(), VideoPlayer.VideoListenerCallBack {
             layoutManager = LinearLayoutManager(this@StzbDetailsActivity)
             adapter = commentAdapter
         }
-        binding?.webView!!.settings.run {
-            javaScriptEnabled = true
-            useWideViewPort = true
-            loadWithOverviewMode = true
-            allowFileAccess = true
-            setSupportZoom(true)
-            javaScriptCanOpenWindowsAutomatically = true
-            domStorageEnabled = true
-            cacheMode = WebSettings.LOAD_NO_CACHE
-            textZoom = 200
-            mixedContentMode = MIXED_CONTENT_ALWAYS_ALLOW
-        }
-        try {
-            if (Build.VERSION.SDK_INT >= 16) {
-                val clazz = binding?.webView!!.getSettings()::class.java
-                val method = clazz.getMethod("setAllowUniversalAccessFromFileURLs", Boolean::class.javaPrimitiveType)
-                if (method != null) {
-                    method!!.invoke(binding?.webView!!.getSettings(), true)
-                }
-            }
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
+//        binding?.webView!!.settings.run {
+//            javaScriptEnabled = true
+//            useWideViewPort = true
+//            loadWithOverviewMode = true
+//            allowFileAccess = true
+//            setSupportZoom(true)
+//            javaScriptCanOpenWindowsAutomatically = true
+//            domStorageEnabled = true
+//            cacheMode = WebSettings.LOAD_NO_CACHE
+//            textZoom = 200
+//            mixedContentMode = MIXED_CONTENT_ALWAYS_ALLOW
+//        }
+//        try {
+//            if (Build.VERSION.SDK_INT >= 16) {
+//                val clazz = binding?.webView!!.getSettings()::class.java
+//                val method = clazz.getMethod("setAllowUniversalAccessFromFileURLs", Boolean::class.javaPrimitiveType)
+//                if (method != null) {
+//                    method!!.invoke(binding?.webView!!.getSettings(), true)
+//                }
+//            }
+//        } catch (e: Exception) {
+//            e.printStackTrace()
+//        }
 
 
-        binding?.webView!!.webChromeClient = object : WebChromeClient(){
-            override fun getDefaultVideoPoster(): Bitmap? {
-                return Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888)
-            }
-        }
-        binding?.webView!!.webViewClient = object : WebViewClient(){
-            override fun onPageFinished(view: WebView?, url: String?) {
-                endLoading()
-                super.onPageFinished(view, url)
-            }
-        }
-        binding?.webView!!.isHorizontalScrollBarEnabled = false
-        binding?.webView!!.isVerticalScrollBarEnabled = false
+//        binding?.webView!!.webChromeClient = object : WebChromeClient(){
+//            override fun getDefaultVideoPoster(): Bitmap? {
+//                return Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888)
+//            }
+//        }
+//        binding?.webView!!.webViewClient = object : WebViewClient(){
+//            override fun onPageFinished(view: WebView?, url: String?) {
+//                endLoading()
+//                super.onPageFinished(view, url)
+//            }
+//        }
+//        binding?.webView!!.isHorizontalScrollBarEnabled = false
+//        binding?.webView!!.isVerticalScrollBarEnabled = false
         load()
 
         viewModel.detailData.observe(this, Observer {
@@ -145,11 +145,11 @@ class StzbDetailsActivity : BaseActivity(), VideoPlayer.VideoListenerCallBack {
     }
 
     override fun onDestroy() {
-        binding?.webView?.run {
-            loadDataWithBaseURL(null, "", "application/x-shockwave-flash", "utf-8", null)
-            clearHistory()
-            destroy()
-        }
+//        binding?.webView?.run {
+//            loadDataWithBaseURL(null, "", "application/x-shockwave-flash", "utf-8", null)
+//            clearHistory()
+//            destroy()
+//        }
         super.onDestroy()
     }
 

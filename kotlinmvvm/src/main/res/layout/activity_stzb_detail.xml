@@ -134,18 +134,18 @@
                 android:visibility="gone"/>
 
 
-                <WebView
-                        android:id="@+id/webView"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/tv_time"
-                        android:layout_marginTop="20dp"
-                        android:layout_marginLeft="10dp"
-                        android:layout_marginRight="10dp"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:nestedScrollingEnabled="false"
-                        android:layerType="hardware"
-                />
+<!--                <WebView-->
+<!--                        android:id="@+id/webView"-->
+<!--                        app:layout_constraintStart_toStartOf="parent"-->
+<!--                        app:layout_constraintTop_toBottomOf="@id/tv_time"-->
+<!--                        android:layout_marginTop="20dp"-->
+<!--                        android:layout_marginLeft="10dp"-->
+<!--                        android:layout_marginRight="10dp"-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:nestedScrollingEnabled="false"-->
+<!--                        android:layerType="hardware"-->
+<!--                />-->
 
 
                 <TextView

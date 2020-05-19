@@ -41,7 +41,12 @@ class MainActivity : AppCompatActivity() {
          */
         first.setOnClickListener { view ->
 //            ARouter.getInstance().build("/kotlinmvvm/news").navigation()
-            startActivity(Intent(this@MainActivity,H5VideoPlayerActivity::class.java))
+            startActivity(Intent(this@MainActivity,H5VideoPlayerActivity::class.java).putExtra("url","1"))
+        }
+
+        second.setOnClickListener {
+            view ->
+            startActivity(Intent(this@MainActivity,H5VideoPlayerActivity::class.java).putExtra("url","2"))
         }
 
         baseContext!!.getSystemService(Context.ACTIVITY_SERVICE)

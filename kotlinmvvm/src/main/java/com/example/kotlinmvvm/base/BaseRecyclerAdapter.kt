@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.kotlinmvvm.R
 import com.example.kotlinmvvm.bean.NewsBean
 import com.example.kotlinmvvm.databinding.ItemNewsBinding
+import java.util.*
 
 /**
  * V 数据类型  H ViewHolder类型
@@ -35,6 +36,7 @@ open abstract class BaseRecyclerAdapter<V,H:BaseRecyclerAdapter.BaseViewHolder<V
         open fun bind(bean: V?){
             this.bean = bean
             binding.executePendingBindings()
+
         }
     }
 

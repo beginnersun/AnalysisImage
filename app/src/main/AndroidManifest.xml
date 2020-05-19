@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          xmlns:tools="http://schemas.android.com/tools" package="com.example.analysisimage">
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.example.analysisimage">
 
-    <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.CAMERA"/>
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <!-- 读取图片中的位置信息 -->
-    <uses-permission android:name="android.permission.ACCESS_MEDIA_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_MEDIA_LOCATION" />
 
     <!--必须有相机才能安装程序 (如果不支持camera2 会在安装过程中就会因条件不符合而禁止安装-->
     <!--<uses-feature android:name="android.hardware.camera2"-->
@@ -16,38 +17,37 @@
 
 
     <!--<uses-permission android:name="android.permission.INTERNET"/>-->
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
 
     <!--    腾讯X5   -->
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <!--    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />-->
 
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
 
     <!--    <uses-permission android:name="android.permission.INTERNET" />-->
 
-    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
-    <uses-permission android:name="android.permission.GET_TASKS"/>
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.GET_TASKS" />
 
     <application
         android:name=".AnalysisApplication"
         android:allowBackup="true"
-        android:hardwareAccelerated="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        tools:replace="android:name"
-    android:usesCleartextTraffic="true">
+        android:usesCleartextTraffic="true"
+        tools:replace="android:name">
         <activity android:name=".MainActivity">
 
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
+                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER"/>
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
@@ -55,28 +55,32 @@
 
         </activity>
 
-        <activity android:name=".activity.camerax.PlantAnalysisActivityCameraX"
+        <activity
+            android:name=".activity.camerax.PlantAnalysisActivityCameraX"
 
-                  android:theme="@style/AppThemeWelcome"/>
+            android:theme="@style/AppThemeWelcome" />
 
-        <activity android:name=".TestActivity">
-        </activity>
+        <activity android:name=".TestActivity"></activity>
 
-        <activity android:name=".LoadMultiDexActivity"
-                  android:excludeFromRecents="true"
-                  android:launchMode="singleTask"
-                  android:process=":multidex"/>
+        <activity
+            android:name=".LoadMultiDexActivity"
+            android:excludeFromRecents="true"
+            android:launchMode="singleTask"
+            android:process=":multidex" />
 
-        <activity android:name=".H5VideoPlayerActivity"
-                  android:configChanges="orientation|screenSize|keyboardHidden"
-                  android:windowSoftInputMode="stateHidden|adjustResize">
+        <activity
+            android:name=".H5VideoPlayerActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:windowSoftInputMode="stateHidden|adjustResize"
+            android:screenOrientation="portrait"
+            android:hardwareAccelerated="false">
 
         </activity>
         <!--     在AndroidManifest.xml中增加内核首次加载时优化Service声明；    该Service仅在TBS内核首次Dex加载时触发并执行dex2oat任务，任务完成后自动结束。  -->
-        <service
-            android:name="com.tencent.smtt.export.external.DexClassLoaderProviderService"
-            android:label="dexopt"
-            android:process=":dexopt"></service>
+        <!--        <service-->
+        <!--            android:name="com.tencent.smtt.export.external.DexClassLoaderProviderService"-->
+        <!--            android:label="dexopt"-->
+        <!--            android:process=":dexopt"></service>-->
         <activity
 
             android:name="com.tencent.smtt.sdk.VideoActivity"
@@ -91,9 +95,9 @@
 
             <intent-filter>
 
-                <action android:name="com.tencent.smtt.tbs.video.PLAY"/>
+                <action android:name="com.tencent.smtt.tbs.video.PLAY" />
 
-                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.DEFAULT" />
 
             </intent-filter>
 
