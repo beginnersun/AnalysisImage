@@ -1,6 +1,7 @@
 package com.example.analysisimage
 
 import android.content.res.Configuration
+import android.graphics.Bitmap
 import android.graphics.PixelFormat
 import android.os.Bundle
 import android.view.View
@@ -11,6 +12,12 @@ import com.tencent.smtt.sdk.*
 import android.widget.Toast
 import android.webkit.JavascriptInterface
 import android.widget.Button
+import androidx.core.app.ComponentActivity.ExtraData
+import androidx.core.content.ContextCompat.getSystemService
+import android.icu.lang.UCharacter.GraphemeClusterBreak.T
+import android.os.Build
+import java.io.ByteArrayOutputStream
+import java.io.IOException
 
 
 class H5VideoPlayerActivity : AppCompatActivity() {
@@ -23,6 +30,8 @@ class H5VideoPlayerActivity : AppCompatActivity() {
     private var callback: IX5WebChromeClient.CustomViewCallback? = null
 
     private var flage = false
+
+    private var jsString = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,7 +49,8 @@ class H5VideoPlayerActivity : AppCompatActivity() {
             flage = !flage
         }
 
-        webView!!.loadUrl("https://v.qq.com/x/cover/mzc00200h1b5kde/f0966btulm6.html")
+        webView!!.loadUrl("https://m.bilibili.com/video/BV1B7411M7VY?spm_id_from=666.25.b_7265636f6d5f6d6f64756c65.13")
+        readJs()
         webView!!.webViewClient = object : WebViewClient() {
             override fun shouldOverrideUrlLoading(p0: WebView?, p1: String?): Boolean {
                 Log.e("标签Url", p1!!)
@@ -59,6 +69,16 @@ class H5VideoPlayerActivity : AppCompatActivity() {
 
             override fun onReceivedSslError(p0: WebView?, p1: SslErrorHandler?, p2: SslError?) {
                 p1?.proceed()
+            }
+
+            override fun onPageStarted(p0: WebView?, p1: String?, p2: Bitmap?) {
+                super.onPageStarted(p0, p1, p2)
+                if (Build.VERSION.SDK_INT >= 19) {
+                    webView!!.evaluateJavascript(jsString) {
+                        t ->
+                        Log.e("标签回调","$t")
+                    }
+                }
             }
 
         }
@@ -203,6 +223,28 @@ class H5VideoPlayerActivity : AppCompatActivity() {
                 data
             )
         }
+    }
+
+
+    private fun readJs(){
+        try {
+            val inputStream = assets.open("bilibili.js")
+            val buff = ByteArray(1024)
+            val fromFile = ByteArrayOutputStream()
+            do {
+                val numRead = inputStream.read(buff)
+                if (numRead <= 0) {
+                    break
+                }
+                fromFile.write(buff, 0, numRead)
+            } while (true)
+            jsString = fromFile.toString()
+            inputStream.close()
+            fromFile.close()
+        } catch (e: IOException) {
+            e.printStackTrace()
+        }
+
     }
 
     private fun enableLiteWndFunc() {

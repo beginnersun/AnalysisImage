@@ -36,6 +36,7 @@ class StzbServerActivity:BaseActivity() ,OnItemClickListener{
         Pair(1,"fd")
     }
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_server_info)

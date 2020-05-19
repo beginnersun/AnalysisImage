@@ -5,9 +5,14 @@ import android.content.Context
 import android.os.Bundle
 import android.util.DisplayMetrics
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Observer
+import androidx.work.*
+import com.example.analysisimage.worker.DownLoadWorker
 import com.example.base_module.Constants
 import com.example.base_module.widget.ArrowView
+import com.example.kotlinmvvm.model.Bean
 import com.example.kotlinmvvm.widget.PointView
+import java.util.concurrent.TimeUnit
 
 
 class DownLoadActivity:AppCompatActivity() {
@@ -19,6 +24,30 @@ class DownLoadActivity:AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_load_multidex)
+
+        val constraints = Constraints.Builder().setRequiredNetworkType(NetworkType.CONNECTED).build()
+        val data = workDataOf(Pair("MEME", "url"))
+        val workRequest = OneTimeWorkRequestBuilder<DownLoadWorker>()
+            .setConstraints(constraints) //添加约束条件（满足时才回执行）
+            .setInitialDelay(5, TimeUnit.MINUTES) //设置初始化延迟事件
+            .addTag("down")  //添加标签  多个WorkRequest可以添加同一个标签 这样多个WorkRequest就会分为一个组 然后利用WorkManager的有关tag方法进行统一处理
+            .setInputData(data).build() //传入参数给DownLoadWorker的doWork方法 doWork方法里面getInputData获取
+        val result = WorkManager.getInstance(this).enqueue(workRequest)  //执行
+        when(result.state){
+            WorkInfo.State.BLOCKED -> print("又尚未完成的前提性工作")
+            WorkInfo.State.ENQUEUED -> print("满足enqueue的条件能够立即执行")
+            WorkInfo.State.RUNNING -> print("已经正在执行")
+        }
+
+
+        WorkManager.getInstance(this).getWorkInfosByTagLiveData("down").observe(this, Observer {
+            for (item in it){
+                print(item.state)
+            }
+        })
+
+
+
 //        var outMetrics = DisplayMetrics()
 //        windowManager.defaultDisplay.getMetrics(outMetrics)
 //        var widthPixels = outMetrics.widthPixels

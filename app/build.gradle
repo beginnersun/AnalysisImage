@@ -77,6 +77,19 @@ dependencies {
     implementation project(':base_module')
     implementation project(':kotlinmvvm')
     implementation 'com.tencent.tbs.tbssdk:sdk:43903'
+
+    def work_version = "2.3.1"
+    // Kotlin + coroutines
+    implementation "androidx.work:work-runtime-ktx:$work_version"
+
+    // optional - RxJava2 support
+    implementation "androidx.work:work-rxjava2:$work_version"
+
+    // optional - GCMNetworkManager support
+    implementation "androidx.work:work-gcm:$work_version"
+
+    // optional - Test helpers
+    androidTestImplementation "androidx.work:work-testing:$work_version"
 }
 kapt {
     generateStubs = true

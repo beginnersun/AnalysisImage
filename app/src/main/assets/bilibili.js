@@ -59,7 +59,7 @@ var EventUtil = {
     }
 };
 
-var at = $('.btn-widescreen');
+var at = $('.player-icon icon-widescreen');
 
 alert('haha');
 
