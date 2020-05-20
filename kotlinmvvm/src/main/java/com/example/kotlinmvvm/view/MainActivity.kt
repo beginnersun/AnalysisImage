@@ -3,6 +3,7 @@ package com.example.kotlinmvvm.view
 import android.content.Intent
 import android.os.Bundle
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.*
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.alibaba.android.arouter.launcher.ARouter
 import com.example.base_module.rxbinding.RxView
@@ -12,6 +13,7 @@ import com.example.kotlinmvvm.base.BaseViewModel
 import com.example.kotlinmvvm.databinding.ActivityMainKotlinBinding
 import com.example.kotlinmvvm.view.news.NewsActivity
 import com.example.kotlinmvvm.vm.MainViewModel
+import com.example.kotlinmvvm.vm.StzbViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.qualifier.named
 import kotlinx.coroutines.*
@@ -29,6 +31,8 @@ class MainActivity :BaseActivity() {
         super.onCreate(savedInstanceState)
 
         binding = DataBindingUtil.setContentView(this,R.layout.activity_main_kotlin)
+        viewModelStore
+
 
         ARouter.getInstance().inject(this)
 
@@ -38,6 +42,7 @@ class MainActivity :BaseActivity() {
         RxView.bindClick(binding!!.tvInfo).subscribe{
             myviewModel.test()
         }
+
 
 
 

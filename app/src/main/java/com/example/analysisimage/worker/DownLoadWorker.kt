@@ -1,6 +1,7 @@
 package com.example.analysisimage.worker
 
 import android.content.Context
+import android.content.Intent
 import androidx.work.Worker
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf

@@ -10,6 +10,8 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelStoreOwner
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.alibaba.android.arouter.launcher.ARouter
 import com.example.kotlinmvvm.R
@@ -57,6 +59,8 @@ class NewsActivity : BaseActivity(),XRecyclerView.LoadingListener{
         Log.e("thisActivity",this.toString())
         binding = DataBindingUtil.setContentView(this, R.layout.activity_news)
         ARouter.getInstance().inject(this)
+
+        val viewModel = ViewModelProvider(ViewModelStoreOwner { this@NewsActivity.viewModelStore }).get(NewsViewModel::class.java)
 
         binding?.tablayout!!.run {
             for (item in new_tab){

@@ -9,12 +9,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
+import androidx.arch.core.util.Function
 import androidx.databinding.DataBindingUtil
-import androidx.lifecycle.Observer
+import androidx.lifecycle.*
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.kotlinmvvm.R
 import com.example.kotlinmvvm.base.BaseFragment
+import com.example.kotlinmvvm.bean.NewsBean
 import com.example.kotlinmvvm.databinding.FragmentListBinding
+import com.example.kotlinmvvm.model.Bean
 import com.example.kotlinmvvm.model.NewsService
 import com.example.kotlinmvvm.view.news.adapter.NewsAdapter
 import com.example.kotlinmvvm.vm.NewsViewModel
@@ -60,6 +63,17 @@ class NewsFragment: BaseFragment(),XRecyclerView.LoadingListener {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_list,container,false)
+
+        ViewModelProvider(ViewModelStoreOwner { this@NewsFragment.viewModelStore }).get(NewsViewModel::class.java)
+
+//        Transformations.map()
+
+        Transformations.map(viewModel.getDatas("")) {
+            MutableLiveData<NewsBean>()
+        }
+        Transformations.switchMap(viewModel.getDatas("")){
+            MutableLiveData<Bean>()
+        }
 
         binding = DataBindingUtil.bind(view)
         newsAdapter = NewsAdapter(activity!!)

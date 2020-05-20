@@ -1,9 +1,15 @@
 package com.example.analysisimage
 
+import android.animation.AnimatorInflater
+import android.animation.LayoutTransition
+import android.animation.TypeEvaluator
+import android.animation.ValueAnimator
 import android.app.ActivityManager
 import android.content.Context
+import android.graphics.Point
 import android.os.Bundle
 import android.util.DisplayMetrics
+import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.work.*
@@ -40,56 +46,56 @@ class DownLoadActivity:AppCompatActivity() {
             .addTag("down")  //添加标签  多个WorkRequest可以添加同一个标签 这样多个WorkRequest就会分为一个组 然后利用WorkManager的有关tag方法进行统一处理
             .setInputData(data).build() //传入参数给DownLoadWorker的doWork方法 doWork方法里面getInputData获取
         val result = WorkManager.getInstance(this).enqueue(workRequest)  //执行
-        when(result.state){
-            WorkInfo.State.BLOCKED -> print("又尚未完成的前提性工作")
-            WorkInfo.State.ENQUEUED -> print("满足enqueue的条件能够立即执行")
-            WorkInfo.State.RUNNING -> print("已经正在执行")
-        }
-
-
-        /**
-         * 监听状态
-         */
-        WorkManager.getInstance(this).getWorkInfosByTagLiveData("down").observe(this, Observer {
-            for (item in it){
-                print(item.state)
-                val process = item.progress.getInt("process",-1)
-            }
-        })
-
-        /**
-         * 创建链接工作  当workRequest是OneTimeWorkRequest时前一个的输出结果作为后一个的输入参数
-         * begin也可以是一个list 这个list的内容可能会并行
-         * ps:父级状态与从属相关 父级取消则从属取消
-         */
-        WorkManager.getInstance(this).beginWith(workRequest).then(workRequest)
-            .enqueue()
-        WorkManager.getInstance(this).beginWith(listOf(workRequest)).then(workRequest).enqueue()
-
-        /**
-         * 唯一工作链只能是oneTime类型
-         */
-        WorkManager.getInstance(this)
-            .beginUniqueWork("唯一名称",ExistingWorkPolicy.APPEND,workRequest).enqueue() //第二个参数是指冲突策略 当名称重复怎么做
-//        WorkManager.getInstance(this).enqueueUniquePeriodicWork()  //唯一名称的重复任务  参数都同上
-//        WorkManager.getInstance(this).enqueueUniqueWork()  //唯一名称的单次任务
-
-
-        /**
-         * 根据id与tag可以对任务进行取消和停止
-         */
-        WorkManager.getInstance(this).cancelWorkById(workRequest.id)
-        /**
-         * 取消一个工作链
-         */
-        WorkManager.getInstance(this).cancelUniqueWork("唯一名称的Work")
-
-        val constraintsPeriodic = Constraints.Builder()
-            .setRequiresCharging(true)
-            .build()
-        val downWork = PeriodicWorkRequestBuilder<DownLoadWorker>(1,TimeUnit.MINUTES) //重复间隔1分钟
-            .setConstraints(constraintsPeriodic).build()
-        WorkManager.getInstance(this).enqueue(downWork)
+//        when(result.state){
+//            WorkInfo.State.BLOCKED -> print("又尚未完成的前提性工作")
+//            WorkInfo.State.ENQUEUED -> print("满足enqueue的条件能够立即执行")
+//            WorkInfo.State.RUNNING -> print("已经正在执行")
+//        }
+//
+//
+//        /**
+//         * 监听状态
+//         */
+//        WorkManager.getInstance(this).getWorkInfosByTagLiveData("down").observe(this, Observer {
+//            for (item in it){
+//                print(item.state)
+//                val process = item.progress.getInt("process",-1)
+//            }
+//        })
+//
+//        /**
+//         * 创建链接工作  当workRequest是OneTimeWorkRequest时前一个的输出结果作为后一个的输入参数
+//         * begin也可以是一个list 这个list的内容可能会并行
+//         * ps:父级状态与从属相关 父级取消则从属取消
+//         */
+//        WorkManager.getInstance(this).beginWith(workRequest).then(workRequest)
+//            .enqueue()
+//        WorkManager.getInstance(this).beginWith(listOf(workRequest)).then(workRequest).enqueue()
+//
+//        /**
+//         * 唯一工作链只能是oneTime类型
+//         */
+//        WorkManager.getInstance(this)
+//            .beginUniqueWork("唯一名称",ExistingWorkPolicy.APPEND,workRequest).enqueue() //第二个参数是指冲突策略 当名称重复怎么做
+////        WorkManager.getInstance(this).enqueueUniquePeriodicWork()  //唯一名称的重复任务  参数都同上
+////        WorkManager.getInstance(this).enqueueUniqueWork()  //唯一名称的单次任务
+//
+//
+//        /**
+//         * 根据id与tag可以对任务进行取消和停止
+//         */
+//        WorkManager.getInstance(this).cancelWorkById(workRequest.id)
+//        /**
+//         * 取消一个工作链
+//         */
+//        WorkManager.getInstance(this).cancelUniqueWork("唯一名称的Work")
+//
+//        val constraintsPeriodic = Constraints.Builder()
+//            .setRequiresCharging(true)
+//            .build()
+//        val downWork = PeriodicWorkRequestBuilder<DownLoadWorker>(1,TimeUnit.MINUTES) //重复间隔1分钟
+//            .setConstraints(constraintsPeriodic).build()
+//        WorkManager.getInstance(this).enqueue(downWork)
 
 //        var outMetrics = DisplayMetrics()
 //        windowManager.defaultDisplay.getMetrics(outMetrics)
@@ -111,6 +117,23 @@ class DownLoadActivity:AppCompatActivity() {
 //        down.setOnClickListener {
 //            thread.start()
 //        }
+
+        var varags = arrayOf(Point(),Point())
+        ValueAnimator.ofObject(object :TypeEvaluator<Point>{
+            override fun evaluate(fraction: Float, startValue: Point?, endValue: Point?): Point {
+                return Point()
+            }
+        },Point(),Point()).apply {
+            addUpdateListener {
+                val point = it.values as Point
+             }
+        }
+        var group = LinearLayout(this)
+        LayoutTransition.APPEARING
+        val animator = AnimatorInflater.loadStateListAnimator(this,R.animator.design_appbar_state_list_animator)//加载动画
+        group.stateListAnimator = animator
+
+
     }
 
 //    inner class DownRunnable(val path:String):Runnable{
