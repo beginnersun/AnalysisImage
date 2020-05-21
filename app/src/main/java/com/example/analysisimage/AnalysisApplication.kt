@@ -33,7 +33,7 @@ class AnalysisApplication : BaseApplication() {
         super.attachBaseContext(base)
         val isMainProcess = isMainProcess(base!!)
 
-        Log.e("当前进程名attachBaseContext","${getProcessName(this)}")
+        Log.e("当前进程名attach","${getProcessName(this)}")
         Log.e("当前线程名","${Thread.currentThread().name}")
         if (isMainProcess && !isVMMultidexCapable(System.getProperty("java.vm.version")!!)){
 //            loadMultiDex(base!!)

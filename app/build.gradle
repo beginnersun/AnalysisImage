@@ -36,6 +36,10 @@ android {
 //        generateStubs = true
 //    }
 
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
+
     buildTypes {
         release {
             minifyEnabled false
@@ -91,6 +95,14 @@ dependencies {
 
     // optional - Test helper
     androidTestImplementation "androidx.work:work-testing:$work_version"
+
+    implementation 'com.google.dagger:dagger:2.7'
+    kapt 'com.google.dagger:dagger-compiler:2.7'
+
+//    annotationProcessor 'com.google.dagger:dagger-compiler:2.22.1'
+//    // if you use the support libraries
+//    implementation 'com.google.dagger:dagger-android-support:2.22.1'
+//    implementation 'com.google.dagger:dagger:2.22.1'
 }
 kapt {
     generateStubs = true

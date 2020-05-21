@@ -15,7 +15,6 @@ public class TestActivity extends BaseActivity {
 
     @Override
     public void initView() {
-
         int a = getResources().getDisplayMetrics().widthPixels << 4;
 //        ImageView(this)
 
@@ -29,6 +28,8 @@ public class TestActivity extends BaseActivity {
 
     @Override
     public int getLayoutId() {
+        setSaturation(0.55f);
         return R.layout.activity_test;
     }
+
 }

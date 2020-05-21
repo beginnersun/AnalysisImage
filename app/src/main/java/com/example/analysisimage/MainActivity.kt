@@ -2,15 +2,20 @@ package com.example.analysisimage
 
 import android.content.Context
 import android.content.Intent
+import android.graphics.ColorMatrix
+import android.graphics.ColorMatrixColorFilter
+import android.graphics.Paint
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.DisplayMetrics
 import android.util.Log
+import android.view.View
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.alibaba.android.arouter.launcher.ARouter
 import com.bumptech.glide.Glide
+import com.example.analysisimage.base.BaseActivity
 import com.example.base_module.Constants
 import com.example.base_module.util.SharedPreferenceUtil
 import com.example.base_module.util.main
@@ -23,42 +28,38 @@ import okhttp3.Response
 import org.json.JSONObject
 
 @Route(path = "app/main")
-class MainActivity : AppCompatActivity() {
+class MainActivity : BaseActivity() {
+    override fun initData() {
 
-    private val apiKey: String = "PdszjNdLcEG4rMpQR2ELHbIl"
-    private val secretKey: String = "ph4d4TOqnArWF5i8Z6GmBIYk6fowTwxI"
-    private val client: OkHttpClient = OkHttpClient();
-    override fun onCreate(savedInstanceState: Bundle?) {
+    }
 
-        Glide.with(this).load("")
-
-        super.onCreate(savedInstanceState)
+    override fun initView() {
+        saturation = 0.1f
         setTheme(R.style.AppTheme)
         SharedPreferenceUtil.init(applicationContext)
-        setContentView(R.layout.activity_main)
         /**
          * 声明一个匿名类  object:xxxxx{    override fun .....(){ 覆写的方法}    }
          */
         first.setOnClickListener { view ->
-//            ARouter.getInstance().build("/kotlinmvvm/news").navigation()
+            //            ARouter.getInstance().build("/kotlinmvvm/news").navigation()
             startActivity(Intent(this@MainActivity,H5VideoPlayerActivity::class.java).putExtra("url","1"))
         }
 
         second.setOnClickListener {
-            view ->
+                view ->
             startActivity(Intent(this@MainActivity,H5VideoPlayerActivity::class.java).putExtra("url","2"))
         }
 
         baseContext!!.getSystemService(Context.ACTIVITY_SERVICE)
 
 
-        GlobalScope.launch(Dispatchers.Main) {
-            println("Hello 线程${Thread.currentThread().name}")
-            val result = test()
-            Log.e("TokenResult", result)
-            analysisToken(result)
-            println("End 线程${Thread.currentThread().name}")
-        }
+//        GlobalScope.launch(Dispatchers.Main) {
+//            Log.e("线程","Hello 线程${Thread.currentThread().name}")
+//            val result = test()
+//            Log.e("TokenResult", result)
+//            analysisToken(result)
+//            Log.e("线程","End 线程${Thread.currentThread().name}")
+//        }
 
 
 
@@ -80,13 +81,20 @@ class MainActivity : AppCompatActivity() {
         var heightPixels = outMetrics.heightPixels
         Constants.SCREEN_WIDTH = widthPixels
         Constants.SCREEN_HEIGHT = heightPixels
+
     }
+
+    override fun getLayoutId(): Int = R.layout.activity_main
+
+    private val apiKey: String = "PdszjNdLcEG4rMpQR2ELHbIl"
+    private val secretKey: String = "ph4d4TOqnArWF5i8Z6GmBIYk6fowTwxI"
+    private val client: OkHttpClient = OkHttpClient();
 
     suspend fun test() =
         withContext(Dispatchers.IO){
-            println("World 线程1${Thread.currentThread().name}")
+            Log.e("线程","World 线程1${Thread.currentThread().name}")
             var result = getImageRecognitionToken(apiKey, secretKey)
-            println("World 线程2${Thread.currentThread().name}")
+            Log.e("线程","World 线程2${Thread.currentThread().name}")
             result
         }
 
@@ -102,6 +110,7 @@ class MainActivity : AppCompatActivity() {
         } else {
             Log.d("Fail", "get请求失败")
         }
+        response.close()
         return result
     }
 

@@ -29,8 +29,10 @@ public class TestActivity extends BaseActivity implements View.OnClickListener{
 
     @Override
     public void initData() {
-
+        getCC();
     }
+
+
 
     @Override
     public void initView() {
